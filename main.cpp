@@ -35,7 +35,7 @@
 #include "MenuItemSubMenu.h"
 #include "MenuItemPlay.h"
 #include "MenuItemExit.h"
-#include "MenuItemVar.h"
+#include "MenuItemPlayer.h"
 #include "MenuItemNotImplemented.h"
 #include "MenuKeys.h"
 #include "MenuItemBack.h"
@@ -85,16 +85,18 @@ int main(int argc, char *argv[]) {
   menuThemes->add(mib);
 
   menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
-  menuExtra->add(new MenuItemNotImplemented(string("Player 3")));
-  menuExtra->add(new MenuItemNotImplemented(string("Player 4")));
+  menuExtra->add(new MenuItemPlayer(TEAM_LEFT, 1));
+  menuExtra->add(new MenuItemPlayer(TEAM_RIGHT, 1));
+  menuExtra->add(new MenuItemSubMenu(new MenuKeys(1),
+				     string("Define Keys")));
   menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);
 
   m.add(&miplay);
-  m.add(new MenuItemPL1(string("PL1")));
-  m.add(new MenuItemPL2(string("PL2")));
+  m.add(new MenuItemPlayer(TEAM_LEFT, 0));
+  m.add(new MenuItemPlayer(TEAM_RIGHT, 0));
   m.add(new MenuItemNotImplemented(string("Sound Off")));
-  m.add(new MenuItemSubMenu((new MenuKeys()),
+  m.add(new MenuItemSubMenu(new MenuKeys(0),
 			    string("Define Keys")));
   m.add(new MenuItemNotImplemented(string("Set Joystick")));
   m.add(new MenuItemSubMenu(menuExtra,

@@ -33,7 +33,7 @@ class StatePlaying : public State {
 private:
   Team *tl, *tr; // team left and team right
   Ball *b;
-  Agent *agentR, *agentL;
+  Agent *agentR[MAX_PLAYERS/2], *agentL[MAX_PLAYERS/2];
 
 public:
   StatePlaying() {}

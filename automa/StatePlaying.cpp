@@ -24,6 +24,8 @@
 #include "StatePlaying.h"
 #include "Automa.h"
 
+using namespace std;
+
 #define WINNING_SCORE 15
 
 // executes one step of the game's main loop
@@ -42,22 +44,33 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tr = new Team(1);
     b = new Ball(BALL_ORIG);
 
-    Player *automL = tl->addPlayer("Pippo", PL_TYPE_MALE_LEFT);
-    Player *automR = tr->addPlayer("Pluto", PL_TYPE_MALE_RIGHT);
+    for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
+      if ( configuration.left_players[j] == PLAYER_NONE ) {
+	continue;
+      }
+      string name = "Pippo-" + j;
+      Player *automL = tl->addPlayer(name.c_str(), PL_TYPE_MALE_LEFT);
+      agentL[j] = new Agent(b, automL, controlsArray);
+      if ( configuration.left_players[j] == PLAYER_HUMAN )
+	controlsArray->isHuman(j*2);
+      else
+	controlsArray->isArtificial(j*2);
+      i++;
+    }
 
-    agentL = new Agent(b, automL, controlsArray);
-    agentR = new Agent(b, automR, controlsArray);
-
-    /* check to see if player 2 is automatic or not */
-    if ( configuration.right_human )
-      controlsArray->isHuman(1);
-    else
-      controlsArray->isArtificial(1);
-
-    if ( configuration.left_human )
-      controlsArray->isHuman(0);
-    else
-      controlsArray->isArtificial(0);
+    for ( int i = 0, j = 0; i < configuration.right_nplayers; j++ ) {
+      if ( configuration.right_players[j] == PLAYER_NONE ) {
+	continue;
+      }
+      string name = "Pluto-" + j;
+      Player *automR = tr->addPlayer(name.c_str(), PL_TYPE_MALE_RIGHT);
+      agentR[j] = new Agent(b, automR, controlsArray);
+      if ( configuration.right_players[j] == PLAYER_HUMAN )
+	controlsArray->isHuman(j*2 + 1);
+      else
+	controlsArray->isArtificial(j*2 + 1);
+      i++;
+    }
 
     tl->setScore(0);
     tr->setScore(0);
@@ -70,12 +83,19 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   if ( is->getKeyState()[SDLK_ESCAPE] )
     return(NO_TRANSITION + 1); // everything but NO_TRANSITION
   
-
-  /* update agents */
-  if ( !configuration.right_human )
-    agentR->update();
-  if ( !configuration.left_human )
-    agentL->update();
+  /* update AI agents */
+  for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
+    if ( configuration.left_players[j] == PLAYER_COMPUTER )
+      agentL[i]->update();
+    if ( configuration.left_players[j] != PLAYER_NONE )
+      i++;
+  }
+  for ( int i = 0, j = 0; i < configuration.right_nplayers; j++ ) {
+    if ( configuration.right_players[j] == PLAYER_COMPUTER )
+      agentR[j]->update();
+    if ( configuration.right_players[j] != PLAYER_NONE )
+      i++;
+  }
 
   tl->update(ticks - prevTicks, controlsArray);
   tr->update(ticks - prevTicks, controlsArray);

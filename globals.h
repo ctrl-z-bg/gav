@@ -30,8 +30,6 @@
 class MenuRoot;
 class ControlsArray;
 
-#define MAX_PLAYERS 12
-
 extern SDL_Surface *screen;
 extern SDL_Surface *background;
 

@@ -22,12 +22,16 @@
 
 /* Configuration options */
 
+#define MAX_PLAYERS 12
+
+enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
+
 class Configuration {
 public:
   int left_nplayers;
   int right_nplayers;
-  int left_human;
-  int right_human;
+  int left_players[MAX_PLAYERS/2];
+  int right_players[MAX_PLAYERS/2];  
 
   /* To add: something meaningful to record the controls... */
 
@@ -35,7 +39,13 @@ public:
   int winning_score;
 
   Configuration() : left_nplayers(1), right_nplayers(1),
-		    left_human(1), right_human(0),
-		    sound(0), winning_score(15) {}
+		    sound(0), winning_score(15) {
+    left_players[0] = PLAYER_HUMAN;
+    right_players[0] = PLAYER_COMPUTER;
+    for ( int i = 1; i < MAX_PLAYERS/2; i++ ) {
+      left_players[i] = PLAYER_NONE;
+      right_players[i] = PLAYER_NONE;
+    }
+  }
 };
 
