@@ -186,18 +186,6 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   _x += dx;
   _y -= dy; // usual problem with y
     
-  //ball hits floor
-  if ( _y > (SCREEN_HEIGHT() - _frames->height()-2) ) {
-    _y = (SCREEN_HEIGHT() - _frames->height()-2);
-    _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
-    if ( !_scorerSide ) {
-      // oldx, so we're safe from collisions against
-      // the net
-      _scorerSide = (oldx < (SCREEN_WIDTH() / 2))?1:-1;
-      _scoredTime = 0;
-    }
-  }
-
   //ball hits upper wall
   if ( _y < 24 ) {
     _y = 24;
@@ -240,6 +228,18 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
       _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
     else
       _x =  2* NET_X - 2*_frames->width() - _x;
+  }
+
+  //ball hits floor
+  if ( _y > (SCREEN_HEIGHT() - _frames->height()-2) ) {
+    _y = (SCREEN_HEIGHT() - _frames->height()-2);
+    _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
+    if ( !_scorerSide ) {
+      // oldx, so we're safe from collisions against
+      // the net
+      _scorerSide = (oldx < (SCREEN_WIDTH() / 2))?1:-1;
+      _scoredTime = 0;
+    }
   }
 
   // collisions with the players
