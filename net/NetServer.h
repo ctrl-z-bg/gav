@@ -24,6 +24,7 @@
 #define __NETSERVER_H__
 
 #include "Net.h"
+#include <string.h>
 
 class NetServer: public Net {
   std::vector<IPaddress*> clientIP;
@@ -32,6 +33,7 @@ class NetServer: public Net {
 
 public:
   NetServer() {
+    memset(_players, 0, MAX_PLAYERS * sizeof(int));
   }
 
   ~NetServer() {

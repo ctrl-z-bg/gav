@@ -50,8 +50,7 @@ int NetServer::WaitClients(int nclients) {
   char * id;
   int i;
   bool inserted = false;
-
-  memset(_players, 0, MAX_PLAYERS * sizeof(int));
+  char pl;
 
   _nclients = nclients;
 
@@ -65,20 +64,24 @@ int NetServer::WaitClients(int nclients) {
       if (*id & NET_TEAM_LEFT) {
 	for (i = 0; (i < configuration.left_nplayers) && !inserted; i++)
 	  if ((configuration.left_players[i] == PLAYER_COMPUTER) &&
-	      !_players[2*i])
+	      !_players[2*i]) {
 	    inserted = true;
+	    pl = (char)i;
+	  }
 	if (inserted) {
-	  *id |= nleft;
+	  *id |= pl;
 	  nleft++;
 	} else
 	  continue;
       } else if (*id & NET_TEAM_RIGHT) {
 	for (i = 0; (i < configuration.right_nplayers) && !inserted; i++)
 	  if ((configuration.right_players[i] == PLAYER_COMPUTER) &&
-	      !_players[2*i+1])
+	      !_players[2*i+1]) {
 	    inserted = true;
+	    pl = (char)i;
+	  }
 	if (inserted) {
-	  *id |= nright;
+	  *id |= pl;
 	  nright++;
 	} else
 	  continue;
