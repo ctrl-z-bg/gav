@@ -1,0 +1,25 @@
+Version 0.7.1 added:
+- lots of bugs fixed (collisions, etc.)
+- AI improved in multiplayer mode
+
+Version 0.7.0 added:
+
+- Networking game, in client/server mode
+- modified collisions
+- several themes provided by friendly users
+- selectable "larger" background
+- adjustable frame rate and frame skip values
+- configurable end score
+- vintage monitor effect (works ok only with the default theme)
+
+Version 0.6.0 added:
+
+- Theme support via the 'Extra' menu entry
+  Only a silly modification of the classic theme is
+  available so far, if you are interested in developing
+  more, please do, and let us know!
+- Keys redefinition works
+- You can now activate menu items using the enter key (wow!)
+- You can play more than one-a-side. Cooperative games are supported.
+- Fullscreen can now be triggered via a menu entry
+
