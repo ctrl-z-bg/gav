@@ -157,7 +157,7 @@ Ball::netPartialCollision(int x, int y)
   ymax = MAX(y, _oldy);
 
   if ((xmin < NET_X) && (xmax > NET_X)) {
-    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin);
+    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin) + ymin;
     if ( (collisionY < NET_Y ) && (collisionY > NET_Y - _frames->height()/2) )
       return true;
   }
@@ -179,7 +179,7 @@ Ball::netFullCollision(int x, int y)
   ymax = MAX(y, _oldy);
 
   if ((xmin < NET_X) && (xmax > NET_X)) {
-    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin);
+    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin) + ymin;
     if ( collisionY > NET_Y )
       return true;
   }
@@ -193,6 +193,9 @@ Ball::netFullCollision(int x, int y)
 void Ball::update(int passed, Team *tleft, Team *tright) {
   int dx, dy;
   static int overallPassed = 0;
+    
+  _oldx = _x;
+  _oldy = _y;
     
   overallPassed += passed;
   if ( (overallPassed > FRAME_RATE) ) {
@@ -213,10 +216,6 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 
   dx = (int) (_spdx * ((float) passed / 1000.0));
   dy = (int) (_spdy * ((float) passed / 1000.0));
-
-  _oldx = _x;
-  _oldy = _y;
-    
 
   _x += dx;
   _y -= dy; // usual problem with y
