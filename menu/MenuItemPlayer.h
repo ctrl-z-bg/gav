@@ -56,7 +56,7 @@ public:
       postfix = std::string("None");
       break;
     case PLAYER_COMPUTER:
-      postfix = std::string("Computer");
+      postfix = std::string("Computer / Net");
       break;
     case PLAYER_HUMAN:
       postfix = std::string("Keyboard");
