@@ -35,7 +35,13 @@ class MenuItemBallSpeed: public MenuItem {
 
 public:
   MenuItemBallSpeed() {
-    _currItem = 0;
+    if (configuration.ballAmplify == DEFAULT_BALL_AMPLIFY)
+      _currItem = 0;
+    else if ( configuration.ballAmplify ==
+	      DEFAULT_BALL_AMPLIFY + BALL_SPEED_INC )
+      _currItem = 1;
+    else
+      _currItem = 2;
     _item[0] = "Normal";
     _item[1] = "Fast";
     _item[2] = "Too Fast!";
@@ -49,7 +55,8 @@ public:
 
   int execute(std::stack<Menu *> &s) {
     _currItem = (_currItem + 1) % BALL_SPEED_ITEMS;
-    configuration.ballAmplify = DEFAULT_BALL_AMPLIFY + 3 * _currItem;
+    configuration.ballAmplify =
+      DEFAULT_BALL_AMPLIFY + BALL_SPEED_INC * _currItem;
     setLabel();
     return(0);
   }

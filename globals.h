@@ -26,7 +26,6 @@
 #include <SDL.h>
 #include "ScreenFont.h"
 #include "Configuration.h"
-#include "aarg.h"
 
 #define FPS (50)
 

@@ -104,31 +104,34 @@ bool Theme::_checkTheme() {
 
 void Theme::loadConf()
 {
-  aargh.loadConf(_confFile.c_str());
+  Aargh myAargh; /* I want a new one, 'cause the global one is used by
+		    configuration */
+
+  myAargh.loadConf(_confFile.c_str());
   /* now set things up in configuration */
   string value;
-  if ( aargh.getArg("NPlayerFrames", value) )
+  if ( myAargh.getArg("NPlayerFrames", value) )
     configuration.playerFrameConf.nPlayerFrames = atoi(value.c_str());
-  if ( aargh.getArg("PlayerStillB", value) )
+  if ( myAargh.getArg("PlayerStillB", value) )
     configuration.playerFrameConf.playerStillB = atoi(value.c_str());
-  if ( aargh.getArg("PlayerStillE", value) )
+  if ( myAargh.getArg("PlayerStillE", value) )
     configuration.playerFrameConf.playerStillE = atoi(value.c_str());
-  if ( aargh.getArg("PlayerStillP", value) )
+  if ( myAargh.getArg("PlayerStillP", value) )
     configuration.playerFrameConf.playerStillP = atoi(value.c_str());
-  if ( aargh.getArg("PlayerRunB", value) )
+  if ( myAargh.getArg("PlayerRunB", value) )
     configuration.playerFrameConf.playerRunB = atoi(value.c_str());
-  if ( aargh.getArg("PlayerRunE", value) )
+  if ( myAargh.getArg("PlayerRunE", value) )
     configuration.playerFrameConf.playerRunE = atoi(value.c_str());
-  if ( aargh.getArg("PlayerRunP", value) )
+  if ( myAargh.getArg("PlayerRunP", value) )
     configuration.playerFrameConf.playerRunP = atoi(value.c_str());
-  if ( aargh.getArg("PlayerJumpB", value) )
+  if ( myAargh.getArg("PlayerJumpB", value) )
     configuration.playerFrameConf.playerJmpB = atoi(value.c_str());
-  if ( aargh.getArg("PlayerJumpE", value) )
+  if ( myAargh.getArg("PlayerJumpE", value) )
     configuration.playerFrameConf.playerJmpE = atoi(value.c_str());
-  if ( aargh.getArg("PlayerJumpP", value) )
+  if ( myAargh.getArg("PlayerJumpP", value) )
     configuration.playerFrameConf.playerJmpP = atoi(value.c_str());
-  if ( aargh.getArg("NBallFrames", value) )
+  if ( myAargh.getArg("NBallFrames", value) )
     configuration.ballFrameConf.nBallFrames = atoi(value.c_str());
-  if ( aargh.getArg("BallPeriod", value) )
+  if ( myAargh.getArg("BallPeriod", value) )
     configuration.ballFrameConf.ballPeriod = atoi(value.c_str());
 }

@@ -30,20 +30,28 @@
 class MenuItemFullScreen: public MenuItem {
 public:
   MenuItemFullScreen() {
-    label = std::string("Fullscreen: No");
+    label = std::string("Fullscreen: ");
+    label += (configuration.fullscreen?"Yes":"No");
+  }
+
+  void apply() {
+    if ( configuration.fullscreen )
+      screenFlags |= SDL_FULLSCREEN;
+    else
+      screenFlags = (screenFlags & ~SDL_FULLSCREEN);
   }
 
   int execute(std::stack<Menu *> &s) {
     SDL_FreeSurface(screen);
-    int wasFull = (screenFlags & SDL_FULLSCREEN);
-    label = std::string(wasFull?"Fullscreen: No":"FullScreen: Yes");
-    screenFlags =
-      wasFull?(screenFlags & ~SDL_FULLSCREEN):(screenFlags|SDL_FULLSCREEN);
+    configuration.fullscreen = !configuration.fullscreen;
+    label = configuration.fullscreen?"Fullscreen: Yes":"FullScreen: No";
+    apply();
     screen = SDL_SetVideoMode(SCREEN_WIDTH(),
 			      //	SCREEN_HEIGHT(), BPP, screenFlags);
 			      SCREEN_HEIGHT(),
 			      videoinfo->vfmt->BitsPerPixel, 
 			      screenFlags);
+    
     return(0);
   }
 };

@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <map>
 #include <string>
+#include <sstream>
 
 class Aargh
 {
@@ -131,6 +132,26 @@ public:
       value = std::string(def);
     
     return false;
+  }
+
+  bool setArg (std::string name, std::string value)
+  {
+    bool ret = (argmap.find (name) != argmap.end ());
+    // std::cerr << "Setting " << name << " to: " << value << std::endl;
+    argmap[name] = value;
+    return(ret);
+  }
+
+  bool setArg (std::string name, int intvalue)
+  {
+    std::ostringstream value;
+
+    value << intvalue;
+
+    bool ret = (argmap.find (value.str()) != argmap.end ());
+    // std::cerr << "Setting " << name << " to: " << value.str() << std::endl;
+    argmap[name] = value.str();
+    return(ret);
   }
 
   void dump (std::string & out)

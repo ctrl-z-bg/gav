@@ -34,10 +34,8 @@ public:
   }
   
   void setLabel() {
-    char fs[10];
-    sprintf(fs, "%d", configuration.winning_score);
-
-    label = std::string("Winning Score: ") + std::string(fs);
+    label = "Winning Score: " +
+      configuration.toString(configuration.winning_score);
   }
 
   int execute(std::stack<Menu *> &s) {

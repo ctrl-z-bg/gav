@@ -22,14 +22,26 @@
 
 /* Configuration options */
 
+#include <string>
+#include <sstream>
+#include "aarg.h"
+
 #ifndef __CONFIGURATION_H__
 #define __CONFIGURATION_H__
 
 #define MAX_PLAYERS (12)
-#define FPS (50)
-#define WINNING_SCORE (15)
+#define DEFAULT_FPS (50)
+#define DEFAULT_WINNING_SCORE (15)
 
 #define DEFAULT_BALL_AMPLIFY 5
+
+#define DEFAULT_FRAME_SKIP 0
+
+#define DEFAULT_THEME "classic"
+
+#define DEFAULT_FULLSCREEN false
+
+#define DEFAULT_SOUND true
 
 #define DEFAULT_NPLAYERFRAMES 4
 #define DEFAULT_PLAYERSTILLB  1
@@ -44,6 +56,11 @@
 
 #define DEFAULT_NBALLFRAMES   4
 #define DEFAULT_BALLPERIOD    1000
+
+#define BALL_SPEED_INC        3
+
+#define CONF_FILENAME ".gav"
+//#define CONF_FILENAME "gav.ini"
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
@@ -74,11 +91,11 @@ public:
   int right_players[MAX_PLAYERS/2];
   PlayerFrameConf_t playerFrameConf;
   BallFrameConf_t ballFrameConf;
-
-
+  std::string currentTheme;
+  
   /* To add: something meaningful to record the controls... */
 
-  int sound;
+  bool sound;
   int winning_score;
 
   int monitor_type;
@@ -87,13 +104,15 @@ public:
   unsigned int fps;            // fps of the update (not graphical)
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
   bool bgBig;                  // if the background is big
+  bool fullscreen;
   unsigned int ballAmplify;
 
   Configuration() : left_nplayers(1), right_nplayers(1),
-		    sound(1), winning_score(WINNING_SCORE) {
+		    sound(DEFAULT_SOUND),
+		    winning_score(DEFAULT_WINNING_SCORE) {
     monitor_type = MONITOR_NORMAL;
-    frame_skip = 0;
-    fps = FPS;
+    frame_skip = DEFAULT_FRAME_SKIP;
+    fps = DEFAULT_FPS;
     mill_per_frame = 1000 / fps;
     left_players[0] = PLAYER_HUMAN;
     right_players[0] = PLAYER_COMPUTER;
@@ -102,8 +121,10 @@ public:
       right_players[i] = PLAYER_NONE;
     }
     bgBig = false;
+    fullscreen = DEFAULT_FULLSCREEN;
     ballAmplify = DEFAULT_BALL_AMPLIFY;
     setDefaultFrameConf();
+    currentTheme = "classic";
   }
 
   inline void setDefaultFrameConf() {
@@ -126,6 +147,18 @@ public:
     fps = val;
     mill_per_frame = 1000 / val;
   }
+
+  std::string toString(int v) {
+    std::ostringstream os;
+    
+    os << v;
+    
+    return os.str();
+  }
+
+  int loadConfiguration(const char *fname);
+  int saveConfiguration(const char *fname);
+  int createConfigurationFile(const char *fname);
 };
 
 #endif

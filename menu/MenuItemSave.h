@@ -20,53 +20,30 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef __MENUITEMMONITOR_H__
-#define __MENUITEMMONITOR_H__
+#ifndef __MENUITEMSAVE_H__
+#define __MENUITEMSAVE_H__
 
 #include <SDL.h>
+#include <iostream>
 #include "MenuItem.h"
 #include "globals.h"
 
-class MenuItemMonitor: public MenuItem {
+class MenuItemSave: public MenuItem {
 public:
-  MenuItemMonitor() {
-    setLabel();
-  }
-  
-  void setLabel() {
-    std::string monitor;
-
-    switch ( configuration.monitor_type ) {
-    case MONITOR_NORMAL:
-      monitor = "Normal";
-      break;
-    case MONITOR_OLD:
-      monitor = "Old";
-      break;
-    case MONITOR_VERYOLD:
-      monitor = "Very old";
-      break;
-    case MONITOR_VERYVERYOLD:
-      monitor = "Very, very old";
-      break;
-    }
-
-    label = std::string("Monitor Type: ") + monitor;
+  MenuItemSave() {
+    label = std::string("Save Preferences");
   }
 
-  void apply() {
-    if ( !configuration.monitor_type )
-      SDL_SetAlpha(background, 0, 0);
-    else
-      SDL_SetAlpha(background, SDL_SRCALPHA | SDL_RLEACCEL,
-		   128 - (configuration.monitor_type * 30));
-  }
-  
   int execute(std::stack<Menu *> &s) {
-    configuration.monitor_type =
-      (configuration.monitor_type + 1)%4;
-
-    setLabel();
+    std::string msg = "Configuration saved.";
+    if ( configuration.createConfigurationFile("/tmp/gav.conf") == -1 )
+      msg = "Could not save configuration";
+    SDL_Rect r;
+    r.x = (screen->w / 2) - msg.length()*(cga->charWidth())/2;
+    r.y = screen->h * 2/3;
+    cga->printXY(screen, &r, msg.c_str());
+    SDL_Flip(screen);
+    SDL_Delay(1000);
     return(0);
   }
 };

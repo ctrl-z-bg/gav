@@ -49,6 +49,7 @@
 #include "MenuItemMonitor.h"
 #include "MenuItemBigBackground.h"
 #include "MenuItemBallSpeed.h"
+#include "MenuItemSave.h"
 #ifndef NONET
 #include "MenuItemClient.h"
 #include "MenuItemServer.h"
@@ -122,6 +123,12 @@ void ClearPlayingSounds(void)
 }
 #endif
 
+/* applies the changes loaded with the configuration when needed */
+void applyConfiguration() {
+  MenuItemFullScreen().apply();
+  CurrentTheme = new Theme(configuration.currentTheme);
+}
+
 void
 init()
 {
@@ -160,7 +167,11 @@ init()
 
   setThemeDir(TH_DIR);
   videoinfo = SDL_GetVideoInfo();
-  CurrentTheme = new Theme(TH_DEFAULT);
+  if ( configuration.loadConfiguration("/tmp/gav.conf") == -1 ) {
+    cerr << "Configuration file not found: creating.\n";
+    configuration.createConfigurationFile("/tmp/gav.conf");
+  }
+  applyConfiguration();
 }
 
 #ifdef AUDIO
@@ -222,6 +233,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemBallSpeed());
   menuExtra->add(new MenuItemBigBackground());
   menuExtra->add(new MenuItemFullScreen());
+  menuExtra->add(new MenuItemSave());
   menuExtra->add(mib);
 
   m.add(&miplay);

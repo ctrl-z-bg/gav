@@ -37,8 +37,10 @@
 
 #include "SoundMgr.h"
 #include "globals.h"
+#include "Menu.h"
+#include "MenuItem.h"
+#include "MenuItemMonitor.h"
 
-#define TH_DEFAULT "classic"
 #define TH_DIR "themes"
 
 #define TH_NET          "net.png"
@@ -90,6 +92,7 @@ private:
       } else
 	closedir(dir);
 
+      configuration.currentTheme = name;
       TD = ThemeDir + "/" + name +  "/";
 
 #else
@@ -149,6 +152,8 @@ private:
       
       cga = new ScreenFont(font(), FONT_FIRST_CHAR, FONT_NUMBER);
       cgaInv = new ScreenFont(fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
+      
+      MenuItemMonitor().apply();
 
 #ifdef AUDIO
       if ( soundMgr )

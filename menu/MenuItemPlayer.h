@@ -20,8 +20,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef __MENUITEMVAR_H__
-#define __MENUITEMVAR_H__
+#ifndef __MENUITEMPLAYER_H__
+#define __MENUITEMPLAYER_H__
 
 #include <stdio.h>
 #include <SDL.h>
