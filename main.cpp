@@ -38,6 +38,7 @@
 #include "MenuItemPlayer.h"
 #include "MenuItemSound.h"
 #include "MenuItemNotImplemented.h"
+#include "MenuItemNotCompiled.h"
 #include "MenuKeys.h"
 #include "MenuItemBack.h"
 #include "MenuItemTheme.h"
@@ -219,7 +220,11 @@ int main(int argc, char *argv[]) {
   m.add(&miplay);
   m.add(new MenuItemPlayer(TEAM_LEFT, 0));
   m.add(new MenuItemPlayer(TEAM_RIGHT, 0));
+#ifdef AUDIO
   m.add(new MenuItemSound());
+#else // AUDIO
+  m.add(new MenuItemNotCompiled(string("Sound: Off")));
+#endif // AUDIO
   m.add(new MenuItemSubMenu(new MenuKeys(0),
 			    string("Define Keys")));
   m.add(new MenuItemNotImplemented(string("Set Joystick")));

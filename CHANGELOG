@@ -1,3 +1,8 @@
+Version 0.7.3 added:
+- patch for stuck on the net problem
+- advanced themes configuration support (check the naive theme
+  for an example)
+
 Version 0.7.2 added:
 - char specified as signed (for other architectures than x86)
 - ball speed selectable
