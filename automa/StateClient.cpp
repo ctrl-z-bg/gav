@@ -27,32 +27,6 @@
 
 using namespace std;
 
-char StateClient::getKeyPressed(InputState *is) {
-  bool typed = false;
-  SDL_keysym keysym;
-  SDL_Event event;
-  while ( !typed ) {
-    is->getInput();
-    if ( (event = is->getEvent()).type != SDL_KEYDOWN )
-      continue;
-    keysym = event.key.keysym;
-    do {
-      is->getInput();
-    } while ( is->getEvent().type != SDL_KEYUP );
-    char *kn = SDL_GetKeyName(keysym.sym);
-    printf("\"%s\"\n", kn);
-    if ( strlen(kn) == 1 )
-      return(*kn);
-    else if ( !strcmp(kn, "return") )
-      return(0);
-    else if ( !strcmp(kn, "backspace") )
-      return(-1);
-    else
-      continue;
-  }
-  return(0);
-}
-
 int StateClient::setupConnection(InputState *is) {
   bool configured = false;
   string saddress = "";
@@ -99,6 +73,8 @@ int StateClient::setupConnection(InputState *is) {
       }
     }
     port = atoi(ports.c_str());
+    if ( !port )
+      port = SERVER_PORT;
     configured = true;
   }
 
@@ -162,6 +138,7 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     return(STATE_MENU);
   }  
 
+  controlsArray->setControlsState(is);
   triple_t input = controlsArray->getCommands(0);
   netc->SendCommand((input.left?CNTRL_LEFT:0)|
 		    (input.right?CNTRL_RIGHT:0)|

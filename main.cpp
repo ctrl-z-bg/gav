@@ -47,6 +47,7 @@
 #include "MenuItemMonitor.h"
 #include "MenuItemBigBackground.h"
 #include "MenuItemClient.h"
+#include "MenuItemServer.h"
 
 #include "Theme.h"
 
@@ -220,7 +221,7 @@ int main(int argc, char *argv[]) {
   closedir(dir);
   menuThemes->add(mib);
 
-  menuNetwork->add(new MenuItemClient());// MenuItemNotImplemented("Start as server"));
+  menuNetwork->add(new MenuItemServer());
   menuNetwork->add(new MenuItemClient());
   menuNetwork->add(mib);
 

@@ -25,8 +25,44 @@
 #include "Automa.h"
 #include "AutomaMainLoop.h"
 #include "NetServer.h"
+#include "StateWithInput.h"
 
 using namespace std;
+
+void StatePlaying::setupConnection(InputState *is) {
+  std::string clinumb = "";
+  int nclients = 0;
+  char ch;
+  
+  nets = new NetServer();
+  /* first, delete the screen... */
+  SDL_Rect r;
+  r.x = r.y = 0;
+  r.h = background->h;
+  r.w = background->w;
+  SDL_BlitSurface(background, &r, screen, &r);
+  SDL_Flip(screen);
+  /* now, ask for server address, port and team side */
+  cga->printRow(screen, 0, "How many clients to wait? [1]");
+  SDL_Flip(screen);
+  while ( (ch = getKeyPressed(is)) != 0 ) {
+    if ( ch < 0 ) ; // should be backspace...
+    else {
+      char w[2];
+      w[0] = ch;
+      w[1] = 0;
+      clinumb = clinumb + w;
+      cga->printRow(screen, 1, clinumb.c_str(), background);
+      SDL_Flip(screen);
+    }
+  }
+  nclients = atoi(clinumb.c_str());
+  if ( !nclients )
+    nclients = 1;
+  
+  nets->StartServer();
+  nets->WaitClients(nclients);
+}
 
 // executes one step of the game's main loop
 // Returns NO_TRANSITION if the game continues, the next state otherwise
@@ -34,6 +70,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
   if ( firstTime ) {
+    if ( nets ) {
+      setupConnection(is);
+    }
+    
     /* 
        First time we change to execute state: we should
        probably create players here instead of in the constructor,

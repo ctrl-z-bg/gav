@@ -20,31 +20,42 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _STATEPLAYING_H_
-#define _STATEPLAYING_H_
+#ifndef __STATENET_H__
+#define __STATENET_H__
 
-#include "State.h"
-#include "InputState.h"
-#include "Team.h"
-#include "Ball.h"
-#include "AI.h"
-#include "StateWithInput.h"
+#include <SDL.h>
+#include "AutomaMainLoop.h"
+#include <string.h>
 
-class StatePlaying : public State, public StateWithInput {
-private:
-  Team *tl, *tr; // team left and team right
-  Ball *b;
-  Agent *agentR[MAX_PLAYERS/2], *agentL[MAX_PLAYERS/2];
-  unsigned int prevDrawn;
-
-public:
-  StatePlaying() : prevDrawn(0) {}
-
-  virtual int execute(InputState *is, unsigned int ticks,
-		      unsigned int prevTicks, int firstTime);
-
-private:
-  void StatePlaying::setupConnection(InputState *is);
+class StateWithInput {
+ public:
+  StateWithInput() {}
+  
+  char getKeyPressed(InputState *is) {
+    bool typed = false;
+    SDL_keysym keysym;
+    SDL_Event event;
+    while ( !typed ) {
+      is->getInput();
+      if ( (event = is->getEvent()).type != SDL_KEYDOWN )
+	continue;
+      keysym = event.key.keysym;
+      do {
+	is->getInput();
+      } while ( is->getEvent().type != SDL_KEYUP );
+      char *kn = SDL_GetKeyName(keysym.sym);
+      printf("\"%s\"\n", kn);
+      if ( strlen(kn) == 1 )
+	return(*kn);
+      else if ( !strcmp(kn, "return") )
+	return(0);
+      else if ( !strcmp(kn, "backspace") )
+	return(-1);
+      else
+	continue;
+    }
+    return(0);
+  }
 };
 
-#endif // _STATEPLAYING_H_
+#endif

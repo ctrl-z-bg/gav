@@ -24,6 +24,7 @@
 
 #include <string>
 #include <stack>
+#include "InputState.h"
 
 class Menu;
 

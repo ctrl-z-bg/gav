@@ -24,12 +24,13 @@
 #define _STATECLIENT_H_
 
 #include "State.h"
+#include "StateWithInput.h"
 #include "InputState.h"
 #include "Team.h"
 #include "Ball.h"
 #include "AI.h"
 
-class StateClient : public State {
+class StateClient : public State, public StateWithInput {
 private:
   Team *tl, *tr; // team left and team right
   Ball *b;
@@ -44,7 +45,6 @@ public:
 		      unsigned int prevTicks, int firstTime);
   
 private:
-  char getKeyPressed(InputState *is);
   int setupConnection(InputState *is);
 };
 
