@@ -24,23 +24,23 @@
 
 #ifdef AUDIO
 
-int Sound::loadAndConvertSound(char *filename, SDL_AudioSpec *spec,sound_p sound)
+int Sound::loadAndConvertSound(const char *filename, SDL_AudioSpec *spec,sound_p sound)
 {
   SDL_AudioCVT cvt;
   SDL_AudioSpec loaded;
   Uint8 *new_buf;
   
-  printf("loading sound: %s\n", filename);
+  // printf("loading sound: %s\n", filename);
 
   if(SDL_LoadWAV(filename, &loaded,&sound->samples, &sound->length)==NULL) {
-    printf("Cannot load the wav file\n");
+    printf("Cannot load the wav file %s\n", filename);
     return 1;
   }
 
   if (SDL_BuildAudioCVT(&cvt, loaded.format, loaded.channels,loaded.freq,spec->format,
 			spec->channels,spec->freq)<0)
     {
-      printf("Cannot convert the sound file\n");
+      printf("Cannot convert the sound file %s\n", filename);
     }
 
   cvt.len =sound->length;
@@ -51,7 +51,7 @@ int Sound::loadAndConvertSound(char *filename, SDL_AudioSpec *spec,sound_p sound
   cvt.buf = new_buf;
 
   if(SDL_ConvertAudio(&cvt)<0) {
-    printf("Audio conversion failed\n");
+    printf("Audio conversion failed for file %s\n", filename);
     free(new_buf);
     SDL_FreeWAV(sound->samples);
     return 1;

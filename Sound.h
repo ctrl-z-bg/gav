@@ -30,10 +30,14 @@ class Sound {
  private:
  
   sound_t  this_sound;
-  int loadAndConvertSound(char *filename, SDL_AudioSpec *spec,sound_p sound);
+  int loadAndConvertSound(const char *filename, SDL_AudioSpec *spec,sound_p sound);
  public:
-  Sound(char *filename) {
+  Sound(const char *filename) {
     loadAndConvertSound(filename,&obtained,&this_sound);
+  }
+  Sound() {};
+  int loadSound(const char *fname) {
+    return loadAndConvertSound(fname,&obtained,&this_sound);
   }
   int playSound();
 

@@ -19,6 +19,10 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "SoundMgr.h"
 
 #ifdef AUDIO
@@ -42,6 +46,11 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
   memset(sounds, 0, sizeof(Sound *) * MAX_SOUNDS);
 
   const char *actualdir = dir?dir:defdir;
+  struct stat sbuf;
+
+  if ( dir && stat(dir, &sbuf) )
+    actualdir = defdir;
+
   char fname[100];
 
   int sndidx = 0;
@@ -51,7 +60,11 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
     FILE *fp = fopen(fname, "r");
     if ( !fp ) continue;
     fclose(fp);
-    sounds[sndidx] = new Sound(fname);
+    sounds[sndidx] = new Sound();
+    if ( sounds[sndidx]->loadSound(fname) ) {
+      delete(sounds[sndidx]);
+      sounds[sndidx] = NULL;
+    }
   }
   nsounds = sndidx;
 }

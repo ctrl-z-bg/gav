@@ -154,7 +154,7 @@ private:
       if ( soundMgr )
 	delete(soundMgr);
       soundMgr = new SoundMgr((TD+"sounds").c_str(),
-			      (ThemeDir+"/sounds").c_str());
+			      (ThemeDir+"/../sounds").c_str());
 #endif // AUDIO
     }
   
