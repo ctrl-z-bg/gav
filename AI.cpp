@@ -64,7 +64,7 @@ void Agent::update() {
   if (nplrs > 1) {
       std::vector<Player *> plv = (_p->team())->players();
       /* Look for my id */
-      std::vector<Player *>::const_iterator it; 
+      std::vector<Player *>::iterator it; 
       int myidx = _p->orderInField(), i;
 
       if (_p->orderInField() < 0) {
