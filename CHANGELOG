@@ -1,3 +1,7 @@
+Version 0.7.2 added:
+- char specified as signed (for other architectures than x86)
+- ball speed selectable
+
 Version 0.7.1 added:
 - lots of bugs fixed (collisions, etc.)
 - AI improved in multiplayer mode
