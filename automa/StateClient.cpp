@@ -144,23 +144,21 @@ int StateClient::execute(InputState *is, unsigned int ticks,
 		    (input.right?CNTRL_RIGHT:0)|
 		    (input.jump?CNTRL_JUMP:0));
 
-  if ( netc->ReceiveSnapshot(tl, tr, b) != -1 ) {
-
-    if ( (ticks - prevDrawn) >
-	 (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
-      SDL_Rect r;
-      r.x = r.y = 0;
-      r.h = background->h;
-      r.w = background->w;
-      SDL_BlitSurface(background, &r, screen, &r);
-      
-      tl->draw();
-      tr->draw();
-      b->draw();
-      SDL_Flip(screen);
-      prevDrawn = ticks;
-    }
-  }  
+  while ( netc->ReceiveSnapshot(tl, tr, b) != -1 );
+  if ( (ticks - prevDrawn) >
+       (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
+    SDL_Rect r;
+    r.x = r.y = 0;
+    r.h = background->h;
+    r.w = background->w;
+    SDL_BlitSurface(background, &r, screen, &r);
+    
+    tl->draw();
+    tr->draw();
+    b->draw();
+    SDL_Flip(screen);
+    prevDrawn = ticks;
+  }
 
   if ( ((tl->getScore() >= configuration.winning_score) &&
 	(tl->getScore() > (tr->getScore()+1))) ||
