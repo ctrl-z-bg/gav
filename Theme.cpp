@@ -42,6 +42,8 @@ void errorOn(string file) {
 
 bool Theme::_checkTheme() {
     bool r;
+
+    _hasConfFile = true;
 #ifndef WIN32
     cerr << "Verifying Theme `" << _name << "' [" << ThemeDir << "/" << _name << "/]:\n";
     if ( access(_CCS(_background), R_OK) ) {
@@ -90,8 +92,12 @@ bool Theme::_checkTheme() {
 
     cerr << "OK!\n";
 
-    if ( _hasConfFile )
+    if ( _hasConfFile ) {
+      cerr << "Using configuration file theme.conf\n";
       loadConf();
+    } else {
+      cerr << "No theme.conf\n";
+    }
 
     return(r);
 }
