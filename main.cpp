@@ -80,6 +80,8 @@ void AudioCallBack(void *user_data,Uint8 *audio,int length)
 
   //memset(audio,0 , length);
 
+  if (!configuration.sound) return;
+
   for(i=0; i <MAX_PLAYING_SOUNDS;i++)
     {
       if(playing[i].active) {
