@@ -2,7 +2,7 @@
 
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav-themes
-Version: 0.7.1
+Version: 0.7.3
 Release: 1
 URL: gav.sourceforge.net
 Source0: %{name}-%{version}.tar.gz
@@ -30,6 +30,7 @@ cp -r themes/fabeach $RPM_BUILD_ROOT/usr/share/games/gav/themes
 cp -r themes/unnamed $RPM_BUILD_ROOT/usr/share/games/gav/themes
 cp -r themes/yisus $RPM_BUILD_ROOT/usr/share/games/gav/themes
 cp -r themes/yisus2 $RPM_BUILD_ROOT/usr/share/games/gav/themes
+cp -r themes/naive $RPM_BUILD_ROOT/usr/share/games/gav/themes
 
 %clean
 
@@ -85,6 +86,17 @@ cp -r themes/yisus2 $RPM_BUILD_ROOT/usr/share/games/gav/themes
 /usr/share/games/gav/themes/yisus2/plfr.png
 /usr/share/games/gav/themes/yisus2/plml.png
 /usr/share/games/gav/themes/yisus2/plmr.png
+/usr/share/games/gav/themes/naive
+/usr/share/games/gav/themes/naive/Font.png
+/usr/share/games/gav/themes/naive/FontInv.png
+/usr/share/games/gav/themes/naive/background.png
+/usr/share/games/gav/themes/naive/background_big.png
+/usr/share/games/gav/themes/naive/ball.png
+/usr/share/games/gav/themes/naive/plfl.png
+/usr/share/games/gav/themes/naive/plfr.png
+/usr/share/games/gav/themes/naive/plml.png
+/usr/share/games/gav/themes/naive/plmr.png
+/usr/share/games/gav/themes/naive/theme.conf
 
 %changelog
 * Tue Feb 24 2002 Alessandro Tommasi <tommasi@di.unipi.it>
