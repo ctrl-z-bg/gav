@@ -157,6 +157,7 @@ int main(int argc, char *argv[]) {
   
 #ifdef AUDIO
   Prova = new Sound("rocket.wav");
+  Prova->playSound();
 #endif
 
    /* initialize menus */

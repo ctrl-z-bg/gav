@@ -51,6 +51,8 @@ class NetServer;
 extern NetServer * nets;
 extern NetClient * netc;
 
+//#define AUDIO
+
 #ifdef AUDIO
 extern SDL_AudioSpec desired,obtained;
 
