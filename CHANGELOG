@@ -5,6 +5,7 @@ Version 0.8.0 changes:
 - sound support added (sounds can be found in theme packages)
 - Players classes hierarchy re-designed
 - AI Player improved
+- added default service change and scoring sounds.
 
 Version 0.7.3 added:
 - patch for stuck on the net problem

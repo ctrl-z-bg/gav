@@ -35,6 +35,17 @@ might cause problem if you start GAV from a directory that contains
 a 'themes' subdirectory, but no classic theme, which is the
 default.
 
+Sounds:
+Sounds are looked for in the current theme's directory. If no sound is
+found there, they are looked for in the "default sound" directory,
+which is the directory "sounds" at the same level as the "themes"
+directory. Provided with the game by default (as long as theme
+creators do not come with appropriate sounds for their themes) are the
+default sounds (two 'whistles' at different pitch indicating the
+service change and the scoring of a point). Theme creators interesting in
+setting up sounds, can find the sound filenames, associated with the various
+events, in the array "sound_fnames", found in SoundMgr.cpp.
+
 Thanks:
 - Marius Andreiana, who provided the gnome menu entry.
 - Mark Whittington, who provided patches to compile
