@@ -55,7 +55,7 @@ class StateWithInput {
 	is->getInput();
       } while ( is->getEventWaiting().type != SDL_KEYUP );
       char *kn = SDL_GetKeyName(keysym.sym);
-      printf("\"%s\"\n", kn);
+      // printf("\"%s\"\n", kn);
       if ( strlen(kn) == 1 )
 	return(*kn);
       else if ( !strcmp(kn, "return") )

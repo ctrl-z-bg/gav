@@ -55,10 +55,10 @@ int NetServer::WaitClients(int nclients) {
 
   _nclients = nclients;
 
-  while ((nright + nleft) != nclients) {
+  while ( !inserted ) { // (nright + nleft) != nclients) {
     inserted = false;
     if (SDLNet_UDP_Recv(mySock, packetRegister) != 0) {
-      printf("ricevuto\n");
+      // printf("ricevuto\n");
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
       memcpy(ipa, &(packetRegister->address), sizeof(IPaddress));
       id = &(((net_register_t*)(packetRegister->data))->id);
@@ -92,11 +92,13 @@ int NetServer::WaitClients(int nclients) {
 	configuration.right_nplayers;
       ((net_register_t*)(packetRegister->data))->bgBig =
 	configuration.bgBig;
+      ((net_register_t*)(packetRegister->data))->winning_score =
+	configuration.winning_score;
       SDLNet_UDP_Send(mySock, -1, packetRegister);
     } else SDL_Delay(500);
   }
 
-  return 0;
+  return (nclients-1);
 }
 
 int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {

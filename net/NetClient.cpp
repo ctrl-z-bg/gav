@@ -57,7 +57,9 @@ int NetClient::ConnectToServer(int * pl, int * pr, char team,
     std::stack<Menu *> st;
     menuBG.execute(st);
   }
-  
+  configuration.winning_score =
+    ((net_register_t*)(packetRegister->data))->winning_score;
+
   *pl = (int)_nplayers_l;
   *pr = (int)_nplayers_r;
 

@@ -86,10 +86,18 @@ void StatePlaying::setupConnection(InputState *is) {
     nclients = 1;
   
   nets->StartServer(port);
-  cga->printRow(screen, 3, "Server started. Waiting for clients...",
+  cga->printRow(screen, 4, "Server started. Waiting for clients...",
 		background);
+
   SDL_Flip(screen);  
-  nets->WaitClients(nclients);
+  int remaining = nclients;
+  do {
+    remaining = nets->WaitClients(remaining);
+    char msg[100];
+    sprintf(msg, "  %d connection(s) to go  ", remaining);
+    cga->printRow(screen, 5, msg, background);
+    SDL_Flip(screen);  
+  } while ( remaining > 0 );
 }
 
 // executes one step of the game's main loop

@@ -67,6 +67,7 @@ typedef struct {
   char nplayers_l;
   char nplayers_r;
   char bgBig;    // 0 or 1
+  char winning_score;
 } net_register_t;
 
 class Net {
