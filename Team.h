@@ -116,6 +116,20 @@ class Team {
     }
   }
 
+  ~Team() {
+    Player *pl[_players.size()];
+
+    int i = 0;
+    for ( std::vector<Player *>::const_iterator it = _players.begin();
+	  it != _players.end(); it++ ) {
+      pl[i++] = (*it);
+    }
+
+    for ( int j = 0; j < i; j++ ) {
+      delete pl[j];
+    }
+  }
+
 };
 
 

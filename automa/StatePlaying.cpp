@@ -44,6 +44,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tr = new Team(1);
     b = new Ball(BALL_ORIG);
 
+    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+      agentL[i] = NULL;
+      agentR[i] = NULL;
+    }
+
     for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
       if ( configuration.left_players[j] == PLAYER_NONE ) {
 	continue;
@@ -80,9 +85,17 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   
   controlsArray->setControlsState(is);
   
-  if ( is->getKeyState()[SDLK_ESCAPE] )
+  if ( is->getKeyState()[SDLK_ESCAPE] ) {
+    delete(tl);
+    delete(tr);
+    delete(b);
+    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+      if ( agentL[i] ) delete(agentL[i]);
+      if ( agentL[i] ) delete(agentR[i]);
+    }
     return(NO_TRANSITION + 1); // everything but NO_TRANSITION
-  
+  }  
+
   /* update AI agents */
   for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
     if ( configuration.left_players[j] == PLAYER_COMPUTER )
@@ -119,8 +132,17 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   if ( ((tl->getScore() >= WINNING_SCORE) &&
 	(tl->getScore() > (tr->getScore()+1))) ||
        ((tr->getScore() >= WINNING_SCORE) &&
-	(tr->getScore() > (tl->getScore()+1))) )
+	(tr->getScore() > (tl->getScore()+1))) ) {
+    /* Deallocate teams, ball and players */
+    delete(tl);
+    delete(tr);
+    delete(b);
+    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+      if ( agentL[i] ) delete(agentL[i]);
+      if ( agentL[i] ) delete(agentR[i]);
+    }
     return(NO_TRANSITION + 1); // everything but NO_TRANSITION
+  }
 
   return(NO_TRANSITION);
 }

@@ -42,7 +42,7 @@ public:
     index = idx;
     char numb[10];
     sprintf(numb, "%d", idx*2 + tm + 1);
-    prefix = std::string("Player ") + numb + " ";
+    prefix = std::string("Player ") + numb + ": ";
     setLabel();
   }
 

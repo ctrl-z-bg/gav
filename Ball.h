@@ -129,6 +129,10 @@ class Ball {
   float distance(int, int);
 
   void draw(SDL_Surface *scr = screen);
+
+  ~Ball() {
+    delete(_frames);
+  }
 };
 
 #endif // _BALL_H_

@@ -114,6 +114,7 @@ class Player {
       free(_fileNames[PL_TYPE_MALE_RIGHT]);
       free(_fileNames[PL_TYPE_FEMALE_LEFT]);
       free(_fileNames[PL_TYPE_FEMALE_RIGHT]);
+      delete(_frames);
   }
 
   inline std::string name() {return _name;}
