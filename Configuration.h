@@ -59,8 +59,8 @@
 
 #define BALL_SPEED_INC        3
 
-#define CONF_FILENAME ".gav"
-//#define CONF_FILENAME "gav.ini"
+#define DEFAULT_CONF_FILENAME     ".gav"
+#define ALTERNATIVE_CONF_FILENAME "gav.ini"
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
@@ -156,9 +156,10 @@ public:
     return os.str();
   }
 
-  int loadConfiguration(const char *fname);
-  int saveConfiguration(const char *fname);
-  int createConfigurationFile(const char *fname);
+  int loadConfiguration();
+  int saveConfiguration(std::string fname);
+  int createConfigurationFile();
+  std::string confFileName();
 };
 
 #endif

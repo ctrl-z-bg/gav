@@ -20,6 +20,8 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
 #include <SDL.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -168,9 +170,11 @@ init()
   setThemeDir(TH_DIR);
   videoinfo = SDL_GetVideoInfo();
   controlsArray = new ControlsArray(); /* could be modified by loadConf */
-  if ( configuration.loadConfiguration("./gav.conf") == -1 ) {
-    cerr << "Configuration file not found: creating.\n";
-    configuration.createConfigurationFile("./gav.conf");
+  if ( configuration.loadConfiguration() == -1 ) {
+    cerr << "Configuration file " << configuration.confFileName() <<
+      " not found: creating.\n";
+    if ( configuration.createConfigurationFile() == -1 )
+      perror("creation failed: ");
   }
   applyConfiguration();
 }

@@ -22,6 +22,7 @@
 
 /* Configuration options */
 
+#include <stdlib.h>
 #include <string>
 #include <iostream>
 #include "Configuration.h"
@@ -33,8 +34,10 @@ Configuration configuration;
 
 Aargh aargh;
 
-int Configuration::loadConfiguration(const char *fname) {
-  if ( !aargh.loadConf(fname) )
+int Configuration::loadConfiguration() {
+  string fname = confFileName();
+  
+  if ( !aargh.loadConf(fname.c_str()) )
     return(-1);
   string value;
   if ( aargh.getArg("left_nplayers", value) )
@@ -139,13 +142,15 @@ int Configuration::loadConfiguration(const char *fname) {
 }
 
 /* we'll use aargh's dump feature! Yiipeee!! */
-int Configuration::saveConfiguration(const char *fname) {
+int Configuration::saveConfiguration(string fname) {
+  // cerr << "saving to: " << fname << endl;
+
   string tosave;
   
   aargh.dump(tosave);
   
   FILE *fp;
-  if ( (fp = fopen(fname, "w")) == NULL )
+  if ( (fp = fopen(fname.c_str(), "w")) == NULL )
     return(-1);
   
   fputs(tosave.c_str(), fp);
@@ -156,7 +161,9 @@ int Configuration::saveConfiguration(const char *fname) {
 /* unfortunately, I *HAVE* to go through all the settings...
    This function puts configuration parameters inside aargh, and then
    dumps it. */
-int Configuration::createConfigurationFile(const char *fname) {
+int Configuration::createConfigurationFile() {
+  string fname = confFileName();
+
   Configuration c = configuration; /* for short :) */
 
   aargh.setArg("left_nplayers", c.left_nplayers);
@@ -214,4 +221,17 @@ int Configuration::createConfigurationFile(const char *fname) {
   }
   
   return(saveConfiguration(fname));
+}
+
+string Configuration::confFileName() {
+  string ret;
+  const char *home = getenv("HOME");
+  
+  if ( home ) {
+    ret = (string(home) + "/" + DEFAULT_CONF_FILENAME);
+  } else { /* gav.ini in the current directory */
+    ret = string(ALTERNATIVE_CONF_FILENAME);
+  }
+
+  return ret;
 }
