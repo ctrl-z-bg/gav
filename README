@@ -24,9 +24,10 @@ items, F10 to switch to fullscreen mode while playing.
 Checkout the INSTALL file for installation instructions.
 
 Thanks:
-- Marius Andreiana, who provided the gnome menu entry
+- Marius Andreiana, who provided the gnome menu entry.
 - Mark Whittington, who provided patches to compile
   under Win32, and working on an installer.
+- Fernando "Yisus" Notari, who provided the Yisus and Yisus2 themes.
 
 Authors:
 To contact the authors, please refer to the Sourceforge project page
