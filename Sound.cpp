@@ -82,8 +82,7 @@ int Sound::playSound()
 
   SDL_LockAudio();
   playing[i].active=1;
-  playing[i].sound=&
-this_sound;
+  playing[i].sound=&this_sound;
   playing[i].position=0;
   SDL_UnlockAudio();
   return 0;

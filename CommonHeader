@@ -31,7 +31,7 @@ CXXFLAGS+= -DNONET
 endif
 
 ifdef NET
-LDFLAGS= `sdl-config --libs` -lSDL_image -lSDL_net -lm
+LDFLAGS= `sdl-config --libs` -lSDL_image -lSDL_net -lm -lSDL_mixer
 else
 LDFLAGS= `sdl-config --libs` -lSDL_image -lm
 endif

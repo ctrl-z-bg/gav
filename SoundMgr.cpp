@@ -67,6 +67,7 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
     }
   }
   nsounds = sndidx;
+
 }
 
 SoundMgr::~SoundMgr()

@@ -77,7 +77,7 @@ void AudioCallBack(void *user_data,Uint8 *audio,int length)
 {
   int i;
 
-  memset(audio,0 , length);
+  //memset(audio,0 , length);
 
   for(i=0; i <MAX_PLAYING_SOUNDS;i++)
     {
@@ -134,18 +134,16 @@ init()
 #ifdef AUDIO
   atexit(SDL_CloseAudio);
 
-  desired.freq=22050;
+  desired.freq=44100;//22050;
   desired.format = AUDIO_S16;
-  desired.samples=4096;
-  desired.channels=2;
+  desired.samples=512;//4096;
+  desired.channels=1;
   desired.callback=AudioCallBack;
   desired.userdata=NULL;
 
-  
   if(SDL_OpenAudio(&desired,&obtained)<0){
     printf("Cannot open the audio device\n");
   }
-
 
   ClearPlayingSounds();
 
