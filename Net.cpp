@@ -104,13 +104,8 @@ int Net::ReceiveSnapshot(net_game_snapshot_t * snap) {
   return -1;
 }
 
-int Net::SendCommand() {
-  net_command_t * data = (net_command_t*)(packetCmd->data);
-  int ret;
-
-  data->command = 123;
-
-  ret = SDLNet_UDP_Send(mySock, -1, packetCmd);
-  return ret?0:-1;
+int Net::SendCommand(net_command_t * cmd) {
+  memcpy(packetCmd->data, cmd, sizeof(net_command_t *));
+  return SDLNet_UDP_Send(mySock, -1, packetCmd)?0:-1;
 }
 

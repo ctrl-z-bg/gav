@@ -37,12 +37,14 @@ typedef struct {
 } net_object_snapshot_t;
 
 typedef struct {
+  unsigned int timestamp;
   net_object_snapshot_t team1[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t team2[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t ball;
 } net_game_snapshot_t;
 
 typedef struct {
+  unsigned int timestamp;
   char id;       // the client ID
   char command;
 } net_command_t;
@@ -83,7 +85,7 @@ public:
   int ConnectToServer(char * hostname, int port = 7145);
   int KillClient();
   int ReceiveSnapshot(net_game_snapshot_t * snap);
-  int SendCommand();
+  int SendCommand(net_command_t * cmd);
 };
 
 #endif
