@@ -1,3 +1,10 @@
+Version 0.8.0 changes:
+- (we hope) *FINAL* patch for stuck on the net problem
+- patch for ball passing over the net bug
+- collision mechanisms improved
+- sound support added (sounds can be found in theme packages)
+
+
 Version 0.7.3 added:
 - patch for stuck on the net problem
 - advanced themes configuration support (check the naive theme
