@@ -133,7 +133,7 @@ Ball::distance(int x, int y)
 {
   int bx = _x + _frames->width()/2; // center of the ball
   int by = _y + _frames->height()/2;
-  return(sqrt((x - bx)*(x - bx) + (y - by) * (y - by))); 
+  return(sqrt((double) (x - bx)*(x - bx) + (y - by) * (y - by))); 
 }
 
 bool
