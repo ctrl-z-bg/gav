@@ -39,3 +39,5 @@ Configuration configuration;
 
 NetServer * nets = NULL;
 NetClient * netc = NULL;
+
+Aargh aargh;

@@ -58,6 +58,7 @@ bool Theme::_checkTheme() {
     if ( access(_CCS(_leftfemale), R_OK) )  errorOn(TH_LEFTFEMALE);
     if ( access(_CCS(_rightfemale), R_OK) ) errorOn(TH_RIGHTFEMALE);
     if ( access(_CCS(_ball), R_OK) )        errorOn(TH_BALL);
+    if ( access(_CCS(_confFile), R_OK) )    _hasConfFile = false;
 
     r = (access(_CCS(_net), R_OK) == 0);
 #else
@@ -80,6 +81,8 @@ bool Theme::_checkTheme() {
     if (_stat (_rightfemale.c_str(), &sStat))		errorOn (TH_RIGHTFEMALE) ;
     if (_stat (_ball.c_str(), &sStat))				errorOn (TH_BALL) ;
     
+    if ( _stat(_confFile.c_str(), &sStat) ) _hasConfFile = false;
+
     r = (_stat (_net.c_str(), &sStat) == 0) ;
 #endif /* WIN32 */
     
@@ -87,5 +90,40 @@ bool Theme::_checkTheme() {
 
     cerr << "OK!\n";
 
+    if ( _hasConfFile )
+      loadConf();
+
     return(r);
+}
+
+void Theme::loadConf()
+{
+  aargh.loadConf(_confFile.c_str());
+  configuration.setDefaultFrameConf();
+  /* now set things up in configuration */
+  string value;
+  if ( aargh.getArg("NPlayerFrames", value) )
+    configuration.playerFrameConf.nPlayerFrames = atoi(value.c_str());
+  if ( aargh.getArg("PlayerStillB", value) )
+    configuration.playerFrameConf.playerStillB = atoi(value.c_str());
+  if ( aargh.getArg("PlayerStillE", value) )
+    configuration.playerFrameConf.playerStillE = atoi(value.c_str());
+  if ( aargh.getArg("PlayerStillP", value) )
+    configuration.playerFrameConf.playerStillP = atoi(value.c_str());
+  if ( aargh.getArg("PlayerRunB", value) )
+    configuration.playerFrameConf.playerRunB = atoi(value.c_str());
+  if ( aargh.getArg("PlayerRunE", value) )
+    configuration.playerFrameConf.playerRunE = atoi(value.c_str());
+  if ( aargh.getArg("PlayerRunP", value) )
+    configuration.playerFrameConf.playerRunP = atoi(value.c_str());
+  if ( aargh.getArg("PlayerJumpB", value) )
+    configuration.playerFrameConf.playerJmpB = atoi(value.c_str());
+  if ( aargh.getArg("PlayerJumpE", value) )
+    configuration.playerFrameConf.playerJmpE = atoi(value.c_str());
+  if ( aargh.getArg("PlayerJumpP", value) )
+    configuration.playerFrameConf.playerJmpP = atoi(value.c_str());
+  if ( aargh.getArg("NBallFrames", value) )
+    configuration.ballFrameConf.nBallFrames = atoi(value.c_str());
+  if ( aargh.getArg("BallPeriod", value) )
+    configuration.ballFrameConf.ballPeriod = atoi(value.c_str());
 }

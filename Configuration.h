@@ -31,8 +31,40 @@
 
 #define DEFAULT_BALL_AMPLIFY 5
 
+#define DEFAULT_NPLAYERFRAMES 4
+#define DEFAULT_PLAYERSTILLB  1
+#define DEFAULT_PLAYERSTILLE  1
+#define DEFAULT_PLAYERSTILLP  0
+#define DEFAULT_PLAYERRUNB    2
+#define DEFAULT_PLAYERRUNE    3
+#define DEFAULT_PLAYERRUNP    250
+#define DEFAULT_PLAYERJMPB    4
+#define DEFAULT_PLAYERJMPE    4
+#define DEFAULT_PLAYERJMPP    0
+
+#define DEFAULT_NBALLFRAMES   4
+#define DEFAULT_BALLPERIOD    1000
+
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
+
+typedef struct PlayerFrameConf_s {
+  unsigned short nPlayerFrames;
+  unsigned short playerStillB;
+  unsigned short playerStillE;
+  unsigned short playerStillP;
+  unsigned short playerRunB;
+  unsigned short playerRunE;
+  unsigned short playerRunP;
+  unsigned short playerJmpB;
+  unsigned short playerJmpE;
+  unsigned short playerJmpP;
+} PlayerFrameConf_t;
+
+typedef struct BallFrameConf_s {
+  unsigned short nBallFrames;
+  unsigned short ballPeriod;
+} BallFrameConf_t;
 
 class Configuration {
 public:
@@ -40,6 +72,9 @@ public:
   int right_nplayers;
   int left_players[MAX_PLAYERS/2];
   int right_players[MAX_PLAYERS/2];
+  PlayerFrameConf_t playerFrameConf;
+  BallFrameConf_t ballFrameConf;
+
 
   /* To add: something meaningful to record the controls... */
 
@@ -68,6 +103,23 @@ public:
     }
     bgBig = false;
     ballAmplify = DEFAULT_BALL_AMPLIFY;
+    setDefaultFrameConf();
+  }
+
+  inline void setDefaultFrameConf() {
+    playerFrameConf.nPlayerFrames = DEFAULT_NPLAYERFRAMES;
+    playerFrameConf.playerStillB = DEFAULT_PLAYERSTILLB;
+    playerFrameConf.playerStillE = DEFAULT_PLAYERSTILLE;
+    playerFrameConf.playerStillP = DEFAULT_PLAYERSTILLP;
+    playerFrameConf.playerRunB = DEFAULT_PLAYERRUNB;
+    playerFrameConf.playerRunE = DEFAULT_PLAYERRUNE;
+    playerFrameConf.playerRunP = DEFAULT_PLAYERRUNP;
+    playerFrameConf.playerJmpB = DEFAULT_PLAYERJMPB;
+    playerFrameConf.playerJmpE = DEFAULT_PLAYERJMPE;
+    playerFrameConf.playerJmpP = DEFAULT_PLAYERJMPP;
+
+    ballFrameConf.nBallFrames = DEFAULT_NBALLFRAMES;
+    ballFrameConf.ballPeriod = DEFAULT_BALLPERIOD;
   }
 
   inline void setFps(int val) {

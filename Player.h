@@ -48,11 +48,10 @@ typedef enum {
 
 } pl_type_t;
 
-#define NUM_STATES (4)
+#define NUM_STATES (3)
 typedef enum {
   PL_STATE_STILL = 0,
-  PL_STATE_WALK1,
-  PL_STATE_WALK2,
+  PL_STATE_WALK,
   PL_STATE_JUMP
 } pl_state_t;
 
@@ -61,14 +60,14 @@ class Player {
   std::string _name;
   pl_type_t  _type;
   pl_state_t _state;
+  int _frameIdx;
   int _speed;
   int _x, _y;
   int _speedX;        // actual x speed
   int _speedY;
-  int _walkDrawSpeed;
-  int _lastXWalkDrawChanged;
   int _plId;
   int _oif;
+  int _currStateFrameDelay, _currFrameB, _currFrameE;
   Team *_team;
 
   char *_fileNames[NUM_TYPES];
@@ -102,12 +101,11 @@ class Player {
     _oif    = -1;
     _type   = type;
     _state  = PL_STATE_STILL;
+    _frameIdx = configuration.playerFrameConf.playerStillB - 1;
     _speed  = speed;
     _y      = GROUND_LEVEL;
     _speedX = 0;
     _speedY = 0;
-    _walkDrawSpeed = 10;
-    _lastXWalkDrawChanged = RESET_WALK_SEQUENCE;
     Player::loadFrames();
   }
 
@@ -143,12 +141,10 @@ class Player {
   inline int y() {return _y;}
   inline void setY(int y) {_y = y;}
     inline Team *team() {return(_team);}
-  inline int walkDrawSpeed() {return _walkDrawSpeed;}
-  inline void setWalkDrawSpeed(int walkDrawSpeed) {
-    _walkDrawSpeed = walkDrawSpeed;}
 
   void loadFrames() {
-    _frames = new FrameSeq(_fileNames[_type], NUM_STATES);
+    _frames = new FrameSeq(_fileNames[_type],
+			   configuration.playerFrameConf.nPlayerFrames);
   }
 
   void update(int ticks, ControlsArray *ca);

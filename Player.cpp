@@ -41,9 +41,11 @@ int Player::speedX()  {
 
 void Player::update(int ticks, ControlsArray *ca) {
   triple_t input = ca->getCommands(_plId);
+  static int overallPassed = 0;
 
   int dx = 0;
 
+  overallPassed += ticks;
   if ( input.left ) 
     dx--;
 
@@ -73,24 +75,52 @@ void Player::update(int ticks, ControlsArray *ca) {
   if ( _y < GROUND_LEVEL )
     _speedY += (SPEEDY * 5 * ticks) / 1000;
 
-  /* What frame have I to draw? */
-  if ( _y < GROUND_LEVEL ) {    // I'm jumping!
-    _state  = PL_STATE_JUMP;
-    _lastXWalkDrawChanged = RESET_WALK_SEQUENCE;
-  } else {
-    if (!dx) {                  // I'm still
-      _state  = PL_STATE_STILL;
-      _lastXWalkDrawChanged = RESET_WALK_SEQUENCE;
-    } else                      // I'm walking
-      if (abs(_x - _lastXWalkDrawChanged) > _walkDrawSpeed) {
-	_lastXWalkDrawChanged = _x;
-	if (_state == PL_STATE_WALK2)
-	  _state = PL_STATE_WALK1;
-	else
-	  _state = PL_STATE_WALK2;
-      }
+  int _oldState = _state;
+  /* detect state changes */
+  if ( _y < GROUND_LEVEL ) {
+    if ( _state != PL_STATE_JUMP ) { // jumping
+      _state = PL_STATE_JUMP;
+      _currFrameB = configuration.playerFrameConf.playerJmpB - 1;
+      _currFrameE = configuration.playerFrameConf.playerJmpE - 1;
+      if ( (_currFrameB == _currFrameE) ||
+	   (configuration.playerFrameConf.playerJmpP == 0) )
+	_currStateFrameDelay = 0;
+      else
+	_currStateFrameDelay = configuration.playerFrameConf.playerJmpP/
+	  ( _currFrameE - _currFrameB);
+    }
+  } else if ( !dx && (_state != PL_STATE_STILL) ) { // player still
+    _state = PL_STATE_STILL;
+    _currFrameB = configuration.playerFrameConf.playerStillB - 1;
+    _currFrameE = configuration.playerFrameConf.playerStillE - 1;
+    if ( (_currFrameB == _currFrameE) ||
+	 (configuration.playerFrameConf.playerStillP == 0) )
+      _currStateFrameDelay = 0;
+    else
+      _currStateFrameDelay = configuration.playerFrameConf.playerStillP/
+	( _currFrameE - _currFrameB);
+  } else if ( dx && (_state != PL_STATE_WALK) ) { // player running
+    _state = PL_STATE_WALK;
+    _currFrameB = configuration.playerFrameConf.playerRunB - 1;
+    _currFrameE = configuration.playerFrameConf.playerRunE - 1;
+    if ( (_currFrameB == _currFrameE) ||
+	 (configuration.playerFrameConf.playerRunP == 0) )
+      _currStateFrameDelay = 0;
+    else
+      _currStateFrameDelay = configuration.playerFrameConf.playerRunP/
+	( _currFrameE - _currFrameB);
   }
 
+  if ( _state != _oldState ) {
+    overallPassed = 0;
+    _frameIdx = _currFrameB;
+  } else if ( _currStateFrameDelay &&
+	      (overallPassed > _currStateFrameDelay) ) {
+    // update _frameIdx
+    if ( ++_frameIdx > _currFrameE )
+      _frameIdx = _currFrameB;
+    overallPassed = 0;
+  }
 }
 
 void Player::draw(SDL_Surface * screen) {
@@ -98,7 +128,7 @@ void Player::draw(SDL_Surface * screen) {
   rect.x = _x;
   rect.y = _y;
 
-  _frames->blit(_state, screen, &rect);
+  _frames->blit(_frameIdx, screen, &rect);
 }
 
 bool

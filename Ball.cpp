@@ -196,9 +196,10 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   _oldy = _y;
     
   overallPassed += passed;
-  if ( (overallPassed > FRAME_RATE) ) {
+  if (overallPassed > (configuration.ballFrameConf.ballPeriod/
+		       configuration.ballFrameConf.nBallFrames)) {
     overallPassed = 0;
-    _frameIdx = (_frameIdx + 1) % BALL_FRAMES;
+    _frameIdx = (_frameIdx + 1) % configuration.ballFrameConf.nBallFrames;
   }
     
   if ( _scorerSide ) {

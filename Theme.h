@@ -52,6 +52,7 @@
 #define TH_BALL         "ball.png"
 #define TH_FONT         "Font.png"
 #define TH_FONTINV      "FontInv.png"
+#define TH_CONFNAME     "theme.conf"
 
 extern std::string ThemeDir;
 
@@ -68,7 +69,9 @@ private:
   std::string _leftfemale;
   std::string _rightfemale;
   std::string _ball;
+  std::string _confFile;
   std::string TD;
+  bool _hasConfFile;
   bool _bigBackground;
   bool _checkTheme(); // Theme Validation
     
@@ -123,6 +126,7 @@ private:
       _rightmale   = TD + TH_RIGHTMALE;
       _leftfemale  = TD + TH_LEFTFEMALE;
       _rightfemale = TD + TH_RIGHTFEMALE;
+      _confFile    = TD + TH_CONFNAME;
       
       _ball = TD + TH_BALL;
       
@@ -166,7 +170,8 @@ private:
     inline const char * leftfemale() { return( _CCS(_leftfemale)  );}
     inline const char * rightfemale(){ return( _CCS(_rightfemale) );}
     inline const char * ball()       { return( _CCS(_ball)        );}
-
+  
+  void loadConf();
 };
 
 

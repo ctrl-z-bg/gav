@@ -31,10 +31,6 @@
 #include "globals.h"
 #include "Theme.h"
 
-#define BALL_FRAMES (4)
-
-#define FRAME_RATE (250)
-
 #define ELASTIC_SMOOTH (0.8)
 
 #define MIN_NET_SPEED (10)
@@ -68,7 +64,8 @@ class Ball {
   void loadFrameSeq(ball_t t) {
     switch (t) {
     case BALL_ORIG:
-      _frames = new FrameSeq(CurrentTheme->ball(), BALL_FRAMES);
+      _frames = new FrameSeq(CurrentTheme->ball(),
+			     configuration.ballFrameConf.nBallFrames);
       break;
     }
   }
