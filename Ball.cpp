@@ -59,7 +59,6 @@ bool Ball::collide(Player *p) {
 	  spriteCollide(p) );
 }
 
-
 void Ball::update_internal(Player * pl) {
 #define AMPLIFY 5
   
@@ -78,12 +77,15 @@ void Ball::update_internal(Player * pl) {
 
   float x1, y1;
 
-  // x1 = _spdx * cosb - _spdy * sinb;
+  /* service patch */
+  if (!_spdy && !_spdx) {
+    _spdy = -200;
+    //_spdx = (_x > NET_X)?-100:100;
+  }
+
   y1 = _spdx * sinb + (- _spdy) * cosb;
   x1 = AMPLIFY * (pl->speedX() * cosb - pl->speedY() * sinb);
   
-  // x1 = x2;
-
   int oldspdy = _spdy;
 
   _spdx = (int) (x1 * cos(beta) - y1 * sin(beta));
@@ -102,8 +104,6 @@ void Ball::update_internal(Player * pl) {
     _spdy = (int) ((1.1 * ELASTIC_SMOOTH) * abs(oldspdy));
 
 }
-
-
 
 void Ball::assignPoint(int side, Team *t) {
   if ( _side == side )
