@@ -130,10 +130,11 @@ class Ball {
   inline void setFrame(int fr) { _frameIdx = fr; }
   inline void setX(int x) { _x = x; }
   inline void setY(int y) { _y = y; }
-
+  inline int gravity()   { return _accelY; }
   void update(int passed, Team *tleft, Team *tright);
   float distance(int, int);
 
+  
   void draw(SDL_Surface *scr = screen);
 
   ~Ball() {
