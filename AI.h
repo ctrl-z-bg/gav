@@ -37,7 +37,7 @@ class Agent {
   
 public:
   Agent(Ball *b, Player *p, ControlsArray *ca) : _b(b), _p(p), _ca(ca) {
-    _ca->isArtificial(p->id());
+    _ca->setArtificial(p->id());
   }
 
   void update();

@@ -38,7 +38,7 @@ public:
   int ConnectToServer(char team, char * hostname, int port = SERVER_PORT);
   int KillClient();
   int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
-  int SendCommand(cntrl_t cmd);
+  int SendCommand(char cmd);
   inline char id() { return _id; }
 
 };

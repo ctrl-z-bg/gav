@@ -23,6 +23,7 @@
 #include <SDL.h>
 #include "StatePlaying.h"
 #include "Automa.h"
+#include "NetServer.h"
 
 using namespace std;
 
@@ -56,9 +57,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       Player *automL = tl->addPlayer(name.c_str(), PL_TYPE_MALE_LEFT);
       agentL[j] = new Agent(b, automL, controlsArray);
       if ( configuration.left_players[j] == PLAYER_HUMAN )
-	controlsArray->isHuman(j*2);
+	controlsArray->setHuman(j*2);
+      else if (!nets || nets->isRemote(j*2))
+	controlsArray->setArtificial(j*2);
       else
-	controlsArray->isArtificial(j*2);
+	controlsArray->setRemote(j*2);
       i++;
     }
 
@@ -70,9 +73,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       Player *automR = tr->addPlayer(name.c_str(), PL_TYPE_MALE_RIGHT);
       agentR[j] = new Agent(b, automR, controlsArray);
       if ( configuration.right_players[j] == PLAYER_HUMAN )
-	controlsArray->isHuman(j*2 + 1);
+	controlsArray->setHuman(j*2 + 1);
+      else if (!nets || nets->isRemote(j*2+1))
+	controlsArray->setArtificial(j*2 + 1);
       else
-	controlsArray->isArtificial(j*2 + 1);
+	controlsArray->setRemote(j*2+1);
       i++;
     }
 
@@ -98,13 +103,15 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   /* update AI agents */
   for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
     if ( configuration.left_players[j] == PLAYER_COMPUTER )
-      agentL[i]->update();
+      if ( !nets || !(nets->isRemote(2*i)) )
+	agentL[i]->update();
     if ( configuration.left_players[j] != PLAYER_NONE )
       i++;
   }
   for ( int i = 0, j = 0; i < configuration.right_nplayers; j++ ) {
     if ( configuration.right_players[j] == PLAYER_COMPUTER )
-      agentR[j]->update();
+      if ( !nets || !(nets->isRemote(2*i+1)) )
+	agentR[j]->update();
     if ( configuration.right_players[j] != PLAYER_NONE )
       i++;
   }
@@ -125,6 +132,8 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tl->draw();
     tr->draw();
     b->draw();
+    if (nets)
+      nets->SendSnapshot(tl, tr, b);
     SDL_Flip(screen);
     prevDrawn = ticks;
   }

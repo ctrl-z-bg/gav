@@ -24,6 +24,7 @@
 #include <SDL.h>
 #include "InputState.h"
 #include "ControlsArray.h"
+#include "NetServer.h"
 
 void ControlsArray::action(int plId, int movx, int movy) {
   _inputs[plId].left = _inputs[plId].right = _inputs[plId].jump = 0;
@@ -57,9 +58,18 @@ void ControlsArray::initializeControls() {
 void ControlsArray::setControlsState(InputState *is) {
   Uint8 *keystate = is->getKeyState();
   int i = 0;
+  int player;
+  char cmd;
 
-  for (; i < 4; i++ ) {
-    if ( !_isArtificial[i] ) {
+  if (nets)
+    while ( nets->ReceiveCommand(&player, &cmd) != -1 ) {
+      _inputs[player].left = cmd & CNTRL_LEFT;
+      _inputs[player].right = cmd & CNTRL_RIGHT;
+      _inputs[player].jump = cmd & CNTRL_JUMP;
+    }
+
+  for (i = 0; i < 4 ; i++ ) {
+    if ( !_isArtificial[i] && !_isRemote[i] ) {
       _inputs[i].left = keystate[_keyMapping[i].left_key];
       _inputs[i].right = keystate[_keyMapping[i].right_key];
       _inputs[i].jump = keystate[_keyMapping[i].jump_key];

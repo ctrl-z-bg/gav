@@ -27,6 +27,8 @@
 
 class NetServer: public Net {
   std::vector<IPaddress*> clientIP;
+  int _nclients;
+  int _players[MAX_PLAYERS];
 
 public:
   NetServer() {
@@ -44,7 +46,10 @@ public:
   int KillServer();
   int WaitClients(int nclients = 1);
   int SendSnapshot(Team *tleft, Team *tright, Ball * ball);
-  int ReceiveCommand(char * team, char * player, cntrl_t * cmd);
+  int ReceiveCommand(int * player, char * cmd);
+  int ComputePlayerID(char id);
+  int isRemote(int pl);
+  inline int nclients() { return _nclients; }
 
 };
 

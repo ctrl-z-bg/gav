@@ -22,6 +22,8 @@
 
 #include "NetClient.h"
 
+using namespace std;
+
 int NetClient::ConnectToServer(char team, char * hostname, int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(0);
@@ -83,7 +85,7 @@ int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
   return -1;
 }
 
-int NetClient::SendCommand(cntrl_t cmd) {
+int NetClient::SendCommand(char cmd) {
   net_command_t * command = (net_command_t *)(packetCmd->data);
   command->id = _id;
   command->command = cmd;

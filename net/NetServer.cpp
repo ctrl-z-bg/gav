@@ -23,6 +23,8 @@
 #include "NetServer.h"
 #include "Player.h"
 
+using namespace std;
+
 int NetServer::StartServer(int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(port);
@@ -39,25 +41,53 @@ int NetServer::KillServer() {
   return 0;
 }
 
+int NetServer::ComputePlayerID(char id) {
+  char tm ,pl;
+  tm = (id & NET_TEAM_LEFT)?0:1;
+  pl = id & 0x3F;
+  return  (2 * pl + tm);
+}
+
 int NetServer::WaitClients(int nclients) {
   IPaddress * ipa;
   char nleft = 0;
   char nright = 0;
   char * id;
+  int i;
+  bool inserted = false;
+
+  memset(_players, 0, MAX_PLAYERS * sizeof(int));
+
+  _nclients = nclients;
 
   while ((nright + nleft) != nclients) {
     if (SDLNet_UDP_Recv(mySock, packetCmd) != 0) {
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
       memcpy(ipa, &(packetCmd->address), sizeof(IPaddress));
-      clientIP.push_back(ipa);
       id = &(((net_command_t*)(packetCmd->data))->id);
       if (*id & NET_TEAM_LEFT) {
-	*id |= nleft;
-	nleft++;
+	for (i = 0; (i < configuration.left_nplayers) && !inserted; i++)
+	  if ((configuration.left_players[i] == PLAYER_COMPUTER) &&
+	      !_players[2*i])
+	    inserted = true;
+	if (inserted) {
+	  nleft++;
+	  *id |= nleft;
+	} else
+	  continue;
       } else if (*id & NET_TEAM_RIGHT) {
-	*id |= nright;
-	nright++;
+	for (i = 0; (i < configuration.right_nplayers) && !inserted; i++)
+	  if ((configuration.right_players[i] == PLAYER_COMPUTER) &&
+	      !_players[2*i+1])
+	    inserted = true;
+	if (inserted) {
+	  *id |= nright;
+	  nright++;
+	} else
+	  continue;
       }
+      _players[ComputePlayerID(*id)] = 1;
+      clientIP.push_back(ipa);
       /* send the ID back to client */
       SDLNet_UDP_Send(mySock, -1, packetCmd);
     }
@@ -98,14 +128,17 @@ int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   return 0;
 }
 
-int NetServer::ReceiveCommand(char * team, char * player, cntrl_t * cmd) {
+int NetServer::ReceiveCommand(int * player, char * cmd) {
   if (SDLNet_UDP_Recv(mySock, packetCmd) != 0) {
     net_command_t * c = (net_command_t*)(packetCmd->data);
-    *team = (c->id) & 0xC0;
-    *player = (c->id) & 0x3F;
+    *player = ComputePlayerID(c->id);
     *cmd = c->command;
     return 0;
   }
 
   return -1;
+}
+
+int NetServer::isRemote(int pl) {
+  return _players[pl];
 }

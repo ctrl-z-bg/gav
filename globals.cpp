@@ -36,3 +36,6 @@ MenuRoot *mroot;
 
 ControlsArray *controlsArray;
 Configuration configuration;
+
+NetServer * nets = NULL;
+NetClient * netc = NULL;

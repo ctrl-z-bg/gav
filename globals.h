@@ -45,6 +45,12 @@ extern MenuRoot *mroot;
 
 extern Configuration configuration;
 
+class NetClient;
+class NetServer;
+
+extern NetServer * nets;
+extern NetClient * netc;
+
 #ifdef AUDIO
 extern SDL_AudioSpec desired,obtained;
 

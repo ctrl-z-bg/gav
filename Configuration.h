@@ -37,7 +37,7 @@ public:
   int left_nplayers;
   int right_nplayers;
   int left_players[MAX_PLAYERS/2];
-  int right_players[MAX_PLAYERS/2];  
+  int right_players[MAX_PLAYERS/2];
 
   /* To add: something meaningful to record the controls... */
 

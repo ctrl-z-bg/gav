@@ -39,19 +39,21 @@ typedef struct {
   int jump_key;
 } controls_t;
 
-typedef enum { CNTRL_LEFT, CNTRL_RIGHT, CNTRL_JUMP } cntrl_t;
+typedef enum { CNTRL_LEFT = 1, CNTRL_RIGHT = 2, CNTRL_JUMP = 4} cntrl_t;
 
 class ControlsArray {
   triple_t _inputs[MAX_PLAYERS];
   controls_t _keyMapping[MAX_PLAYERS];
   Uint8 _f[12];
   bool _isArtificial[MAX_PLAYERS];
+  bool _isRemote[MAX_PLAYERS];
 
 public:
   ControlsArray() {
     memset(_inputs, 0, MAX_PLAYERS * sizeof(triple_t));
     memset(_f, 0, 12);
     for ( int i = 0; i < MAX_PLAYERS; _isArtificial[i++] = false );
+    for ( int i = 0; i < MAX_PLAYERS; _isRemote[i++] = false );
     initializeControls();
   }
 
@@ -75,11 +77,18 @@ public:
   inline triple_t getCommands(int idx) { return _inputs[idx];}
 
   void action(int plId, int movx, int movy);
-  inline void isArtificial(int plId) {
+
+  inline void setArtificial(int plId) {
     _isArtificial[plId] = true;
+    _isRemote[plId] = false;
   }
-  inline void isHuman(int plId) {
+  inline void setHuman(int plId) {
     _isArtificial[plId] = false;
+    _isRemote[plId] = false;
+  }
+  inline void setRemote(int plId) {
+    _isArtificial[plId] = false;
+    _isRemote[plId] = true;
   }
 };
 

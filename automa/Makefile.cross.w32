@@ -21,7 +21,7 @@ include ../CommonHeader
 
 NAME 		= automa
 
-CXXFLAGS += -I$(GAV_ROOT) -I../menu
+CXXFLAGS += -I$(GAV_ROOT) -I$(GAV_ROOT)/menu -I$(GAV_ROOT)/net
 
 DEPEND = Makefile.depend
 
