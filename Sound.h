@@ -22,7 +22,7 @@
 #ifndef __SOUND_H__
 #define __SOUND_H__
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "globals.h"
 
 #ifdef AUDIO
