@@ -28,6 +28,7 @@ install -d $RPM_BUILD_ROOT/usr/share/games/gav/themes
 install -d $RPM_BUILD_ROOT/usr/share/doc/gav-%{version}
 install -d $RPM_BUILD_ROOT/usr/share/applications
 install -d $RPM_BUILD_ROOT/usr/share/pixmaps
+install -d $RPM_BUILD_ROOT/etc/X11/applnk/Games
 install package/gav.desktop $RPM_BUILD_ROOT/usr/share/applications
 install package/gav.desktop $RPM_BUILD_ROOT/etc/X11/applnk/Games
 install package/gav.png $RPM_BUILD_ROOT/usr/share/pixmaps
