@@ -38,6 +38,7 @@ $(SUBDIRS):
 
 gav.exe:	$(ALL_OBJ) $(OFILES)
 	$(CXX) -o gav.exe $(OFILES) $(ALL_OBJ) $(LDFLAGS)
+	strip gav.exe
 
 clean:
 	for i in $(SUBDIRS) ; do \

@@ -39,6 +39,7 @@ $(ALL_OBJ):
 
 gav:	$(ALL_OBJ) $(OFILES)
 	$(CXX) -o gav $(OFILES) $(ALL_OBJ) $(LDFLAGS)
+	strip gav
 
 clean:
 	for i in $(SUBDIRS) ; do \

@@ -1,5 +1,7 @@
 Welcome to GAV, a GPL rendition of the popular Arcade Volleyball.
 
+Some menu items might not be implemtented yet.
+
 Version 0.7.0 added:
 
 - Networking game, in client/server mode
