@@ -42,6 +42,7 @@
 #include "MenuItemTheme.h"
 #include "MenuItemFullScreen.h"
 #include "MenuItemFrameSkip.h"
+#include "MenuItemFPS.h"
 #include "MenuItemScore.h"
 #include "MenuItemMonitor.h"
 
@@ -169,6 +170,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemPlayer(TEAM_RIGHT, 1));
   menuExtra->add(new MenuItemSubMenu(new MenuKeys(1),
 				     string("Define Keys")));
+  menuExtra->add(new MenuItemFPS());
   menuExtra->add(new MenuItemFrameSkip());
   menuExtra->add(new MenuItemScore());
   menuExtra->add(new MenuItemMonitor());
