@@ -61,7 +61,7 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
     sprintf(fname, "%s/%s", actualdir, sound_fnames[sndidx]);
     FILE *fp = fopen(fname, "r");
     if ( !fp ) continue;
-        printf("suono %s\n", fname);
+    printf("sound: %s\n", fname);
     fclose(fp);
     sounds[sndidx] = new Sound();
     if ( sounds[sndidx]->loadSound(fname) ) {
