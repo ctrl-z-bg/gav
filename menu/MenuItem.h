@@ -35,7 +35,7 @@ protected:
 public:
   MenuItem() {}
   inline void setLabel(std::string l) {label = l;}
-  inline std::string getLabel() {return label;}
+  virtual std::string getLabel() {return label;}
   virtual int execute(std::stack<Menu *> &s) = 0;
   virtual ~MenuItem() {}
 };

@@ -31,7 +31,7 @@
 class MenuItemBigBackground: public MenuItem {
 public:
   MenuItemBigBackground() {
-    label = std::string("Big Background") + (configuration.bgBig?"Yes":"No");
+    label = std::string("Big Background: ") + (configuration.bgBig?"Yes":"No");
   }
 
   int execute(std::stack<Menu *> &s) {

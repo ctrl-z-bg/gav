@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "StateMenu.h"
 #include "StatePlaying.h"
+#include "MenuItemFullScreen.h"
 #ifndef NONET
 #include "StateClient.h"
 #endif
@@ -92,17 +93,10 @@ int AutomaMainLoop::start()
     
     _is->getInput();
     if ( _is->getF()[9] ) {
-      SDL_FreeSurface(screen);
-      int wasFull = (screenFlags & SDL_FULLSCREEN);
-      screenFlags =
-	wasFull?(screenFlags & ~SDL_FULLSCREEN):(screenFlags|SDL_FULLSCREEN);
-      screen = SDL_SetVideoMode(SCREEN_WIDTH(),
-				//	SCREEN_HEIGHT(), BPP, screenFlags);
-				SCREEN_HEIGHT(),
-				videoinfo->vfmt->BitsPerPixel, 
-				screenFlags);
+      std::stack<Menu *> s;
+      MenuItemFullScreen().execute(s);
     }
-    
+
     // execute the _curr state's code, and transact
     int retval  = _states[_curr]->execute(_is,
 					  ticks, prevTicks,

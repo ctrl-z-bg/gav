@@ -151,7 +151,7 @@ int Configuration::createConfigurationFile(const char *fname) {
       aargh.setArg("right_player" + toString(i), "computer"); break;
     }
   }
-  aargh.setArg("big_background", "yes");
+  aargh.setArg("big_background", c.bgBig?"yes":"no");
   aargh.setArg("fullscreen", (c.fullscreen?"yes":"no"));
   if ( c.ballAmplify == DEFAULT_BALL_AMPLIFY + BALL_SPEED_INC )
     aargh.setArg("ball_speed", "fast");

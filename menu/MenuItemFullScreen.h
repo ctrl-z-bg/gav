@@ -30,8 +30,10 @@
 class MenuItemFullScreen: public MenuItem {
 public:
   MenuItemFullScreen() {
-    label = std::string("Fullscreen: ");
-    label += (configuration.fullscreen?"Yes":"No");
+  }
+
+  std::string getLabel() {
+    return configuration.fullscreen?"Fullscreen: Yes":"Fullscreen: No";
   }
 
   void apply() {
@@ -44,7 +46,6 @@ public:
   int execute(std::stack<Menu *> &s) {
     SDL_FreeSurface(screen);
     configuration.fullscreen = !configuration.fullscreen;
-    label = configuration.fullscreen?"Fullscreen: Yes":"FullScreen: No";
     apply();
     screen = SDL_SetVideoMode(SCREEN_WIDTH(),
 			      //	SCREEN_HEIGHT(), BPP, screenFlags);
