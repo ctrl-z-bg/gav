@@ -64,14 +64,21 @@ bool Theme::_checkTheme() {
     struct _stat sStat ;
     
     cerr << "Verifying Theme `" << _name << "' [" << ThemeDir << "\\" << _name << "\\]:\n";
-    if (_stat (_background.c_str(), &sStat))		errorOn (TH_BACKGROUND) ;
-    if (_stat (_font.c_str(), &sStat))				errorOn (TH_BACKGROUND) ;
-    if (_stat (_fontinv.c_str(), &sStat))			errorOn (TH_BACKGROUND) ;
-    if (_stat (_leftmale.c_str(), &sStat))			errorOn (TH_BACKGROUND) ;
-    if (_stat (_rightmale.c_str(), &sStat))			errorOn (TH_BACKGROUND) ;
-    if (_stat (_leftfemale.c_str(), &sStat))		errorOn (TH_BACKGROUND) ;
-    if (_stat (_rightfemale.c_str(), &sStat))		errorOn (TH_BACKGROUND) ;
-    if (_stat (_ball.c_str(), &sStat))				errorOn (TH_BACKGROUND) ;
+    if (_stat (_background.c_str(), &sStat)) {
+      if (!_bigBackground)
+	_background = TD + TH_BACKGROUND_JPG;
+      else
+	_background = TD + TH_BACKGROUND_BIG_JPG;
+      if (_stat (_background.c_str(), &sStat)) errorOn("background.{jpg,png}");
+    }
+
+    if (_stat (_font.c_str(), &sStat))				errorOn (TH_FONT) ;
+    if (_stat (_fontinv.c_str(), &sStat))			errorOn (TH_FONTINV) ;
+    if (_stat (_leftmale.c_str(), &sStat))			errorOn (TH_LEFTMALE) ;
+    if (_stat (_rightmale.c_str(), &sStat))			errorOn (TH_RIGHTMALE) ;
+    if (_stat (_leftfemale.c_str(), &sStat))		errorOn (TH_LEFTFEMALE) ;
+    if (_stat (_rightfemale.c_str(), &sStat))		errorOn (TH_RIGHTFEMALE) ;
+    if (_stat (_ball.c_str(), &sStat))				errorOn (TH_BALL) ;
     
     r = (_stat (_net.c_str(), &sStat) == 0) ;
 #endif /* WIN32 */

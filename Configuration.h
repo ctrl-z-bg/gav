@@ -27,7 +27,7 @@
 
 #define MAX_PLAYERS (12)
 #define FPS (50)
-#define POINTS (15)
+#define WINNING_SCORE (15)
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
@@ -51,7 +51,7 @@ public:
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
 
   Configuration() : left_nplayers(1), right_nplayers(1),
-		    sound(0), winning_score(POINTS) {
+		    sound(0), winning_score(WINNING_SCORE) {
     monitor_type = MONITOR_NORMAL;
     frame_skip = 0;
     fps = FPS;
