@@ -36,8 +36,7 @@ Theme *CurrentTheme;
 string ThemeDir;
 
 void errorOn(string file) {
-    cerr << "Error accessing file " << file;
-    exit(-1);
+    throw Theme:: ThemeErrorException("Error accessing file " + file);
 }
 
 bool Theme::_checkTheme() {

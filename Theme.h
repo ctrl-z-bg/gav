@@ -172,6 +172,14 @@ private:
     inline const char * ball()       { return( _CCS(_ball)        );}
   
   void loadConf();
+
+  class ThemeErrorException {
+  public:
+    std::string message;
+    ThemeErrorException(std::string msg) {
+      message = msg;
+    }
+  };
 };
 
 

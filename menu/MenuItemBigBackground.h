@@ -24,6 +24,7 @@
 #define __MENUITEMBIGBACKGROUND_H__
 
 #include <SDL.h>
+#include <iostream>
 #include "MenuItem.h"
 #include "globals.h"
 
@@ -35,12 +36,20 @@ public:
 
   int execute(std::stack<Menu *> &s) {
     const char * currThemeName;
-
+    
     configuration.bgBig = !configuration.bgBig;
     label = std::string(configuration.bgBig?"Big Background: Yes":"Big Background: No");
     currThemeName = CurrentTheme->name();
-    delete(CurrentTheme);
-    CurrentTheme = new Theme(currThemeName);
+    try {
+      delete(CurrentTheme);
+      CurrentTheme = new Theme(currThemeName);
+    } catch (Theme::ThemeErrorException te) {
+      std::cerr << te.message << std::endl;
+      configuration.bgBig = !configuration.bgBig;
+      label = std::string(configuration.bgBig?"Big Background: Yes":"Big Background: No");
+      CurrentTheme = new Theme(currThemeName);
+    }
+    
     return(0);
   }
 };

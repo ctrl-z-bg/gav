@@ -24,6 +24,7 @@
 #define __MENUITEMTHEME_H__
 
 #include <SDL.h>
+#include <iostream>
 #include "MenuItem.h"
 #include "globals.h"
 
@@ -34,8 +35,17 @@ public:
   }
 
   int execute(std::stack<Menu *> &s) {
-    delete(CurrentTheme);
-    CurrentTheme = new Theme(label);
+    std::string oldName;
+
+    oldName = CurrentTheme->name();
+    
+    try {
+      delete(CurrentTheme);
+      CurrentTheme = new Theme(label);
+    } catch (Theme::ThemeErrorException te) {
+      std::cerr << te.message << std::endl;
+      CurrentTheme = new Theme(oldName);
+    }
     return(0);
   }
 };
