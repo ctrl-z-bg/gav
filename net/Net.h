@@ -34,9 +34,9 @@
 
 /* The ID of a client is a char with the higher order 2 bits indicating
    the team, the left 6 bits say the player number. When a client wants to
-   register itself, it sends a command with id equal to NET_TEAM_LEFT or
-   NET_TEAM_RIGHT. The server fills the others 6 bits and sends the id
-   back to the client.
+   register itself, it sends a register request with id equal to 
+   NET_TEAM_LEFT or NET_TEAM_RIGHT. The server fills the others 6 bits 
+   and sends the id back to the client.
 */
 #define NET_TEAM_LEFT  0x80    // 10xxxxxx
 #define NET_TEAM_RIGHT 0x40    // 01xxxxxx
@@ -52,6 +52,8 @@ typedef struct {
   net_object_snapshot_t teaml[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t teamr[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t ball;
+  char scorel;
+  char scorer;
 } net_game_snapshot_t;
 
 typedef struct {
@@ -60,11 +62,19 @@ typedef struct {
   char command;
 } net_command_t;
 
+typedef struct {
+  char id;
+  char nplayers_l;
+  char nplayers_r;
+  char bgBig;    // 0 or 1
+} net_register_t;
+
 class Net {
 protected:
   UDPsocket mySock;
   UDPpacket * packetCmd;
   UDPpacket * packetSnap;
+  UDPpacket * packetRegister;
 
 public:
   Net() {
@@ -72,6 +82,8 @@ public:
     packetSnap->len = packetSnap->maxlen;
     packetCmd = SDLNet_AllocPacket(sizeof(net_command_t));
     packetCmd->len = packetCmd->maxlen;
+    packetRegister = SDLNet_AllocPacket(sizeof(net_register_t));
+    packetRegister->len = packetRegister->maxlen;
   }
 
   ~Net() {

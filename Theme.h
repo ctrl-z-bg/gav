@@ -73,7 +73,7 @@ private:
   bool _checkTheme(); // Theme Validation
     
  public:
-    Theme(std::string name, bool big = false) {
+    Theme(std::string name) {
 #ifndef WIN32
       DIR *dir;
       if ((dir = opendir(ThemeDir.c_str())) == NULL) {
@@ -107,7 +107,7 @@ private:
       
       _name = name;
 
-      _bigBackground = big;
+      _bigBackground = configuration.bgBig;
       
       _net = TD + TH_NET;
       

@@ -49,6 +49,7 @@ public:
   unsigned int frame_skip;     // one every frame_skip + 1 are actually drawn
   unsigned int fps;            // fps of the update (not graphical)
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
+  bool bgBig;                  // if the background is big
 
   Configuration() : left_nplayers(1), right_nplayers(1),
 		    sound(0), winning_score(WINNING_SCORE) {
@@ -62,6 +63,7 @@ public:
       left_players[i] = PLAYER_NONE;
       right_players[i] = PLAYER_NONE;
     }
+    bgBig = false;
   }
 
   inline void setFps(int val) {

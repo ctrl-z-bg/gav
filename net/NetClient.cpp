@@ -21,10 +21,12 @@
 */
 
 #include "NetClient.h"
+#include "MenuItemBigBackground.h"
 
 using namespace std;
 
-int NetClient::ConnectToServer(char team, char * hostname, int port) {
+int NetClient::ConnectToServer(int * pl, int * pr, char team, 
+			       char * hostname, int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(0);
   /* resolve the server name */
@@ -39,12 +41,25 @@ int NetClient::ConnectToServer(char team, char * hostname, int port) {
     return -1;
   }
 
-  packetCmd->address = packetSnap->address = ipaddress;
-  ((net_command_t*)(packetCmd->data))->id = team;
+  packetRegister->address = packetSnap->address = 
+    packetCmd->address = ipaddress;
 
-  SDLNet_UDP_Send(mySock, -1, packetCmd);
-  while (!SDLNet_UDP_Recv(mySock, packetCmd));
-  _id = ((net_command_t*)(packetCmd->data))->id;
+  ((net_register_t*)(packetRegister->data))->id = team;
+
+  SDLNet_UDP_Send(mySock, -1, packetRegister);
+  while (!SDLNet_UDP_Recv(mySock, packetRegister));
+  _id = ((net_register_t*)(packetRegister->data))->id;
+  _nplayers_l = ((net_register_t*)(packetRegister->data))->nplayers_l;
+  _nplayers_r = ((net_register_t*)(packetRegister->data))->nplayers_r;
+  if (((net_register_t*)(packetRegister->data))->bgBig &&
+      !configuration.bgBig) {
+    MenuItemBigBackground menuBG;
+    std::stack<Menu *> st;
+    menuBG.execute(st);
+  }
+  
+  *pl = (int)_nplayers_l;
+  *pr = (int)_nplayers_r;
 
   return 0;
 }
@@ -80,6 +95,11 @@ int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
     ball->setX((int)(snap->ball).x);
     ball->setY((int)(snap->ball).y);
     ball->setFrame((int)(snap->ball).frame);
+
+    /* fill the score information */
+    tleft->setScore(snap->scorel);
+    tright->setScore(snap->scorer);
+
     return 0;
   }
   return -1;

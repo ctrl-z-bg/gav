@@ -61,10 +61,10 @@ int NetServer::WaitClients(int nclients) {
   _nclients = nclients;
 
   while ((nright + nleft) != nclients) {
-    if (SDLNet_UDP_Recv(mySock, packetCmd) != 0) {
+    if (SDLNet_UDP_Recv(mySock, packetRegister) != 0) {
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
-      memcpy(ipa, &(packetCmd->address), sizeof(IPaddress));
-      id = &(((net_command_t*)(packetCmd->data))->id);
+      memcpy(ipa, &(packetRegister->address), sizeof(IPaddress));
+      id = &(((net_register_t*)(packetRegister->data))->id);
       if (*id & NET_TEAM_LEFT) {
 	for (i = 0; (i < configuration.left_nplayers) && !inserted; i++)
 	  if ((configuration.left_players[i] == PLAYER_COMPUTER) &&
@@ -89,7 +89,13 @@ int NetServer::WaitClients(int nclients) {
       _players[ComputePlayerID(*id)] = 1;
       clientIP.push_back(ipa);
       /* send the ID back to client */
-      SDLNet_UDP_Send(mySock, -1, packetCmd);
+      ((net_register_t*)(packetRegister->data))->nplayers_l = 
+	configuration.left_nplayers;
+      ((net_register_t*)(packetRegister->data))->nplayers_r = 
+	configuration.right_nplayers;
+      ((net_register_t*)(packetRegister->data))->bgBig =
+	configuration.bgBig;
+      SDLNet_UDP_Send(mySock, -1, packetRegister);
     }
   }
 
@@ -101,6 +107,8 @@ int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   net_game_snapshot_t * snap = (net_game_snapshot_t *)(packetSnap->data);
   std::vector<Player *> plv;
 
+  snap->scorel = tleft->getScore();
+  snap->scorer = tright->getScore();
   /* fill the left team informations */
   plv = tleft->players();
   for (i = 0; i < plv.size(); i++) {

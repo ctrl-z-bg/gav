@@ -28,17 +28,14 @@
 #include "globals.h"
 
 class MenuItemTheme: public MenuItem {
-  bool isBig;
 public:
   MenuItemTheme(std::string l) {
-    isBig = false;
     label = l;
   }
 
   int execute(std::stack<Menu *> &s) {
-    isBig = CurrentTheme->bigBackground();
     delete(CurrentTheme);
-    CurrentTheme = new Theme(label, isBig);
+    CurrentTheme = new Theme(label);
     return(0);
   }
 };

@@ -155,9 +155,8 @@ int main(int argc, char *argv[]) {
     nets = new NetServer();
     //delete(server); while(1);
     nets->StartServer();
-    //sleep(1);
+    sleep(1);
     nets->WaitClients();
-    printf("connesso\n");
 #if 0
     b.setFrame(33);
     while(1) {
@@ -174,13 +173,18 @@ int main(int argc, char *argv[]) {
     }
 #endif
   } else {
+    int pl, pr;
+    init();
+    Team t1, t2;
+    Ball b(BALL_ORIG);
     client = new NetClient();
     //delete(client); while(1);
-    client->ConnectToServer(NET_TEAM_RIGHT, "mynos.metaware.it");
+    usleep(100);
+    client->ConnectToServer(&pl, &pr, NET_TEAM_RIGHT, "localhost");
     while(1) {
-#if 0
+#if 1
       if (client->ReceiveSnapshot(&t1, &t2, &b) != -1)
-	printf("client %p: %d\n", (int*)client->id(), b.frame());
+	printf("client %p: %d\n", (int*)client->id(), b.x());
 #endif
       client->SendCommand(CNTRL_JUMP);
       usleep(1000/60);

@@ -28,21 +28,19 @@
 #include "globals.h"
 
 class MenuItemBigBackground: public MenuItem {
-  bool isBig;
-  const char * currThemeName;
-
 public:
   MenuItemBigBackground() {
-    isBig = false;
     label = std::string("Big Background: No");
   }
 
   int execute(std::stack<Menu *> &s) {
-    isBig = !isBig;
-    label = std::string(isBig?"Big Background: Yes":"Big Background: No");
+    const char * currThemeName;
+
+    configuration.bgBig = !configuration.bgBig;
+    label = std::string(configuration.bgBig?"Big Background: Yes":"Big Background: No");
     currThemeName = CurrentTheme->name();
     delete(CurrentTheme);
-    CurrentTheme = new Theme(currThemeName, isBig);
+    CurrentTheme = new Theme(currThemeName);
     return(0);
   }
 };

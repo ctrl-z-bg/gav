@@ -22,7 +22,7 @@ include ../CommonHeader
 NAME 		= net
 MODULE_NAME	= $(NAME)_module.o
 
-CXXFLAGS += -I$(GAV_ROOT)
+CXXFLAGS += -I$(GAV_ROOT) -I$(GAV_ROOT)/menu -I$(GAV_ROOT)/net
 
 DEPEND = Makefile.depend
 

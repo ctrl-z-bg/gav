@@ -29,13 +29,16 @@ class NetClient: public Net {
   IPaddress ipaddress;
   int channel;   // the channel assigned to client
   char _id;      // if I'm a client I've an id
+  char _nplayers_l;
+  char _nplayers_r;
 
 public:
   NetClient() {
   }
 
   /* client methods */
-  int ConnectToServer(char team, char * hostname, int port = SERVER_PORT);
+  int ConnectToServer(int * pl, int * pr, char team, 
+		      char * hostname, int port = SERVER_PORT);
   int KillClient();
   int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
   int SendCommand(char cmd);
