@@ -3,7 +3,7 @@ Version 0.8.0 changes:
 - patch for ball passing over the net bug
 - collision mechanisms improved
 - sound support added (sounds can be found in theme packages)
-
+- Players classes hierarchy re-designed
 
 Version 0.7.3 added:
 - patch for stuck on the net problem
