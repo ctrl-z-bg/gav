@@ -26,7 +26,11 @@
 #include <iostream>
 
 #include <sys/types.h>
+#ifndef WIN32
 #include <dirent.h>
+#else
+#include <windows.h>
+#endif /* WIN32 */
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -66,6 +70,7 @@ class Theme {
     
  public:
     Theme(std::string name) {
+#ifndef WIN32
       DIR *dir;
       if ((dir = opendir(ThemeDir.c_str())) == NULL) {
 	ThemeDir = "/usr/share/games/gav/" + ThemeDir;
@@ -76,8 +81,26 @@ class Theme {
 	  closedir(dir);
       } else
 	closedir(dir);
-      
+
       std::string TD = ThemeDir + "/" + name +  "/";
+
+#else
+      HANDLE hFindFile ;
+      WIN32_FIND_DATA ffdData ;
+      std::string TD ;
+      
+      hFindFile = FindFirstFile (ThemeDir.c_str(), &ffdData) ;
+      if (hFindFile == INVALID_HANDLE_VALUE)
+	{
+	  std::cerr << "Cannot find themes directory\n" ;
+	  exit(0) ;
+	}
+      
+      FindClose (hFindFile) ;
+      
+      TD = ThemeDir + "\\" + name + "\\" ;
+      
+#endif /* WIN32 */
       
       _name = name;
       

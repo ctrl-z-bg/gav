@@ -19,12 +19,10 @@
 CWD        = $(shell pwd)
 GAV_ROOT    = $(CWD:%/$(RELPATH)=%)
 
-CXX = g++
-CXXFLAGS = -DGAV -Wall
 LD = ld
 MAKE	= make
-
 CXX = g++
+
 CXXFLAGS= `sdl-config --cflags` -g -Wall
 LDFLAGS= `sdl-config --libs` -lSDL_image -lm
 
