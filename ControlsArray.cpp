@@ -28,17 +28,6 @@
 #include "NetServer.h"
 #endif
 
-void ControlsArray::action(int plId, int movx, int movy) {
-  _inputs[plId].left = _inputs[plId].right = _inputs[plId].jump = 0;
-  
-  if ( movx < 0 )
-    _inputs[plId].left = 1;
-  if ( movx > 0 )
-    _inputs[plId].right = 1;
-  if ( movy )
-    _inputs[plId].jump = 1;
-}
-
 void ControlsArray::initializeControls() {
   _keyMapping[0].left_key = SDLK_z;
   _keyMapping[0].right_key = SDLK_c;
@@ -57,11 +46,12 @@ void ControlsArray::initializeControls() {
   _keyMapping[3].jump_key = SDLK_e;
 }
 
-void ControlsArray::setControlsState(InputState *is) {
+void ControlsArray::setControlsState(InputState *is, Team * tl, Team * tr) {
   Uint8 *keystate = is->getKeyState();
   int i = 0;
   int player;
   char cmd;
+  std::vector<Player *> players;
 
 #ifndef NONET
   if (nets)
@@ -72,13 +62,20 @@ void ControlsArray::setControlsState(InputState *is) {
     }
 #endif
 
-  for (i = 0; i < 4 ; i++ ) {
-    if ( !_isArtificial[i] && !_isRemote[i] ) {
-      _inputs[i].left = keystate[_keyMapping[i].left_key];
-      _inputs[i].right = keystate[_keyMapping[i].right_key];
-      _inputs[i].jump = keystate[_keyMapping[i].jump_key];
+  players = tl->players();
+
+  for (i = 0; i < 2; i++) {
+    for ( std::vector<Player *>::const_iterator it = players.begin();
+	  it != players.end(); it++ ) {
+      if ( (*it)->getCtrl() == PL_CTRL_HUMAN ) {
+	_inputs[(*it)->id()].left = keystate[_keyMapping[(*it)->id()].left_key];
+	_inputs[(*it)->id()].right = keystate[_keyMapping[(*it)->id()].right_key];
+	_inputs[(*it)->id()].jump = keystate[_keyMapping[(*it)->id()].jump_key];
+      } else if ( (*it)->getCtrl() == PL_CTRL_AI ) {
+	_inputs[(*it)->id()] = ((PlayerAI *) (*it))->planAction();
+      }
     }
+    players = tr->players();
   }
 }
-
 

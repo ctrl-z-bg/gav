@@ -26,14 +26,13 @@
 #include <SDL.h>
 #include "FrameSeq.h"
 #include <string>
-#include "ControlsArray.h"
-//#include "Team.h"
 #include "Theme.h"
 #include "globals.h"
 
 #define RESET_WALK_SEQUENCE (100000)
 
 class Team;
+class ControlsArray;
 
 #define SPEEDY  (160)
 
@@ -53,7 +52,14 @@ typedef enum {
   PL_STATE_JUMP
 } pl_state_t;
 
+typedef enum {
+  PL_CTRL_HUMAN,
+  PL_CTRL_AI,
+  PL_CTRL_REMOTE
+} pl_ctrl_t;
+
 class Player {
+protected:
   FrameSeq * _frames;
   std::string _name;
   pl_type_t  _type;
@@ -70,8 +76,12 @@ class Player {
 
   char *_fileNames[NUM_TYPES];
 
- public:
+public:
+  Player() {};
   Player(Team *team, std::string name, pl_type_t type, int idx, int speed) {
+    init(team, name, type, idx, speed);
+  }
+  void init(Team *team, std::string name, pl_type_t type, int idx, int speed) {
 
     _fileNames[PL_TYPE_MALE_LEFT]    = 
 	(char *)malloc(sizeof(char)*(MAXPATHLENGTH+1));
@@ -107,7 +117,7 @@ class Player {
     _y      = GROUND_LEVEL();
   }
 
-  ~Player() {
+  virtual ~Player() {
       free(_fileNames[PL_TYPE_MALE_LEFT]);
       free(_fileNames[PL_TYPE_MALE_RIGHT]);
       free(_fileNames[PL_TYPE_FEMALE_LEFT]);
@@ -160,8 +170,8 @@ class Player {
 
   bool collidesWith(FrameSeq *fs, int idx, SDL_Rect *rect);
 
-};
+  virtual pl_ctrl_t getCtrl() { return PL_CTRL_HUMAN; };
 
-#include "Team.h"
+};
 
 #endif

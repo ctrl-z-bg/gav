@@ -20,49 +20,51 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "AI.h"
+#include "PlayerAI.h"
+#include "Ball.h"
 
 #define JUMP_LIMIT       ( 200 )
 
-void Agent::update() {
+triple_t PlayerAI::planAction() {
   int jmp = 0;
   //int i;
-  int side = (_p->team())->side();
-  int nplrs = (_p->team())->nplayers();
+  int side = (team())->side();
+  int nplrs = (team())->nplayers();
   int px, bx, fs, mp, bsx, net, wall; /* Normalized values */
   int mypos, minslot, maxslot;
   float slotsize;
   int move, pw;
+  triple_t ret;
 
-  net = fs = abs(_p->maxX() - _p->minX());
+  net = fs = abs(maxX() - minX());
   wall = 0;
   mp = fs/2;
 
   /* Normalize player x position, ball x position and ball x speed:
      Reasoning as it plays on the left, net=fs, wall=0 */
-  px = (side>0)?(_p->maxX()-_p->x()-_p->width()/2):
-      (_p->x()+_p->width()/2-_p->minX()); 
-  pw = _p->width();
-  bx = (side>0)?(_p->maxX()-(_b->radius()+_b->x())):
-      (_b->radius()+_b->x()-_p->minX()); 
+  px = (side>0)?(maxX()-x()-width()/2):
+      (x()+width()/2-minX()); 
+  pw = width();
+  bx = (side>0)?(maxX()-(_b->radius()+_b->x())):
+      (_b->radius()+_b->x()-minX()); 
   bsx = -side*_b->spdx();
 
   slotsize = net/nplrs;
   
   if (nplrs > 1) {
-      std::vector<Player *> plv = (_p->team())->players();
+      std::vector<Player *> plv = (team())->players();
       /* Look for my id */
       std::vector<Player *>::iterator it; 
-      int myidx = _p->orderInField(), i;
+      int myidx = orderInField(), i;
 
       /* If nobody set the Order In Field I will do for all the team */
-      if (_p->orderInField() < 0) {
+      if (orderInField() < 0) {
 	  for ( it = plv.begin(), i=0;
 		it != plv.end();
 		it++,i++ ) 
 	      (*it)->setOIF(i);	      
 	  
-	  myidx = _p->orderInField();
+	  myidx = orderInField();
 
       }
       mypos = (int)(slotsize*(myidx+0.5));
@@ -73,7 +75,7 @@ void Agent::update() {
 	    it++ ) {
 	  opx = (side>0)?((*it)->maxX()-(*it)->x()-(*it)->width()/2):
 	      ((*it)->x()+(*it)->width()/2-(*it)->minX()); 	  
-	  if ( ( (*it)->id() != _p->id() ) &&
+	  if ( ( (*it)->id() != id() ) &&
 	       ( abs(opx-mypos) < minxsearching ) ){
 	      closer=(*it)->id();
 	      closerp=(*it);
@@ -86,8 +88,8 @@ void Agent::update() {
       /* Someone is inside my slot over the 15% the slot size */
       if (minxsearching < (slotsize*0.35)) {
 	  myidx = closerp->orderInField();
-	  closerp->setOIF(_p->orderInField());
-	  _p->setOIF(myidx);
+	  closerp->setOIF(orderInField());
+	  setOIF(myidx);
       }
       mypos = (int )(slotsize*(myidx+0.5));
       minslot = (int )(slotsize*myidx);
@@ -101,7 +103,7 @@ void Agent::update() {
   /* My rest position has been chosen, and the slot determined */
   
   //  int hd = 3*_b->radius()/4;
-  int hd = (_b->radius()+_p->width())/2;
+  int hd = (_b->radius()+width())/2;
   int minhd = 0;
   if ( !_b->gravity() ) { 
       if (hd/2 >= 12) 
@@ -112,7 +114,7 @@ void Agent::update() {
   int closest = 1;
   if ( !_b->gravity() ) {
       int opx;
-      std::vector<Player *> plv = (_p->team())->players();
+      std::vector<Player *> plv = (team())->players();
       /* Look for my id */
       std::vector<Player *>::iterator it; 
       for ( it = plv.begin();
@@ -155,5 +157,16 @@ void Agent::update() {
 
   move=-side*(move);
 
-  _ca->action(_p->id(), move, jmp);
+
+  ret.left = ret.right = ret.jump = 0;
+
+  if ( move < 0 )
+    ret.left = 1;
+  if ( move > 0 )
+    ret.right = 1;
+  if ( jmp )
+    ret.jump = 1;
+
+  return ret;
 }
+

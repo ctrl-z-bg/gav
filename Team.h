@@ -26,9 +26,14 @@
 #include <SDL.h>
 #include <vector>
 #include "Player.h"
+#include "PlayerHuman.h"
+#include "PlayerAI.h"
+#include "PlayerRemote.h"
 #include "ControlsArray.h"
 #include "ScreenFont.h"
 #include "globals.h"
+
+class Ball;
 
 extern ScreenFont *cga;
 
@@ -43,6 +48,15 @@ class Team {
   int _side;
   int _nplayers;
   int _playerNumInc;
+
+  inline void addPlayer(Player * p) {
+    _players.push_back(p);
+    for(unsigned int i = 0; i < _players.size(); i++)
+      _players[i]->setX((i+1) * (_xmax + _xmin) / (_players.size()+1) - 
+			(p->width() / 2));
+    p->setY(p->GROUND_LEVEL());
+    _nplayers++;
+ }
 
  public:
   // side < 0: left, > 0 right
@@ -71,16 +85,28 @@ class Team {
     return(_score);
   }
 
-  inline Player * addPlayer(std::string name, pl_type_t type, int speed = 250) {
-    Player *p = new Player(this, name, type, _nplayers * 2 + _playerNumInc,
-			   speed);
-    _players.push_back(p);
-    for(unsigned int i = 0; i < _players.size(); i++)
-      _players[i]->setX((i+1) * (_xmax + _xmin) / (_players.size()+1) - 
-			(p->width() / 2));
-    p->setY(p->GROUND_LEVEL());
-    _nplayers++;
-    return(p);
+  inline Player * addPlayerHuman(std::string name, 
+				 pl_type_t type, int speed = 250) {
+    Player *p = new PlayerHuman(this, name, type, 
+				_nplayers * 2 + _playerNumInc, speed);
+    addPlayer(p);
+    return p;
+ }
+
+  inline Player * addPlayerRemote(std::string name, 
+				  pl_type_t type, int speed = 250) {
+    Player *p = new PlayerRemote(this, name, type, 
+				 _nplayers * 2 + _playerNumInc, speed);
+    addPlayer(p);
+    return p;
+ }
+
+  inline Player * addPlayerAI(std::string name, 
+			      pl_type_t type, Ball * b, int speed = 250) {
+    Player *p = new PlayerAI(this, name, type, 
+			     _nplayers * 2 + _playerNumInc, speed, b);
+    addPlayer(p);
+    return p;
  }
 
   inline std::vector<Player *> players() {

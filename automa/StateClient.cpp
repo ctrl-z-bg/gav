@@ -155,19 +155,14 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     tr = new Team(1);
     b = new Ball(BALL_ORIG);
 
-    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
-      agentL[i] = NULL;
-      agentR[i] = NULL;
-    }
-
     for ( int j = 0; j < _lp; j++ ) {
       string name = "Pippo-" + j;
-      tl->addPlayer(name.c_str(), PL_TYPE_MALE_LEFT);
+      tl->addPlayerHuman(name.c_str(), PL_TYPE_MALE_LEFT);
     }
 
     for ( int j = 0; j < _rp; j++ ) {
       string name = "Pluto-" + j;
-      tr->addPlayer(name.c_str(), PL_TYPE_MALE_RIGHT);
+      tr->addPlayerHuman(name.c_str(), PL_TYPE_MALE_RIGHT);
     }
 
     tl->setScore(0);
@@ -175,7 +170,6 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     b->resetPos((int) (SCREEN_WIDTH() * 0.25),
 		(int) (SCREEN_HEIGHT() * 0.66));
     
-    controlsArray->setHuman(0);
   }
   
   if ( is->getKeyState()[SDLK_ESCAPE] ) {
@@ -190,7 +184,7 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     return(STATE_MENU);
   }  
 
-  controlsArray->setControlsState(is);
+  controlsArray->setControlsState(is, tl, tr);
   triple_t input = controlsArray->getCommands(0);
   netc->SendCommand((input.left?CNTRL_LEFT:0)|
 		    (input.right?CNTRL_RIGHT:0)|

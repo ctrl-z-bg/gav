@@ -20,30 +20,20 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _STATECLIENT_H_
-#define _STATECLIENT_H_
+#ifndef __PLAYERREMOTE_H__
+#define __PLAYERREMOTE_H__
 
-#include "State.h"
-#include "StateWithInput.h"
-#include "InputState.h"
-#include "Team.h"
-#include "Ball.h"
+#include "Player.h"
 
-class StateClient : public State, public StateWithInput {
-private:
-  Team *tl, *tr; // team left and team right
-  Ball *b;
-  unsigned int prevDrawn;
-  int _lp, _rp;
+class PlayerRemote : public Player {
+ public:
+  PlayerRemote(Team *team, std::string name, 
+	      pl_type_t type, int idx, int speed) {
+    init(team, name, type, idx, speed);
+  }
 
-public:
-  StateClient() : prevDrawn(0) {}
+  pl_ctrl_t getCtrl() { return PL_CTRL_REMOTE; }
 
-  virtual int execute(InputState *is, unsigned int ticks,
-		      unsigned int prevTicks, int firstTime);
-  
-private:
-  int setupConnection(InputState *is);
 };
 
-#endif // _STATEPLAYING_H_
+#endif

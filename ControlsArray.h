@@ -27,11 +27,7 @@
 #include "InputState.h"
 #include "globals.h"
 
-typedef struct {
-  Uint8 left;
-  Uint8 right;
-  Uint8 jump;
-} triple_t;
+class Team;
 
 typedef struct {
   int left_key;
@@ -45,15 +41,11 @@ class ControlsArray {
   triple_t _inputs[MAX_PLAYERS];
   controls_t _keyMapping[MAX_PLAYERS];
   Uint8 _f[12];
-  bool _isArtificial[MAX_PLAYERS];
-  bool _isRemote[MAX_PLAYERS];
 
 public:
   ControlsArray() {
     memset(_inputs, 0, MAX_PLAYERS * sizeof(triple_t));
     memset(_f, 0, 12);
-    for ( int i = 0; i < MAX_PLAYERS; _isArtificial[i++] = false );
-    for ( int i = 0; i < MAX_PLAYERS; _isRemote[i++] = false );
     initializeControls();
   }
 
@@ -73,23 +65,9 @@ public:
     }
   }
   void initializeControls();
-  void setControlsState(InputState *is);
+  void setControlsState(InputState *is, Team * tl, Team * tr);
   inline triple_t getCommands(int idx) { return _inputs[idx];}
 
-  void action(int plId, int movx, int movy);
-
-  inline void setArtificial(int plId) {
-    _isArtificial[plId] = true;
-    _isRemote[plId] = false;
-  }
-  inline void setHuman(int plId) {
-    _isArtificial[plId] = false;
-    _isRemote[plId] = false;
-  }
-  inline void setRemote(int plId) {
-    _isArtificial[plId] = false;
-    _isRemote[plId] = true;
-  }
 };
 
 #endif // __CONROLSARRAY_H__

@@ -133,29 +133,21 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tr = new Team(1);
     b = new Ball(BALL_ORIG);
 
-    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
-      agentL[i] = NULL;
-      agentR[i] = NULL;
-    }
-
     for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
       if ( configuration.left_players[j] == PLAYER_NONE ) {
 	continue;
       }
+
       string name = "Pippo-" + j;
-      Player *automL = tl->addPlayer(name.c_str(), PL_TYPE_MALE_LEFT);
-      agentL[j] = new Agent(b, automL, controlsArray);
-      if ( configuration.left_players[j] == PLAYER_HUMAN )
-	controlsArray->setHuman(j*2);
-#ifdef NONET 
-      else 
-	controlsArray->setArtificial(j*2);
-#else
-      else if (!nets || nets->isRemote(j*2))
-	controlsArray->setArtificial(j*2);
-      else
-	controlsArray->setRemote(j*2);
-#endif
+      if ( configuration.left_players[j] == PLAYER_HUMAN ) {
+	tl->addPlayerHuman(name.c_str(), PL_TYPE_MALE_LEFT);
+      } else {
+	if (!nets || !(nets->isRemote(j*2)))
+	  tl->addPlayerAI(name.c_str(), PL_TYPE_MALE_LEFT, b);
+	else
+	  tl->addPlayerRemote(name.c_str(), PL_TYPE_MALE_LEFT);
+      }
+
       i++;
     }
 
@@ -164,19 +156,15 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 	continue;
       }
       string name = "Pluto-" + j;
-      Player *automR = tr->addPlayer(name.c_str(), PL_TYPE_MALE_RIGHT);
-      agentR[j] = new Agent(b, automR, controlsArray);
-      if ( configuration.right_players[j] == PLAYER_HUMAN )
-	controlsArray->setHuman(j*2 + 1);
-#ifdef NONET 
-      else 
-	controlsArray->setArtificial(j*2 + 1);
-#else 
-      else if (!nets || nets->isRemote(j*2+1))
-	controlsArray->setArtificial(j*2 + 1);
-      else
-	controlsArray->setRemote(j*2+1);
-#endif
+      if ( configuration.right_players[j] == PLAYER_HUMAN ) {
+	tr->addPlayerHuman(name.c_str(), PL_TYPE_MALE_RIGHT);
+      } else {
+	if (!nets || !(nets->isRemote(j*2+1)))
+	  tr->addPlayerAI(name.c_str(), PL_TYPE_MALE_RIGHT, b);
+	else
+	  tr->addPlayerRemote(name.c_str(), PL_TYPE_MALE_RIGHT);
+      }
+
       i++;
     }
 
@@ -186,7 +174,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 		(int) (SCREEN_HEIGHT() * 0.66));
   }
   
-  controlsArray->setControlsState(is);
+  controlsArray->setControlsState(is, tl, tr);
   
   if ( is->getKeyState()[SDLK_ESCAPE] ) {
     delete(tl);
@@ -198,40 +186,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       nets = NULL;
     } 
 #endif
-    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
-      if ( agentL[i] ) delete(agentL[i]);
-      if ( agentL[i] ) delete(agentR[i]);
-    }
 #ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
 #endif
     return(STATE_MENU);
   }  
-
-  /* update AI agents */
-  for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
-    if ( configuration.left_players[j] == PLAYER_COMPUTER )
-#ifdef NONET
-	agentL[i]->update();
-#else 
-      if ( !nets || !(nets->isRemote(2*i)) )
-	agentL[i]->update();
-#endif
-
-    if ( configuration.left_players[j] != PLAYER_NONE )
-      i++;
-  }
-  for ( int i = 0, j = 0; i < configuration.right_nplayers; j++ ) {
-    if ( configuration.right_players[j] == PLAYER_COMPUTER )
-#ifdef NONET
-	agentR[j]->update();
-#else
-      if ( !nets || !(nets->isRemote(2*i+1)) )
-	agentR[j]->update();
-#endif
-    if ( configuration.right_players[j] != PLAYER_NONE )
-      i++;
-  }
 
   tl->update(ticks - prevTicks, controlsArray);
   tr->update(ticks - prevTicks, controlsArray);
@@ -274,10 +233,6 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       nets = NULL;
     }
 #endif
-    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
-      if ( agentL[i] ) delete(agentL[i]);
-      if ( agentL[i] ) delete(agentR[i]);
-    }
 #ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
 #endif

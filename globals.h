@@ -71,6 +71,12 @@ typedef struct playing_s {
   bool loop;
 } playing_t, *playing_p;
 
+typedef struct {
+  Uint8 left;
+  Uint8 right;
+  Uint8 jump;
+} triple_t;
+
 #define MAX_PLAYING_SOUNDS 10
 
 extern playing_t playing [MAX_PLAYING_SOUNDS];

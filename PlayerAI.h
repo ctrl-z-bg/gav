@@ -20,27 +20,29 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef __AI_H__
-#define __AI_H__
+#ifndef __PLAYERAI_H__
+#define __PLAYERAI_H__
 
-#include <SDL.h>
-#include "FrameSeq.h"
-#include <string>
-#include "ControlsArray.h"
-#include "Ball.h"
 #include "Player.h"
+#include "ControlsArray.h"
 
-class Agent {
-  Ball *_b;
-  Player *_p;
-  ControlsArray *_ca;
-  
-public:
-  Agent(Ball *b, Player *p, ControlsArray *ca) : _b(b), _p(p), _ca(ca) {
-    _ca->setArtificial(p->id());
+class Ball;
+
+class PlayerAI : public Player {
+  Ball * _b;
+
+ public:
+  PlayerAI(Team *team, std::string name, 
+	   pl_type_t type, int idx, int speed,
+	   Ball *b) {
+    init(team, name, type, idx, speed);
+    _b = b;
   }
 
-  void update();
+  virtual pl_ctrl_t getCtrl() { return PL_CTRL_AI; }
+
+  virtual triple_t planAction();
+
 };
 
-#endif // __AI_H__
+#endif

@@ -27,14 +27,12 @@
 #include "InputState.h"
 #include "Team.h"
 #include "Ball.h"
-#include "AI.h"
 #include "StateWithInput.h"
 
 class StatePlaying : public State, public StateWithInput {
 private:
   Team *tl, *tr; // team left and team right
   Ball *b;
-  Agent *agentR[MAX_PLAYERS/2], *agentL[MAX_PLAYERS/2];
   unsigned int prevDrawn;
 
 public:

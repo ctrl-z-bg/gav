@@ -23,6 +23,7 @@
 #include "Player.h"
 #include "ControlsArray.h"
 #include <math.h>
+#include "Team.h"
 
 int Player::maxX() { return _team->xmax(); }
 int Player::minX() { return _team->xmin(); }
