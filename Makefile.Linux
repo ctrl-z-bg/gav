@@ -43,13 +43,13 @@ gav:	$(ALL_OBJ) $(OFILES)
 
 clean:
 	for i in $(SUBDIRS) ; do \
-	  make -C $$i clean;\
+	  $(MAKE) -C $$i clean;\
 	done
 	rm -f *~ *.o gav $(DEPEND)
 
 bindist: all
 	for i in $(SUBDIRS) ; do \
-	  make -C $$i clean;\
+	  $(MAKE) -C $$i clean;\
 	done
 	rm -f *~ *.o
 
@@ -60,7 +60,7 @@ install: all
 
 depend:
 	for i in $(SUBDIRS) ; do \
-	  make -C $$i depend;\
+	  $(MAKE) -C $$i depend;\
 	done
 	$(RM) $(DEPEND)
 	$(CXX) -M $(CXXFLAGS) $(SRCS) >> $(DEPEND)
