@@ -42,27 +42,50 @@ void StatePlaying::setupConnection(InputState *is) {
   r.w = background->w;
   SDL_BlitSurface(background, &r, screen, &r);
   SDL_Flip(screen);
-  /* now, ask for server address, port and team side */
-  cga->printRow(screen, 0, "How many clients to wait? [1]");
+  /* now, ask for the port to listen on */
+  char msg[100];
+  string ports = "";
+  int port;
+  sprintf(msg, "What port to listen on? [%d]", SERVER_PORT);
+  cga->printRow(screen, 0, msg);
   SDL_Flip(screen);
   while ( (ch = getKeyPressed(is)) != 0 ) {
     if ( ch < 0 ) {
-      clinumb = deleteOneChar(clinumb); // should be backspace...
+      ports = deleteOneChar(ports); // should be backspace...
       cga->printRow(screen, 1, "                 ", background);
     } else {
       char w[2];
       w[0] = ch;
       w[1] = 0;
-      clinumb = clinumb + w;
-      cga->printRow(screen, 1, clinumb.c_str(), background);
-      SDL_Flip(screen);
+      ports = ports + w;
     }
+    cga->printRow(screen, 1, ports.c_str(), background);
+    SDL_Flip(screen);
+  }
+  port = atoi(ports.c_str());
+  if ( !port )
+    port = SERVER_PORT;
+
+  cga->printRow(screen, 2, "How many clients to wait? [1]");
+  SDL_Flip(screen);
+  while ( (ch = getKeyPressed(is)) != 0 ) {
+    if ( ch < 0 ) {
+      clinumb = deleteOneChar(clinumb); // should be backspace...
+      cga->printRow(screen, 3, "                 ", background);
+    } else {
+      char w[2];
+      w[0] = ch;
+      w[1] = 0;
+      clinumb = clinumb + w;
+    }
+    cga->printRow(screen, 3, clinumb.c_str(), background);
+    SDL_Flip(screen);
   }
   nclients = atoi(clinumb.c_str());
   if ( !nclients )
     nclients = 1;
   
-  nets->StartServer();
+  nets->StartServer(port);
   nets->WaitClients(nclients);
 }
 

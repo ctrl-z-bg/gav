@@ -32,6 +32,9 @@ class StateWithInput {
   StateWithInput() {}
   
   std::string deleteOneChar(std::string s) {
+    if ( s.length() < 1 )
+      return(s);
+
     char s2[s.length()];
 
     strncpy(s2, s.c_str(), s.length() - 1);

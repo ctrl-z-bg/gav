@@ -33,6 +33,7 @@ int StateClient::setupConnection(InputState *is) {
   char ch;
   string ports = "";
   int port;
+  char ti;
 
   while ( !configured ) {
     /* first, delete the screen... */
@@ -79,21 +80,41 @@ int StateClient::setupConnection(InputState *is) {
     port = atoi(ports.c_str());
     if ( !port )
       port = SERVER_PORT;
+    string team = "";
+    cga->printRow(screen, 4, "Left or right team? (l/r)");
+    SDL_Flip(screen);
+    while ( (ch = getKeyPressed(is)) != 0 ) {
+      if ( ch < 0 ) {
+	team = deleteOneChar(team); // should be backspace...
+	cga->printRow(screen, 5, "                       ", background);
+      } else {
+	char w[2];
+	w[0] = ch;
+	w[1] = 0;
+	team = team + w;
+      }
+      cga->printRow(screen, 5, team.c_str(), background);
+      SDL_Flip(screen);
+    }
+    ti = (*(team.c_str())=='l')?NET_TEAM_LEFT:NET_TEAM_RIGHT;
+
     configured = true;
   }
 
   netc = new NetClient();
-  cga->printRow(screen, 4, "connecting...");
+  cga->printRow(screen, 6, "connecting...");
   SDL_Flip(screen);
-  if ( netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
+  if ( netc->ConnectToServer(&_lp, &_rp, ti, saddress.c_str(),
 			     port) == -1 ) {
     delete(netc);
-    cga->printRow(screen, 5, "host unreachable");
+    cga->printRow(screen, 7, "host unreachable");
     SDL_Flip(screen);
     SDL_Delay(1000);
     nets = NULL;
     return(STATE_MENU);
   }
+  cga->printRow(screen, 7, "connected. Waiting for other clients...");
+  SDL_Flip(screen);
 
   /* ok, I'm connected and I'm waiting for the game start */
   netc->WaitGameStart();
