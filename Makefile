@@ -42,6 +42,17 @@ clean:
 	done
 	rm -f *~ *.o gav
 
+bindist: all
+	for i in $(SUBDIRS) ; do \
+	  make -C $$i clean;\
+	done
+	rm -f *~ *.o
+
+install: all
+	install gav /usr/bin
+	install -d /usr/share/games/gav/themes
+	cp -r themes/* /usr/share/games/gav/themes
+
 depend:
 	for i in $(SUBDIRS) ; do \
 	  make -C $$i depend;\
