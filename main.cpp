@@ -44,10 +44,60 @@
 
 #include "Theme.h"
 
+#include "Sound.h"
 
 #define BPP 16
 
 using namespace std;
+
+#ifdef AUDIO
+SDL_AudioSpec desired,obtained;
+
+playing_t playing[MAX_PLAYING_SOUNDS];
+
+void AudioCallBack(void *user_data,Uint8 *audio,int length)
+{
+  int i;
+
+  memset(audio,0 , length);
+
+  for(i=0; i <MAX_PLAYING_SOUNDS;i++)
+    {
+      if(playing[i].active) {
+	Uint8 *sound_buf;
+	Uint32 sound_len;
+	sound_buf = playing[i].sound->samples;
+	sound_buf += playing[i].position;
+
+	if((playing[i].position +length)>playing[i].sound->length){
+	  sound_len = playing[i].sound->length - playing[i].position;
+	} else {
+	  sound_len=length;
+	}
+
+	SDL_MixAudio(audio,sound_buf,sound_len,VOLUME_PER_SOUND);
+
+	playing[i].position+=length;
+
+	if(playing[i].position>=playing[i].sound->length){
+	  playing[i].active=0;
+	}
+      }
+    }
+}
+
+
+
+void ClearPlayingSounds(void)
+{
+  int i;
+
+  for(i=0;i<MAX_PLAYING_SOUNDS;i++)
+    {
+      playing[i].active=0;
+    }
+}
+#endif
 
 void
 init()
@@ -55,13 +105,40 @@ init()
   SDL_Init(SDL_INIT_VIDEO);
   atexit(SDL_Quit);
 
+#ifdef AUDIO
+  atexit(SDL_CloseAudio);
+
+  desired.freq=22050;
+  desired.format = AUDIO_S16;
+  desired.samples=4096;
+  desired.channels=2;
+  desired.callback=AudioCallBack;
+  desired.userdata=NULL;
+
+  
+  if(SDL_OpenAudio(&desired,&obtained)<0){
+    printf("Cannot open the audio device\n");
+  }
+
+
+  ClearPlayingSounds();
+
+  SDL_PauseAudio(0);
+#endif
+
   setThemeDir(TH_DIR);
   videoinfo = SDL_GetVideoInfo();
   CurrentTheme = new Theme(TH_DEFAULT);
 }
 
+#ifdef AUDIO
+Sound * Prova;
+#endif
 int main(int argc, char *argv[]) {
   init();
+#ifdef AUDIO
+  Prova = new Sound("rocket.wav");
+#endif
 
    /* initialize menus */
   Menu m;

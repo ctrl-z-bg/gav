@@ -43,6 +43,29 @@ extern MenuRoot *mroot;
 
 extern Configuration configuration;
 
+#ifdef AUDIO
+extern SDL_AudioSpec desired,obtained;
+
+typedef struct sound_s {
+  Uint8 *samples;
+  Uint32 length;
+} sound_t, *sound_p;
+
+typedef struct playing_s {
+  int active;
+  sound_p sound;
+
+  Uint32 position;
+} playing_t, *playing_p;
+
+#define MAX_PLAYING_SOUNDS 10
+
+extern playing_t playing [MAX_PLAYING_SOUNDS];
+
+#define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
+
+#endif //AUDIO
+
 #define SCREEN_WIDTH() (::background->w)
 #define SCREEN_HEIGHT() (::background->h)
 #define MAXPATHLENGTH (1024)
