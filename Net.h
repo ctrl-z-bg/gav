@@ -35,12 +35,12 @@
 
 /* The ID of a client is a char with the higher order 2 bits indicating
    the team, the left 6 bits say the player number. When a client wants to
-   register itself, it sends a command with id equal to TEAM_LEFT or
-   TEAM_RIGHT. The server fills the others 6 bits and sends the id
+   register itself, it sends a command with id equal to NET_TEAM_LEFT or
+   NET_TEAM_RIGHT. The server fills the others 6 bits and sends the id
    back to the client.
 */
-#define TEAM_LEFT  0x80    // 10xxxxxx
-#define TEAM_RIGHT 0x40    // 01xxxxxx
+#define NET_TEAM_LEFT  0x80    // 10xxxxxx
+#define NET_TEAM_RIGHT 0x40    // 01xxxxxx
 
 typedef struct {
   short x;

@@ -51,10 +51,10 @@ int Net::WaitClients(int nclients) {
       memcpy(ipa, &(packetCmd->address), sizeof(IPaddress));
       clientIP.push_back(ipa);
       id = &(((net_command_t*)(packetCmd->data))->id);
-      if (*id & TEAM_LEFT) {
+      if (*id & NET_TEAM_LEFT) {
 	*id |= nleft;
 	nleft++;
-      } else if (*id & TEAM_RIGHT) {
+      } else if (*id & NET_TEAM_RIGHT) {
 	*id |= nright;
 	nright++;
       }

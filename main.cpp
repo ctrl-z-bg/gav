@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
       //printf("   +++++ %d\n",(int)b.frame());
     }
   } else {
-    net.ConnectToServer(TEAM_LEFT, "mynos.metaware.it");
+    net.ConnectToServer(NET_TEAM_RIGHT, "mynos.metaware.it");
     while(1) {
       if (net.ReceiveSnapshot(&t1, &t2, &b) != -1)
 	printf("client %p: %d\n", (int*)net.id(), b.frame());
