@@ -27,6 +27,9 @@
 #define GRAVITY 250
 #define MAX_TOUCHES 3
 
+#define MIN(a,b)        ((a<b)?a:b)
+#define MAX(a,b)        ((a>b)?a:b)
+
 using namespace std;
 
 bool Ball::approaching(int spdx, int spdy) {
@@ -86,6 +89,13 @@ void Ball::update_internal(Player * pl) {
   _spdx = (int) (x1 * cos(beta) - y1 * sin(beta));
   _spdy = (int) (- (x1 * sin(beta) + y1 * cos(beta)));
 
+  if ( (pl->speedX() - _spdx) * dx < 0)
+    _spdx = pl->speedX();
+
+  if ( (pl->speedY() - _spdy) * dy > 0)
+    _spdy = pl->speedY();
+
+
 #define MIN_POS_SPD 100
 
   if ( (_spdy < MIN_POS_SPD) && (cby < cply) )
@@ -139,6 +149,19 @@ Ball::distance(int x, int y)
 bool
 Ball::netPartialCollision(int x, int y)
 {
+  int xmin, xmax, ymin, ymax;
+
+  xmin = MIN(x, _oldx);
+  xmax = MAX(x, _oldx);
+  ymin = MIN(y, _oldy);
+  ymax = MAX(y, _oldy);
+
+  if ((xmin < NET_X) && (xmax > NET_X)) {
+    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin);
+    if ( (collisionY < NET_Y ) && (collisionY > NET_Y - _frames->height()/2) )
+      return true;
+  }
+
   return((x + _frames->width() > NET_X) && (x < NET_X) &&
 	 ( distance(NET_X, NET_Y) < (_frames->width()/2)) );
 	 /* (y + _frames->height()/2 < NET_Y) &&
@@ -148,6 +171,19 @@ Ball::netPartialCollision(int x, int y)
 bool
 Ball::netFullCollision(int x, int y)
 {
+  int xmin, xmax, ymin, ymax;
+
+  xmin = MIN(x, _oldx);
+  xmax = MAX(x, _oldx);
+  ymin = MIN(y, _oldy);
+  ymax = MAX(y, _oldy);
+
+  if ((xmin < NET_X) && (xmax > NET_X)) {
+    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin);
+    if ( collisionY > NET_Y )
+      return true;
+  }
+
   return((x + _frames->width() > NET_X) && (x < NET_X) &&
 	 (y + _frames->height()/2 >= NET_Y));
 }
@@ -156,7 +192,6 @@ Ball::netFullCollision(int x, int y)
 // away
 void Ball::update(int passed, Team *tleft, Team *tright) {
   int dx, dy;
-  // int oldx, oldy;
   static int overallPassed = 0;
     
   overallPassed += passed;
@@ -179,13 +214,13 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   dx = (int) (_spdx * ((float) passed / 1000.0));
   dy = (int) (_spdy * ((float) passed / 1000.0));
 
-  int oldx = _x;
-  int oldy = _y;
+  _oldx = _x;
+  _oldy = _y;
     
 
   _x += dx;
   _y -= dy; // usual problem with y
-    
+  
   //ball hits upper wall
   if ( _y < 24 ) {
     _y = 24;
@@ -211,8 +246,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 
   // net collision
   if ( netPartialCollision(_x, _y) ) {
-    if ( !netPartialCollision(oldx, NET_Y - 3*_frames->height()/4) ) {
-      if ( oldy < _y ) { // hits from the top
+    if ( !netPartialCollision(_oldx, NET_Y - 3*_frames->height()/4) ) {
+      if ( _oldy < _y ) { // hits from the top
 	if ( (_x + _frames->width()/8 < NET_X) &&
 	     (_x + 7*_frames->width()/8 > NET_X) )
 	  _spdx = - _spdx;
@@ -222,9 +257,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _y -= _frames->height()/4; //(int) (_frames->height() -
     //(4*distance(NET_X, NET_Y) / _frames->height()));
     _spdy = (int) fabs(_spdy * ELASTIC_SMOOTH * ELASTIC_SMOOTH);
-  } else if ( netFullCollision(_x, _y) && !netFullCollision(oldx, oldy)) {
+  } else if ( netFullCollision(_x, _y) && !netFullCollision(_oldx, _oldy)) {
     _spdx = (int) ((- _spdx) * ELASTIC_SMOOTH);
-    if ( oldx > _x )
+    if ( _oldx > _x )
       _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
     else
       _x =  2* NET_X - 2*_frames->width() - _x;
@@ -237,7 +272,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     if ( !_scorerSide ) {
       // oldx, so we're safe from collisions against
       // the net
-      _scorerSide = (oldx < (SCREEN_WIDTH() / 2))?1:-1;
+      _scorerSide = (_oldx < (SCREEN_WIDTH() / 2))?1:-1;
       _scoredTime = 0;
     }
   }
@@ -264,16 +299,17 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 	  //_collisionCount[team] << endl;
 	  update_internal(*it);
 	  while (collide(*it)) {
-	    dx = (int) (_spdx * 0.1); // ((float) passed / 1000.0));
-	    dy = (int) (_spdy * 0.1); // ((float) passed / 1000.0));
-
 	    _x += (_spdx>0)?1:-1;
 	    _y -= (_spdy>0)?1:-1; // usual problem with y
 	  }
-	  _inCollisionWith = NULL;
-	    //_x = oldx;
-	    //_y = oldy;
+	  //_inCollisionWith = NULL;
+	} else {
+	  while (collide(*it)) {
+	    _x += (_spdx>0)?1:-1;
+	    _y -= (_spdy>0)?1:-1; // usual problem with y
+	  }
 	}
+
       } else if ( _inCollisionWith == *it )
 	_inCollisionWith = NULL;
     }

@@ -54,6 +54,7 @@ class Ball {
   float _angle;
   int _spdx, _spdy;
   int _x, _y;
+  int _oldx, _oldy;
   int _frameIdx;
   int _radius;
   int _beginning;
