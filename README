@@ -47,7 +47,12 @@ will play on (left or right). Currently, only one player per client is
 allowed (while more than one can play on the server). The client's player
 is always controlled by Player 1's controls.
 
-Checkout the INSTALL file for installation instructions.
+Installing themes:
+themes default to the /usr/share/games/gav/themes directory, but if a
+directory ./themes exists, they are looked for in such a directory. This
+might cause problem if you start GAV from a directory that contains
+a 'themes' subdirectory, but no classic theme, which is the
+default.
 
 Thanks:
 - Marius Andreiana, who provided the gnome menu entry.
