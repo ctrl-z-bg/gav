@@ -25,6 +25,7 @@ make
 install -d $RPM_BUILD_ROOT/usr/bin
 install gav $RPM_BUILD_ROOT/usr/bin/
 install -d $RPM_BUILD_ROOT/usr/share/games/gav/themes
+install -d $RPM_BUILD_ROOT/usr/share/games/gav/sounds
 install -d $RPM_BUILD_ROOT/usr/share/doc/gav-%{version}
 install -d $RPM_BUILD_ROOT/usr/share/applications
 install -d $RPM_BUILD_ROOT/usr/share/pixmaps
@@ -33,6 +34,7 @@ install package/gav.desktop $RPM_BUILD_ROOT/usr/share/applications
 install package/gav.desktop $RPM_BUILD_ROOT/etc/X11/applnk/Games
 install package/gav.png $RPM_BUILD_ROOT/usr/share/pixmaps
 cp -r themes/classic $RPM_BUILD_ROOT/usr/share/games/gav/themes
+cp -r sounds $RPM_BUILD_ROOT/usr/share/games/gav/
 install README $RPM_BUILD_ROOT/usr/share/doc/gav-%{version}/
 install CHANGELOG $RPM_BUILD_ROOT/usr/share/doc/gav-%{version}/
 install LICENSE $RPM_BUILD_ROOT/usr/share/doc/gav-%{version}/
@@ -52,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/gav.desktop
 /etc/X11/applnk/Games/gav.desktop
 /usr/share/pixmaps/gav.png
+/usr/share/games/gav/sounds
+/usr/share/games/gav/sounds/score.wav
+/usr/share/games/gav/sounds/servicechange.wav
 /usr/share/games/gav/themes
 /usr/share/games/gav/themes/classic
 /usr/share/games/gav/themes/classic/Font.png
