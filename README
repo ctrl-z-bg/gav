@@ -1,14 +1,33 @@
 Welcome to GAV, a GPL rendition of the popular Arcade Volleyball.
 
-Some of the menu items have not been implemented yet. Themes
-support is there, but unaccessible if not from the code.
+Some menu items might not be implemtented yet.
 
-The keys are:
-left player: z, c and left shift
-right player: <-, -> and cursor up.
+Version 0.6.0 added:
 
-To activate a menu item, SPACE.
-To exit from the game and go back to the menu, ESC
-To switch to fullscreen (much faster), F10
+- Theme support via the 'Extra' menu entry
+  Only a silly modification of the classic theme is
+  available so far, if you are interested in developing
+  more, please do, and let us know!
+- Keys redefinition works
+- You can now activate menu items using the enter key (wow!)
+- You can play more than one-a-side. Cooperative games are supported.
+- Fullscreen can now be triggered via a menu entry
+
+Keys:
+default keys are:
+Left player: z, c and left shift
+Right player: left, right and up cursor keys.
+
+use the arrow keys to navigate the menus, spacebar or enter to activate
+items, F10 to switch to fullscreen mode while playing.
 
 Checkout the INSTALL file for installation instructions.
+
+Thanks:
+- Marius Andreiana, who provided the gnome menu entry
+- Mark Whittington, who provided patches to compile
+  under Win32, and working on an installer.
+
+Authors:
+To contact the authors, please refer to the Sourceforge project page
+http://www.sourceforge.net/projects/gav
