@@ -20,6 +20,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <iostream>
 #include "FrameSeq.h"
 
 #define max(x, y)  ((x)>(y)?(x):(y))
@@ -36,11 +37,30 @@ void FrameSeq::blit(int idx, SDL_Surface * dest, SDL_Rect * rect) {
   SDL_BlitSurface(_surface, &r, dest, rect);
 }
 
-Uint16 CreateHicolorPixel(SDL_PixelFormat *fmt, Uint8 red,
+Uint32 CreateHicolorPixel(SDL_PixelFormat *fmt, Uint8 red,
 			  Uint8 green, Uint8 blue) {
   return( ((red >> fmt->Rloss) << fmt->Rshift) +
 	  ((green >> fmt->Gloss) << fmt->Gshift) +
 	  ((blue >> fmt->Bloss) << fmt->Bshift) );
+}
+
+inline Uint32 getPix(void *v, int i, Uint8 bpp) {
+  switch ( bpp ) {
+  case 4:  return *((Uint32 *) ((Uint32) v) + (i*bpp)); break;
+  case 3:  
+    std::cerr << "Unsupported pixel format: please, report to the GAV team!\n";
+    exit(0);
+    break;
+    //(Uint32) *((Uint24 *) ((Uint32) v) + (i*bpp)); break;
+  case 2:  return (Uint32) (*((Uint16 *) ((Uint32) v) + (i*bpp))); break;
+  case 1:  return (Uint32) (*((Uint8 *) ((Uint32) v) + (i*bpp))); break;
+  }
+
+  std::cerr << "Unsupported pixel format (" << bpp <<
+    "): please, report to the GAV team!\n";
+  exit(0);
+
+  return 0;
 }
 
 bool
@@ -53,13 +73,14 @@ FrameSeq::collidesWith(FrameSeq *fs, int idx1, int idx2, SDL_Rect * rect1,
   
   if ( (xmin > xmax) || (ymin > ymax) ) return(false);
 
-  Uint16 *pix1 = (Uint16 *) _surface->pixels;
-  Uint16 *pix2 = (Uint16 *) fs->_surface->pixels;
+  void *pix1 = _surface->pixels;
+  void *pix2 = fs->_surface->pixels;
+  
+  Uint8 pixfmt = screen->format->BytesPerPixel;
+  Uint32 empty_pixel = 0; // CreateHicolorPixel(screen->format, 0, 0, 0);
 
-  Uint16 empty_pixel = CreateHicolorPixel(screen->format, 0, 0, 0);
-
-  int sp1 = (_surface->pitch / 2);
-  int sp2 = (fs->_surface->pitch / 2);
+  int sp1 = (_surface->pitch >> (pixfmt-1));
+  int sp2 = (fs->_surface->pitch >> (pixfmt-1));
   int xdisp1 = ((idx1 % _nframes) * _width);
   int xdisp2 = ((idx2 % fs->_nframes) * fs->_width);
 		
@@ -68,8 +89,8 @@ FrameSeq::collidesWith(FrameSeq *fs, int idx1, int idx2, SDL_Rect * rect1,
     while ( xrun <= xmax ) {
       int p1off = sp1 * (ymin - rect1->y) + xdisp1 + (xrun - rect1->x);
       int p2off = sp2 * (ymin - rect2->y) + xdisp2 + (xrun - rect2->x);
-      if ( ( pix1[p1off] != empty_pixel ) &&
-	   ( pix2[p2off] != empty_pixel) )
+      if ( ( getPix(pix1, p1off, pixfmt) != empty_pixel ) &&
+	   ( getPix(pix2, p2off, pixfmt) != empty_pixel) )
 	return(true);
       xrun++;
     }

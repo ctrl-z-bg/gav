@@ -46,7 +46,7 @@ public:
       exit(-1);
     }
     SDL_SetColorKey(temp, SDL_SRCCOLORKEY,
-		    (Uint16) SDL_MapRGB(screen->format, 0, 0, 0));
+		    (Uint32) SDL_MapRGB(screen->format, 0, 0, 0));
     _surface = SDL_DisplayFormat(temp);
     SDL_FreeSurface(temp);
     _width = _surface->w / _nframes;
