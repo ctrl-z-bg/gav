@@ -19,7 +19,7 @@
 CWD        = $(shell pwd)
 GAV_ROOT    = $(CWD:%/$(RELPATH)=%)
 #comment the following line if you do not want network support
-#NET = true
+NET = true
 
 LD = ld
 CXX = g++
