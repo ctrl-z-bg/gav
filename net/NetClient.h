@@ -38,7 +38,7 @@ public:
 
   /* client methods */
   int ConnectToServer(int * pl, int * pr, char team, 
-		      char * hostname, int port = SERVER_PORT);
+		      const char * hostname, int port = SERVER_PORT);
   int KillClient();
   int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
   int SendCommand(char cmd);

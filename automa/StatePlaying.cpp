@@ -23,12 +23,13 @@
 #include <SDL.h>
 #include "StatePlaying.h"
 #include "Automa.h"
+#include "AutomaMainLoop.h"
 #include "NetServer.h"
 
 using namespace std;
 
 // executes one step of the game's main loop
-// Returns NO_TRANSITION if the game continues, anything else otherwise
+// Returns NO_TRANSITION if the game continues, the next state otherwise
 int StatePlaying::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
@@ -97,7 +98,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
-    return(NO_TRANSITION + 1); // everything but NO_TRANSITION
+    return(STATE_MENU);
   }  
 
   /* update AI agents */
@@ -150,7 +151,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
-    return(NO_TRANSITION + 1); // everything but NO_TRANSITION
+    return(STATE_MENU); // end of game
   }
 
   return(NO_TRANSITION);

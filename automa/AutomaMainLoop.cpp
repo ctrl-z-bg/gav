@@ -26,17 +26,20 @@
 #include "globals.h"
 #include "StateMenu.h"
 #include "StatePlaying.h"
+#include "StateClient.h"
 
 AutomaMainLoop::AutomaMainLoop()
 {
   _is = new InputState();
   controlsArray = new ControlsArray();
   
-
   StateMenu *sm = new StateMenu();
-  _curr = addState(sm) - 1;
+  addState(STATE_MENU, sm);
+  _curr = STATE_MENU;
   StatePlaying *sp = new StatePlaying();
-  addState(sp);
+  addState(STATE_PLAYING, sp);
+  StateClient *sc = new StateClient();
+  addState(STATE_CLIENT, sc);
   _prev = -1;
 }
 
@@ -45,6 +48,7 @@ int AutomaMainLoop::transition(int retval)
   if ( retval == NO_TRANSITION )
     return(_curr);
 
+#if 0
   switch ( _curr ) {
   case STATE_MENU:
     return STATE_PLAYING;
@@ -52,8 +56,12 @@ int AutomaMainLoop::transition(int retval)
   case STATE_PLAYING:
     return STATE_MENU;
     break;
+  case STATE_CLIENT:
+    return STATE_MENU;
+    break;
   }
-  return _curr;
+#endif
+  return retval; // _curr;
 }
 
 int AutomaMainLoop::start()

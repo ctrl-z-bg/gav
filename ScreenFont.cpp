@@ -20,6 +20,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <string.h>
 #include "ScreenFont.h"
 
 void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
@@ -45,3 +46,16 @@ void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
   }
 }
 
+
+void ScreenFont::printRow(SDL_Surface *dest, int row, const char *str,
+			  SDL_Surface *bg)
+{
+  SDL_Rect rect;
+  /* draw menu items labels */
+  rect.y = 30 + row * charHeight();
+
+  rect.x = (screen->w / 2) - strlen(str)*(charWidth())/2;
+  if ( bg )
+    SDL_BlitSurface(bg, &rect, dest, &rect);
+  printXY(dest, &rect, str, false);
+}

@@ -22,7 +22,7 @@ include ../CommonHeader
 NAME 		= automa
 MODULE_NAME	= $(NAME)_module.o
 
-CXXFLAGS += -I$(GAV_ROOT) -I$(GAV_ROOT)/menu -I$(GAV_ROOT)/net
+CXXFLAGS += -I$(GAV_ROOT) -I$(GAV_ROOT)/menu -I$(GAV_ROOT)/net -I$(GAV_ROOT)/automa
 
 DEPEND = Makefile.depend
 

@@ -1,0 +1,195 @@
+/* -*- C++ -*- */
+/*
+  GAV - Gpl Arcade Volleyball
+  
+  Copyright (C) 2002
+  GAV team (http://sourceforge.net/projects/gav/)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+#include <SDL.h>
+#include "StateClient.h"
+#include "AutomaMainLoop.h"
+#include "NetClient.h"
+
+using namespace std;
+
+char StateClient::getKeyPressed(InputState *is) {
+  bool typed = false;
+  SDL_keysym keysym;
+  SDL_Event event;
+  while ( !typed ) {
+    is->getInput();
+    if ( (event = is->getEvent()).type != SDL_KEYDOWN )
+      continue;
+    keysym = event.key.keysym;
+    do {
+      is->getInput();
+    } while ( is->getEvent().type != SDL_KEYUP );
+    char *kn = SDL_GetKeyName(keysym.sym);
+    printf("\"%s\"\n", kn);
+    if ( strlen(kn) == 1 )
+      return(*kn);
+    else if ( !strcmp(kn, "return") )
+      return(0);
+    else if ( !strcmp(kn, "backspace") )
+      return(-1);
+    else
+      continue;
+  }
+  return(0);
+}
+
+int StateClient::setupConnection(InputState *is) {
+  bool configured = false;
+  string saddress = "";
+  char ch;
+  string ports = "";
+  int port;
+
+  while ( !configured ) {
+    /* first, delete the screen... */
+    SDL_Rect r;
+    r.x = r.y = 0;
+    r.h = background->h;
+    r.w = background->w;
+    SDL_BlitSurface(background, &r, screen, &r);
+    SDL_Flip(screen);
+    
+    /* now, ask for server address, port and team side */
+    cga->printRow(screen, 0, "Please type server address");
+    SDL_Flip(screen);
+    while ( (ch = getKeyPressed(is)) != 0 ) {
+      if ( ch < 0 ) ; // should be backspace...
+      else {
+	char w[2];
+	w[0] = ch;
+	w[1] = 0;
+	saddress = saddress + w;
+	cga->printRow(screen, 1, saddress.c_str(), background);
+	SDL_Flip(screen);
+      }
+    }
+    char msg[100];
+    sprintf(msg, "Please type port number [%d]", SERVER_PORT);
+    cga->printRow(screen, 2, msg);
+    SDL_Flip(screen);
+    while ( (ch = getKeyPressed(is)) != 0 ) {
+      if ( ch < 0 ) ; // should be backspace...
+      else {
+	char w[2];
+	w[0] = ch;
+	w[1] = 0;
+	ports = ports + w;
+	cga->printRow(screen, 3, ports.c_str(), background);
+	SDL_Flip(screen);
+      }
+    }
+    port = atoi(ports.c_str());
+    configured = true;
+  }
+
+  netc = new NetClient();
+  cga->printRow(screen, 4, "connecting...");
+  SDL_Flip(screen);
+  netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
+			port);
+  puts("fatto?");
+
+  return(0);
+}
+
+// executes one step of the game's main loop for a network client.
+// before the game loop actually begins, connection must be set up
+// Returns NO_TRANSITION if the game continues, the next state otherwise
+int StateClient::execute(InputState *is, unsigned int ticks,
+			  unsigned int prevTicks, int firstTime)
+{
+  setupConnection(is);
+
+  if ( firstTime ) {
+    /* 
+       First time we change to execute state: we should
+       probably create players here instead of in the constructor,
+       and think of a clever way to destroy them once we're done.
+    */
+
+    prevDrawn = ticks;
+    tl = new Team(-1);
+    tr = new Team(1);
+    b = new Ball(BALL_ORIG);
+
+    for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+      agentL[i] = NULL;
+      agentR[i] = NULL;
+    }
+
+    for ( int j = 0; j < _lp; j++ ) {
+      string name = "Pippo-" + j;
+      tl->addPlayer(name.c_str(), PL_TYPE_MALE_LEFT);
+    }
+
+    for ( int j = 0; j < _rp; j++ ) {
+      string name = "Pluto-" + j;
+      tr->addPlayer(name.c_str(), PL_TYPE_MALE_RIGHT);
+    }
+
+    tl->setScore(0);
+    tr->setScore(0);
+    b->resetPos((int) (SCREEN_WIDTH() * 0.25),
+		(int) (SCREEN_HEIGHT() * 0.66));
+  }
+  
+  if ( is->getKeyState()[SDLK_ESCAPE] ) {
+    delete(tl);
+    delete(tr);
+    delete(b);
+    delete(netc);
+    return(STATE_MENU);
+  }  
+
+  if ( netc->ReceiveSnapshot(tl, tr, b) != -1 ) {
+
+    if ( (ticks - prevDrawn) >
+	 (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
+      SDL_Rect r;
+      r.x = r.y = 0;
+      r.h = background->h;
+      r.w = background->w;
+      SDL_BlitSurface(background, &r, screen, &r);
+      
+      tl->draw();
+      tr->draw();
+      b->draw();
+      SDL_Flip(screen);
+      prevDrawn = ticks;
+    }
+  }  
+
+  if ( ((tl->getScore() >= configuration.winning_score) &&
+	(tl->getScore() > (tr->getScore()+1))) ||
+       ((tr->getScore() >= configuration.winning_score) &&
+	(tr->getScore() > (tl->getScore()+1))) ) {
+    /* Deallocate teams, ball and players */
+    delete(tl);
+    delete(tr);
+    delete(b);
+    delete(netc);
+    return(STATE_MENU); // end of the game
+  }
+
+  return(NO_TRANSITION);
+}

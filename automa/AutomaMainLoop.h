@@ -25,8 +25,12 @@
 #include "InputState.h"
 #include "globals.h"
 
-enum { STATE_MENU,    // navigate menu tree
-       STATE_PLAYING  // play the game
+#ifndef _AUTOMAMAINLOOP_H_
+#define _AUTOMAMAINLOOP_H_
+
+enum { STATE_MENU = 1,    // navigate menu tree
+       STATE_PLAYING, // play the game
+       STATE_CLIENT   // start the game as a client
 };
 
 class AutomaMainLoop : public Automa {
@@ -39,3 +43,5 @@ public:
 
   virtual int start();
 };
+
+#endif

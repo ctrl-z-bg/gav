@@ -24,11 +24,12 @@
 #define __MENUITEMPLAY_H__
 
 #include "MenuItem.h"
+#include "AutomaMainLoop.h"
 
 class MenuItemPlay: public MenuItem {
 public:
   MenuItemPlay() {label = (std::string)"Play";}
-  int execute(std::stack<Menu *> &s) {return 1;}
+  int execute(std::stack<Menu *> &s) {return STATE_PLAYING;}
 };
 
 #endif

@@ -26,11 +26,11 @@
 using namespace std;
 
 int NetClient::ConnectToServer(int * pl, int * pr, char team, 
-			       char * hostname, int port) {
+			       const char * hostname, int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(0);
   /* resolve the server name */
-  if (SDLNet_ResolveHost(&ipaddress, hostname, port) == -1) {
+  if (SDLNet_ResolveHost(&ipaddress, (char*) hostname, port) == -1) {
     fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
     return -1;
   }

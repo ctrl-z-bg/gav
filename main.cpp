@@ -45,8 +45,8 @@
 #include "MenuItemFPS.h"
 #include "MenuItemScore.h"
 #include "MenuItemMonitor.h"
-
 #include "MenuItemBigBackground.h"
+#include "MenuItemClient.h"
 
 #include "Theme.h"
 
@@ -204,6 +204,7 @@ int main(int argc, char *argv[]) {
   MenuItemExit miexit;
   Menu *menuExtra = new Menu();
   Menu *menuThemes = new Menu();
+  Menu *menuNetwork = new Menu();
   MenuItemBack *mib = new MenuItemBack("back");
   DIR *dir;
   if ((dir = opendir(ThemeDir.c_str())) == NULL) {
@@ -219,7 +220,12 @@ int main(int argc, char *argv[]) {
   closedir(dir);
   menuThemes->add(mib);
 
+  menuNetwork->add(new MenuItemClient());// MenuItemNotImplemented("Start as server"));
+  menuNetwork->add(new MenuItemClient());
+  menuNetwork->add(mib);
+
   menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
+  menuExtra->add(new MenuItemSubMenu(menuNetwork, string("Network game")));
   menuExtra->add(new MenuItemPlayer(TEAM_LEFT, 1));
   menuExtra->add(new MenuItemPlayer(TEAM_RIGHT, 1));
   menuExtra->add(new MenuItemSubMenu(new MenuKeys(1),

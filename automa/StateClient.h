@@ -20,36 +20,32 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _AUTOMA_H_
-#define _AUTOMA_H_
+#ifndef _STATECLIENT_H_
+#define _STATECLIENT_H_
 
-#include <vector>
 #include "State.h"
+#include "InputState.h"
+#include "Team.h"
+#include "Ball.h"
+#include "AI.h"
 
-#define NO_TRANSITION (0)
-
-class Automa {
-protected:
-  State *_states[100]; // max 100 states
-  int _curr; // current state index
-  int _prev;
-  int _size;
+class StateClient : public State {
+private:
+  Team *tl, *tr; // team left and team right
+  Ball *b;
+  Agent *agentR[MAX_PLAYERS/2], *agentL[MAX_PLAYERS/2];
+  unsigned int prevDrawn;
+  int _lp, _rp;
 
 public:
-  Automa() {
-    _size = 0;
-    for ( int i = 0; i < 100; _states[i++] = NULL );
-  };
-  virtual int addState(int idx, State *state) {
-    _states[idx] = state;
-    return(_size++);
-  }
-  virtual int start() { return(0); }
-  virtual ~Automa() {
-    for ( int i = 0; i < 100; i++ )
-      if ( _states[i] )
-	delete(_states[i]);
-  }
+  StateClient() : prevDrawn(0) {}
+
+  virtual int execute(InputState *is, unsigned int ticks,
+		      unsigned int prevTicks, int firstTime);
+  
+private:
+  char getKeyPressed(InputState *is);
+  int setupConnection(InputState *is);
 };
 
-#endif // _AUTOMA_H_
+#endif // _STATEPLAYING_H_

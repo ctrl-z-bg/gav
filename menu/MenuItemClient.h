@@ -20,36 +20,16 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _AUTOMA_H_
-#define _AUTOMA_H_
+#ifndef __MENUITEMCLIENT_H__
+#define __MENUITEMCLIENT_H__
 
-#include <vector>
-#include "State.h"
+#include "MenuItem.h"
+#include "AutomaMainLoop.h"
 
-#define NO_TRANSITION (0)
-
-class Automa {
-protected:
-  State *_states[100]; // max 100 states
-  int _curr; // current state index
-  int _prev;
-  int _size;
-
+class MenuItemClient: public MenuItem {
 public:
-  Automa() {
-    _size = 0;
-    for ( int i = 0; i < 100; _states[i++] = NULL );
-  };
-  virtual int addState(int idx, State *state) {
-    _states[idx] = state;
-    return(_size++);
-  }
-  virtual int start() { return(0); }
-  virtual ~Automa() {
-    for ( int i = 0; i < 100; i++ )
-      if ( _states[i] )
-	delete(_states[i]);
-  }
+  MenuItemClient() {label = (std::string)"Start as client";}
+  int execute(std::stack<Menu *> &s) { return STATE_CLIENT; }
 };
 
-#endif // _AUTOMA_H_
+#endif
