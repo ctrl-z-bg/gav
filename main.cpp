@@ -40,6 +40,7 @@
 #include "MenuKeys.h"
 #include "MenuItemBack.h"
 #include "MenuItemTheme.h"
+#include "MenuItemFullScreen.h"
 
 #include "Theme.h"
 
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
   menuExtra->add(new MenuItemNotImplemented(string("Player 3")));
   menuExtra->add(new MenuItemNotImplemented(string("Player 4")));
+  menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);
 
   m.add(&miplay);
