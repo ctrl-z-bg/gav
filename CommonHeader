@@ -18,12 +18,23 @@
 
 CWD        = $(shell pwd)
 GAV_ROOT    = $(CWD:%/$(RELPATH)=%)
+#comment the following line if you do not want network support
+NET = true
 
 LD = ld
 CXX = g++
 
-CXXFLAGS= `sdl-config --cflags` -g -Wall
+CXXFLAGS= `sdl-config --cflags` -g -Wall 
+
+ifndef NET
+CXXFLAGS+= -DNONET
+endif
+
+ifdef NET
 LDFLAGS= `sdl-config --libs` -lSDL_image -lSDL_net -lm
+else
+LDFLAGS= `sdl-config --libs` -lSDL_image -lm
+endif
 
 SRCS	= 	$(wildcard *.cpp)
 OFILES	=	$(SRCS:%.cpp=%.o)  

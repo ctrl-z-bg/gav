@@ -46,15 +46,19 @@
 #include "MenuItemScore.h"
 #include "MenuItemMonitor.h"
 #include "MenuItemBigBackground.h"
+#ifndef NONET
 #include "MenuItemClient.h"
 #include "MenuItemServer.h"
+#endif
 
 #include "Theme.h"
 
 #include "Sound.h"
 
+#ifndef NONET 
 #include "NetClient.h"
 #include "NetServer.h"
+#endif
 
 #define BPP 16
 
@@ -116,11 +120,12 @@ init()
     exit(1);
   }
   atexit(SDL_Quit);
+#ifndef NONET
   if(SDLNet_Init()==-1) {
     cerr << "SDLNet_Init: " << SDLNet_GetError() << endl;
     exit(2);
   }
-
+#endif
 
 #ifdef AUDIO
   atexit(SDL_CloseAudio);
@@ -182,12 +187,16 @@ int main(int argc, char *argv[]) {
   closedir(dir);
   menuThemes->add(mib);
 
+#ifndef NONET
   menuNetwork->add(new MenuItemServer());
   menuNetwork->add(new MenuItemClient());
+#endif
   menuNetwork->add(mib);
 
   menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
+#ifndef NONET
   menuExtra->add(new MenuItemSubMenu(menuNetwork, string("Network game")));
+#endif
   menuExtra->add(new MenuItemPlayer(TEAM_LEFT, 1));
   menuExtra->add(new MenuItemPlayer(TEAM_RIGHT, 1));
   menuExtra->add(new MenuItemSubMenu(new MenuKeys(1),

@@ -68,6 +68,7 @@ class Player {
   int _walkDrawSpeed;
   int _lastXWalkDrawChanged;
   int _plId;
+  int _oif;
   Team *_team;
 
   char *_fileNames[NUM_TYPES];
@@ -98,6 +99,7 @@ class Player {
     _team   = team;
     _name   = name;
     _plId   = idx;
+    _oif    = -1;
     _type   = type;
     _state  = PL_STATE_STILL;
     _speed  = speed;
@@ -120,6 +122,8 @@ class Player {
   inline std::string name() {return _name;}
   
   inline int id() { return _plId; }
+  inline int orderInField() { return _oif; }
+  inline void setOIF(int oif) { _oif = oif; }
 
   inline pl_type_t type() {return _type;}
 

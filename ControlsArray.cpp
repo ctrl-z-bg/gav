@@ -24,7 +24,9 @@
 #include <SDL.h>
 #include "InputState.h"
 #include "ControlsArray.h"
+#ifndef NONET
 #include "NetServer.h"
+#endif
 
 void ControlsArray::action(int plId, int movx, int movy) {
   _inputs[plId].left = _inputs[plId].right = _inputs[plId].jump = 0;
@@ -61,12 +63,14 @@ void ControlsArray::setControlsState(InputState *is) {
   int player;
   char cmd;
 
+#ifndef NONET
   if (nets)
     while ( nets->ReceiveCommand(&player, &cmd) != -1 ) {
       _inputs[player].left = cmd & CNTRL_LEFT;
       _inputs[player].right = cmd & CNTRL_RIGHT;
       _inputs[player].jump = cmd & CNTRL_JUMP;
     }
+#endif
 
   for (i = 0; i < 4 ; i++ ) {
     if ( !_isArtificial[i] && !_isRemote[i] ) {

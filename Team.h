@@ -92,12 +92,13 @@ class Team {
   inline int ymax() { return _ymax; }
   inline int ymin() { return _ymin; }
   inline int side() { return _side; }
+  inline int  nplayers() { return _nplayers; }
 
   inline void xmax(int v) { _xmax = v; }
   inline void xmin(int v) { _xmin = v; }
   inline void ymax(int v) { _ymax = v; }
   inline void ymin(int v) { _ymin = v; }
-    
+
   void draw(SDL_Surface *scr = screen) {
     SDL_Rect r;
     r.x = (_xmin < (SCREEN_WIDTH()/3))?100:(_xmax - 100);

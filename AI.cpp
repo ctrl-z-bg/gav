@@ -37,8 +37,11 @@ void Agent::update() {
   int jmp = 0;
   //int i;
   int side = (_p->team())->side();
-  int px, bx, fs, mp, bms, bsx, net, wall; /* Normalized values */
-  float c2n, c2w, mid; /* Fuzzy predicates */
+  int nplrs = (_p->team())->nplayers();
+  int px, bx, fs, mp, bsx, net, wall; /* Normalized values */
+  int mypos, minslot, maxslot;
+  float slotsize;
+  //float c2n, c2w, mid; /* Fuzzy predicates */
   //float p;
   int move, pw;
   //int moves[10];
@@ -48,7 +51,7 @@ void Agent::update() {
   net = fs = abs(_p->maxX() - _p->minX());
   wall = 0;
   mp = fs/2;
-
+  nplrs = 1; // To remove when multiplayer AI will work
   /* Normalize player x position, ball x position and ball x speed:
      Reasoning as it plays on the left, net=fs, wall=0 */
   px = (side>0)?(_p->maxX()-_p->x()-_p->width()/2):(_p->x()+_p->width()/2-_p->minX()); 
@@ -56,52 +59,99 @@ void Agent::update() {
   bx = (side>0)?(_p->maxX()-(_b->radius()+_b->x())):(_b->radius()+_b->x()-_p->minX()); 
   bsx = -side*_b->spdx();
 
-  c2n = (bx < mp)?0:(1-(net-bx)/(net-mp));
-  c2w = (bx > mp)?0:(1-(bx-wall)/(mp-wall));
-  mid = ((bx > (net-mp/2))||(bx < mp/2))?0:(1-abs(bx-mp)/mp);
-  bms = bx < net;
-  if (_b->spdy() < 20) jumped=0;
-#ifdef OLDAI
-  if (side > 0) {
-      if ( /*(abs(_b->spdy()) < 10) &&*/ 
-	  (abs(_p->x() - HIT_POINT(_b->x())) <= 
-	   ( (_b->spdx()) ? (_p->width() / 2) : EPSILON)) &&
-	  (_b->y() > JUMP_LIMIT) ) {
-	  jmp = 1;
-	  jumped = 1;
+  slotsize = net/nplrs;
+  
+  if (nplrs > 1) {
+      vector<Player *> plv = (_p->team())->players();
+      /* Look for my id */
+      vector<Player *>::const_iterator it; 
+      int myidx = _p->orderInField();
+
+      if (_p->orderInField() < 0) {
+	  for ( it = plv.begin(), myidx=0;
+		it != plv.end() && ((*it)->id() != (_p->id()));
+		it++,myidx++ );
+	  if ( it == plv.end() ) {
+	      cerr << "Congratulations! You found a bug in" <<
+		  __FILE__ << ":" << __LINE__;
+	      exit(-1);
+	  }
+	  _p->setOIF(myidx);
+      }
+
+      int minxsearching = net, minopx, opx, closer;
+      for ( it = plv.begin();
+	    it != plv.end(); 
+	    it++ ) {
+	  int opx = (side>0)?((*it)->maxX()-(*it)->x()-(*it)->width()/2):
+	      ((*it)->x()+(*it)->width()/2-(*it)->minX()); 	  
+	  if ( ( (*it)->id() != _p->id() ) &&
+	       ( abs(opx-mypos) < minxsearching ) ){
+	      closer=(*it)->id();
+	      minxsearching=abs(opx-mypos);
+	      minopx=opx;
+	  }
+	  printf("%+d(%d) -- %d %d %d\n",
+		 side, _p->id(),
+		 (*it)->id(),abs(opx-mypos), opx);
+			     
       }
       
-      if ( _b->x() < _p->minX() ) {
-	  move = (_p->minX() + _p->maxX())/2 - _p->x();
-      } else {
-	  move = HIT_POINT(_b->x()) - _p->x();
+      int mv = 0;
+      /* Someone is inside my slot over the 15% the slot size */
+      if (minxsearching < (slotsize*0.35)) {
+	  if (opx > mypos) {
+	      mv = +1;
+	      _p->setOIF(++myidx);	      
+	  } else {
+	      mv = -1;
+	      _p->setOIF(--myidx);	      
+	  }
       }
+      mypos = (int )(slotsize*(myidx+0.5));
+      minslot = (int )(slotsize*myidx);
+      maxslot = (int )(slotsize*(myidx+1));
+      printf("%+d(%d) -- %d %d (%d - %d - %d) => %d %d(%d-%d)\n", 
+	     side, _p->id(), myidx, px, minslot, mypos, maxslot, mv, 
+	     closer, minxsearching, minopx);
   } else {
-#endif
-      int hd = HITDELTA;
+      minslot = wall;
+      mypos = mp-50; // behind the middle point
+      maxslot = net;
+  }
+
+  /* My rest position has been chosen, and the slot determined */
+  
+  /* Predicates for fuzzy control, not used 
+     c2n = (bx < mp)?0:(1-(net-bx)/(net-mp));
+     c2w = (bx > mp)?0:(1-(bx-wall)/(mp-wall));
+     mid = ((bx > (net-mp/2))||(bx < mp/2))?0:(1-abs(bx-mp)/mp);
+     bms = bx < net;
+  */
+  if (_b->spdy() < 20) jumped=0;
+  int hd = HITDELTA;
 //      printf("%d\n", _b->spdy());
 //      if (abs(bsx) < 160) hd += 7;
-      if ( //(abs(_b->spdy()) > 10) &&
+  if ( //(abs(_b->spdy()) > 10) &&
 //	  !jumped &&
-	  (bx < net) &&
-	  ( (abs(px - bx)) <= hd ) &&
+      (bx > (minslot*0.95)) && (bx < (maxslot*1.05)) && 
+      // its on my side (in my slot)
+      ( (abs(px - bx)) <= hd ) && 
 //	    ( bsx?HITDELTA : EPSILON) ) &&
-	  ( abs(px-bx) > 5 ) &&
-	  (_b->y() > ((_b->spdy() > 40)?JUMP_LIMIT:(JUMP_LIMIT+20)) ) ) {
+      ( abs(px-bx) > 5 ) &&
+      (_b->y() > ((_b->spdy() > 40)?JUMP_LIMIT:(JUMP_LIMIT+20)) ) ) {
 //	  (_b->y() > (JUMP_LIMIT) )  ){
 //	  printf ("%d %d\n", _b->y(), _b->spdy());
-	  jmp = 1;
-	  jumped = 1;
-      }
-      if ( bx > net ) {
-	  move = mp-px-50;
-      } else {
-	  move = bx-hd-px;
-      }
-      
-      move=-side*(move);
-#ifdef OLDAI
-   }
-#endif
+      jmp = 1;
+      jumped = 1;
+  }
+  if ((bx < minslot) || ( bx > net )) { // the ball is outside my slot /my side
+      move = mypos-px;
+  } else {
+      move = bx-hd-px;
+  }
+  
+  move=-side*(move);
+
   _ca->action(_p->id(), move, jmp);
 }
