@@ -46,7 +46,6 @@ bool Theme::_checkTheme() {
     cerr << "Verifying Theme `" << _name << "' [" << ThemeDir << "/" << _name << "/]:\n";
     if ( access(_CCS(_background), R_OK) ) {
       _background = TD + TH_BACKGROUND_JPG;
-      printf("provo il jpg %s\n", (_CCS(_background)));
       if ( access(_CCS(_background), R_OK) ) errorOn("background.{jpg,png}");
     }
     if ( access(_CCS(_font), R_OK) )        errorOn(TH_FONT);
