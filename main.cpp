@@ -148,6 +148,8 @@ init()
   SDL_PauseAudio(0);
 #endif
 
+  SDL_WM_SetCaption("GPL Arcade Volleyball", "GAV");
+
   setThemeDir(TH_DIR);
   videoinfo = SDL_GetVideoInfo();
   CurrentTheme = new Theme(TH_DEFAULT);

@@ -2,7 +2,7 @@
 
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav-themes
-Version: 0.7.0
+Version: 0.7.1
 Release: 1
 URL: gav.sourceforge.net
 Source0: %{name}-%{version}.tar.gz
@@ -14,7 +14,9 @@ BuildRoot: %{_tmppath}/%{name}-root
 An SDL-based rendition of an old favorite CGA game featuring
 two characters playing a volleyball-like game. This "revamped"
 version is supposed to support theming, multiplayer games,
-different input devices and networking (not yet).
+different input devices and networking.
+
+This package contains additional themes.
 
 %prep
 %setup -q
