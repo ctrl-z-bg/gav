@@ -67,7 +67,7 @@ int Sound::loadAndConvertSound(const char *filename, SDL_AudioSpec *spec,sound_p
 
 
 
-int Sound::playSound()
+int Sound::playSound(bool loop)
 {
   int i;
 
@@ -80,12 +80,19 @@ int Sound::playSound()
   if(i==MAX_PLAYING_SOUNDS)
     return 1;
 
+  id = i;
+
   SDL_LockAudio();
   playing[i].active=1;
   playing[i].sound=&this_sound;
   playing[i].position=0;
+  playing[i].loop = loop;
   SDL_UnlockAudio();
   return 0;
+}
+
+void Sound::stopSound() {
+  playing[id].active = 0;
 }
 
 #endif //AUDIO

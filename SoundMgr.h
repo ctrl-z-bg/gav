@@ -39,7 +39,8 @@ class SoundMgr {
   SoundMgr(const char *dir, const char *defdir);
   ~SoundMgr();
 
-  int playSound(int which);
+  int playSound(int which, bool loop = false);
+  void stopSound(int which);
 
 };
 #endif

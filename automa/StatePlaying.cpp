@@ -116,6 +116,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       setupConnection(is);
     }
 #endif
+
+    soundMgr->stopSound(SND_BACKGROUND_MENU);
+    soundMgr->playSound(SND_BACKGROUND_PLAYING, true);
+
     /* 
        First time we change to execute state: we should
        probably create players here instead of in the constructor,
@@ -196,6 +200,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
+    soundMgr->stopSound(SND_BACKGROUND_PLAYING);
     return(STATE_MENU);
   }  
 
@@ -269,6 +274,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
+    soundMgr->stopSound(SND_BACKGROUND_PLAYING);
     return(STATE_MENU); // end of game
   }
 

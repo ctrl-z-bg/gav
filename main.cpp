@@ -99,7 +99,10 @@ void AudioCallBack(void *user_data,Uint8 *audio,int length)
 	playing[i].position+=length;
 
 	if(playing[i].position>=playing[i].sound->length){
-	  playing[i].active=0;
+	  if (!playing[i].loop)
+	    playing[i].active=0;
+	  else
+	    playing[i].position = 0;
 	}
       }
     }
@@ -235,6 +238,7 @@ int main(int argc, char *argv[]) {
   mroot->add(&m);
 
   AutomaMainLoop *a = new AutomaMainLoop();
+
   a->start();
 
   return 0;

@@ -48,6 +48,9 @@ class StateMenu : public State {
   int execute(InputState *is, unsigned int ticks, unsigned int prevTicks,
 	      int firstTime) {
     static int lastExec = ticks;
+    if ( firstTime )
+      soundMgr->playSound(SND_BACKGROUND_MENU, true);
+
     if ( (ticks - lastExec) > 50 ) {
       SDL_Rect r;
       r.x = r.y = 0;

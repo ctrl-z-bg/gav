@@ -28,7 +28,7 @@
 #ifdef AUDIO
 class Sound {
  private:
- 
+  int id;    // id in playing vector
   sound_t  this_sound;
   int loadAndConvertSound(const char *filename, SDL_AudioSpec *spec,sound_p sound);
  public:
@@ -39,7 +39,8 @@ class Sound {
   int loadSound(const char *fname) {
     return loadAndConvertSound(fname,&obtained,&this_sound);
   }
-  int playSound();
+  int playSound(bool loop);
+  void stopSound();
 
 };
 #endif

@@ -38,6 +38,8 @@ char *sound_fnames[] = {
   "fullnet.wav",
   "servicechange.wav",
   "playerhit.wav",
+  "background_playing.wav",
+  "background_menu.wav",
   NULL
 };
 
@@ -54,11 +56,12 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
   char fname[100];
 
   int sndidx = 0;
-  for ( sndidx = SND_BOUNCE; sound_fnames[sndidx] && (sndidx <= SND_PLAYERHIT);
+  for ( sndidx = SND_BOUNCE; sound_fnames[sndidx] && (sndidx <= SND_BACKGROUND_MENU);
 	sndidx++ ) {
     sprintf(fname, "%s/%s", actualdir, sound_fnames[sndidx]);
     FILE *fp = fopen(fname, "r");
     if ( !fp ) continue;
+        printf("suono %s\n", fname);
     fclose(fp);
     sounds[sndidx] = new Sound();
     if ( sounds[sndidx]->loadSound(fname) ) {
@@ -78,12 +81,16 @@ SoundMgr::~SoundMgr()
       delete(sounds[sndidx]);
 }
 
-int SoundMgr::playSound(int which) {
+int SoundMgr::playSound(int which, bool loop) {
   if ( sounds[which] && configuration.sound )
-    return sounds[which]->playSound();
+    return sounds[which]->playSound(loop);
   else
     return 0;
 }
 
+void SoundMgr::stopSound(int which) {
+  if ( sounds[which] && configuration.sound )
+    sounds[which]->stopSound();
+}
 
 #endif

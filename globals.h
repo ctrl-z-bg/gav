@@ -67,8 +67,8 @@ typedef struct sound_s {
 typedef struct playing_s {
   int active;
   sound_p sound;
-
   Uint32 position;
+  bool loop;
 } playing_t, *playing_p;
 
 #define MAX_PLAYING_SOUNDS 10
@@ -87,7 +87,9 @@ enum {
   SND_PARTIALNET,
   SND_FULLNET,
   SND_SERVICECHANGE,
-  SND_PLAYERHIT
+  SND_PLAYERHIT,
+  SND_BACKGROUND_PLAYING,
+  SND_BACKGROUND_MENU     // last item is used in SoundMgr.cpp as a limit
 };
 
 
