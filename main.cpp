@@ -116,6 +116,11 @@ init()
     exit(1);
   }
   atexit(SDL_Quit);
+  if(SDLNet_Init()==-1) {
+    cerr << "SDLNet_Init: " << SDLNet_GetError() << endl;
+    exit(2);
+  }
+
 
 #ifdef AUDIO
   atexit(SDL_CloseAudio);
