@@ -36,10 +36,15 @@ public:
   NetClient() {
   }
 
+  ~NetClient() {
+    SDLNet_UDP_Unbind(mySock, channel);
+    SDLNet_UDP_Close(mySock);
+  }
+
   /* client methods */
   int ConnectToServer(int * pl, int * pr, char team, 
 		      const char * hostname, int port = SERVER_PORT);
-  int KillClient();
+  int WaitGameStart();
   int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
   int SendCommand(char cmd);
   inline char id() { return _id; }

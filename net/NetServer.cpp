@@ -36,11 +36,6 @@ int NetServer::StartServer(int port) {
   return 0;
 }
 
-int NetServer::KillServer() {
-  SDLNet_UDP_Close(mySock);
-  return 0;
-}
-
 int NetServer::ComputePlayerID(char id) {
   char tm ,pl;
   tm = (id & NET_TEAM_LEFT)?0:1;
@@ -63,7 +58,6 @@ int NetServer::WaitClients(int nclients) {
   while ((nright + nleft) != nclients) {
     inserted = false;
     if (SDLNet_UDP_Recv(mySock, packetRegister) != 0) {
-  printf("            --- pacchetto ricevuto\n");
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
       memcpy(ipa, &(packetRegister->address), sizeof(IPaddress));
       id = &(((net_register_t*)(packetRegister->data))->id);
@@ -98,7 +92,7 @@ int NetServer::WaitClients(int nclients) {
       ((net_register_t*)(packetRegister->data))->bgBig =
 	configuration.bgBig;
       SDLNet_UDP_Send(mySock, -1, packetRegister);
-    }
+    } else SDL_Delay(500);
   }
 
   return 0;

@@ -89,6 +89,9 @@ int StateClient::setupConnection(InputState *is) {
     return(STATE_MENU);
   }
 
+  /* ok, I'm connected and I'm waiting for the game start */
+  netc->WaitGameStart();
+
   return(0);
 }
 

@@ -61,14 +61,11 @@ int NetClient::ConnectToServer(int * pl, int * pr, char team,
   *pl = (int)_nplayers_l;
   *pr = (int)_nplayers_r;
 
-  while (SDLNet_UDP_Recv(mySock, packetSnap) == 0) SDL_Delay(500);
-
   return 0;
 }
 
-int NetClient::KillClient() {
-  SDLNet_UDP_Unbind(mySock, channel);
-  SDLNet_UDP_Close(mySock);
+int NetClient::WaitGameStart() {
+  while (SDLNet_UDP_Recv(mySock, packetSnap) == 0) SDL_Delay(500);
   return 0;
 }
 

@@ -39,11 +39,11 @@ public:
     /* deallocation of clientIP elements */
     for (i = 0; i < clientIP.size(); i++)
       free(clientIP[i]);
+    SDLNet_UDP_Close(mySock);
   }
 
   /* server methods */
   int StartServer(int port = SERVER_PORT);
-  int KillServer();
   int WaitClients(int nclients = 1);
   int SendSnapshot(Team *tleft, Team *tright, Ball * ball);
   int ReceiveCommand(int * player, char * cmd);
