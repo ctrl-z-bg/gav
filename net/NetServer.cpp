@@ -58,6 +58,7 @@ int NetServer::WaitClients(int nclients) {
   while ((nright + nleft) != nclients) {
     inserted = false;
     if (SDLNet_UDP_Recv(mySock, packetRegister) != 0) {
+      printf("ricevuto\n");
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
       memcpy(ipa, &(packetRegister->address), sizeof(IPaddress));
       id = &(((net_register_t*)(packetRegister->data))->id);
