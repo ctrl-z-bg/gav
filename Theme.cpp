@@ -92,6 +92,7 @@ bool Theme::_checkTheme() {
 
     cerr << "OK!\n";
 
+    configuration.setDefaultFrameConf();
     if ( _hasConfFile ) {
       cerr << "Using configuration file theme.conf\n";
       loadConf();
@@ -105,7 +106,6 @@ bool Theme::_checkTheme() {
 void Theme::loadConf()
 {
   aargh.loadConf(_confFile.c_str());
-  configuration.setDefaultFrameConf();
   /* now set things up in configuration */
   string value;
   if ( aargh.getArg("NPlayerFrames", value) )
