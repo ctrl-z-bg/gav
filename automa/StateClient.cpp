@@ -139,8 +139,10 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     if ( (ret = setupConnection(is)) )
       return(ret);
 
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_MENU);
     soundMgr->playSound(SND_BACKGROUND_PLAYING, true);
+#endif // AUDIO
 
    /* 
        First time we change to execute state: we should
@@ -182,7 +184,9 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     delete(b);
     delete(netc);
     netc = NULL;
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
+#endif
     return(STATE_MENU);
   }  
 
@@ -218,7 +222,9 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     delete(b);
     delete(netc);
     netc = NULL;
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
+#endif
     return(STATE_MENU); // end of the game
   }
 

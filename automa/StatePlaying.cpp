@@ -117,8 +117,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     }
 #endif
 
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_MENU);
     soundMgr->playSound(SND_BACKGROUND_PLAYING, true);
+#endif
 
     /* 
        First time we change to execute state: we should
@@ -200,7 +202,9 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
+#endif
     return(STATE_MENU);
   }  
 
@@ -274,7 +278,9 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
     }
+#ifdef AUDIO
     soundMgr->stopSound(SND_BACKGROUND_PLAYING);
+#endif
     return(STATE_MENU); // end of game
   }
 
