@@ -99,15 +99,15 @@ class Ball {
     _spdx = 0;
     loadFrameSeq(t);
     _radius = _frames->width() / 2;
-    // cerr << "radius: " << _radius << endl;
+    //cerr << "radius: " << _radius << endl;
     _beginning = 0;
     _accelY = 0; // as soon as the speed becomes <> 0, it becomes 500
     _inCollisionWith = NULL;
     _side = -1;
     if ( _x < 0 )
-      _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4);
+      _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4) - _radius;
     if ( _y < 0 )
-      _y = (SCREEN_HEIGHT() * 2) / 3;
+      _y = (SCREEN_HEIGHT() * 2) / 3 - _radius;
     _scorerSide = _scoredTime = 0;
   }
 

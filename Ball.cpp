@@ -107,8 +107,8 @@ void Ball::assignPoint(int side, Team *t) {
   if ( _side == side )
     t->score();
   _side = side;
-  _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4);
-  _y = (SCREEN_HEIGHT() * 2) / 3;
+  _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4) - _radius;
+  _y = (SCREEN_HEIGHT() * 2) / 3 - _radius;
   _spdx = _spdy = _accelY = 0;
   _scorerSide = 0;
   resetCollisionCount();
