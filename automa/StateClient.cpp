@@ -34,7 +34,7 @@ int StateClient::setupConnection(InputState *is) {
 #ifndef NONET
   bool configured = false;
   string saddress = "";
-  char ch;
+  signed char ch;
   string ports = "";
   int port;
   char ti;

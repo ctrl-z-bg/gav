@@ -42,7 +42,7 @@ class StateWithInput {
     return(std::string(s2));
   }
 
-  char getKeyPressed(InputState *is) {
+  signed char getKeyPressed(InputState *is) {
     bool typed = false;
     SDL_keysym keysym;
     SDL_Event event;
@@ -57,7 +57,7 @@ class StateWithInput {
       char *kn = SDL_GetKeyName(keysym.sym);
       // printf("\"%s\"\n", kn);
       if ( strlen(kn) == 1 )
-	return(*kn);
+	return((signed char)(*kn));
       else if ( !strcmp(kn, "return") )
 	return(0);
       else if ( !strcmp(kn, "backspace") )

@@ -36,7 +36,7 @@ void StatePlaying::setupConnection(InputState *is) {
 #ifndef NONET
   std::string clinumb = "";
   int nclients = 0;
-  char ch;
+  signed char ch;
   
   nets = new NetServer();
   /* first, delete the screen... */
