@@ -45,15 +45,16 @@ Uint32 CreateHicolorPixel(SDL_PixelFormat *fmt, Uint8 red,
 }
 
 inline Uint32 getPix(void *v, int i, Uint8 bpp) {
+
   switch ( bpp ) {
-  case 4:  return *((Uint32 *) ((Uint32) v) + (i*bpp)); break;
+  case 4:  return (Uint32) ((Uint32 *)v)[i]; break;
   case 3:  
     std::cerr << "Unsupported pixel format: please, report to the GAV team!\n";
     exit(0);
     break;
-    //(Uint32) *((Uint24 *) ((Uint32) v) + (i*bpp)); break;
-  case 2:  return (Uint32) (*((Uint16 *) ((Uint32) v) + (i*bpp))); break;
-  case 1:  return (Uint32) (*((Uint8 *) ((Uint32) v) + (i*bpp))); break;
+    //(Uint32) ((Uint24 *)v)[i]; break; there's no such thing as Uint24!
+  case 2:  return (Uint32) ((Uint16 *)v)[i]; break;
+  case 1:  return (Uint32) ((Uint8 *)v)[i]; break;
   }
 
   std::cerr << "Unsupported pixel format (" << bpp <<
@@ -77,21 +78,23 @@ FrameSeq::collidesWith(FrameSeq *fs, int idx1, int idx2, SDL_Rect * rect1,
   void *pix2 = fs->_surface->pixels;
   
   Uint8 pixfmt = screen->format->BytesPerPixel;
-  Uint32 empty_pixel = 0; // CreateHicolorPixel(screen->format, 0, 0, 0);
+  Uint32 empty_pixel = 0;
+  // faster than CreateHicolorPixel(screen->format, 0, 0, 0);
 
-  int sp1 = (_surface->pitch >> (pixfmt-1));
-  int sp2 = (fs->_surface->pitch >> (pixfmt-1));
+  int sp1 = _surface->pitch / pixfmt;
+  int sp2 = fs->_surface->pitch / pixfmt;
   int xdisp1 = ((idx1 % _nframes) * _width);
   int xdisp2 = ((idx2 % fs->_nframes) * fs->_width);
 		
-  while ( ymin <= ymax ) {
+  while ( ymin < ymax ) { // was ymin <= ymax
     int xrun = xmin;
-    while ( xrun <= xmax ) {
+    while ( xrun < xmax ) { // was xrun <= xmax
       int p1off = sp1 * (ymin - rect1->y) + xdisp1 + (xrun - rect1->x);
       int p2off = sp2 * (ymin - rect2->y) + xdisp2 + (xrun - rect2->x);
       if ( ( getPix(pix1, p1off, pixfmt) != empty_pixel ) &&
-	   ( getPix(pix2, p2off, pixfmt) != empty_pixel) )
+	   ( getPix(pix2, p2off, pixfmt) != empty_pixel) ) {
 	return(true);
+      }
       xrun++;
     }
     ymin++;
