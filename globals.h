@@ -27,6 +27,8 @@
 #include "ScreenFont.h"
 #include "Configuration.h"
 
+#define FPS (50)
+
 class MenuRoot;
 class ControlsArray;
 

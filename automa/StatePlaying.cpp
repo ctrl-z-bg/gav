@@ -40,6 +40,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
        and think of a clever way to destroy them once we're done.
     */
 
+    prevDrawn = ticks;
     tl = new Team(-1);
     tr = new Team(1);
     b = new Ball(BALL_ORIG);
@@ -115,7 +116,8 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   
   b->update(ticks - prevTicks, tl, tr);
   
-  if ( 1 ) { // FIXME!!! (ticks - prevDrawn) > 30 ) {
+  if ( (ticks - prevDrawn) >
+       (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
     SDL_Rect r;
     r.x = r.y = 0;
     r.h = background->h;
@@ -126,7 +128,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tr->draw();
     b->draw();
     SDL_Flip(screen);
-    // prevDrawn = ticks;
+    prevDrawn = ticks;
   }
   
   if ( ((tl->getScore() >= WINNING_SCORE) &&

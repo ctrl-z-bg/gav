@@ -41,6 +41,7 @@
 #include "MenuItemBack.h"
 #include "MenuItemTheme.h"
 #include "MenuItemFullScreen.h"
+#include "MenuItemFrameSkip.h"
 
 #include "Theme.h"
 
@@ -166,6 +167,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemPlayer(TEAM_RIGHT, 1));
   menuExtra->add(new MenuItemSubMenu(new MenuKeys(1),
 				     string("Define Keys")));
+  menuExtra->add(new MenuItemFrameSkip());
   menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);
 

@@ -22,7 +22,8 @@
 
 /* Configuration options */
 
-#define MAX_PLAYERS 12
+#define MAX_PLAYERS (12)
+#define FPS (50)
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 
@@ -38,14 +39,26 @@ public:
   int sound;
   int winning_score;
 
+  unsigned int frame_skip;     // one every frame_skip + 1 are actually drawn
+  unsigned int fps;            // fps of the update (not graphical)
+  unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
+
   Configuration() : left_nplayers(1), right_nplayers(1),
 		    sound(0), winning_score(15) {
+    frame_skip = 0;
+    fps = FPS;
+    mill_per_frame = 1000 / fps;
     left_players[0] = PLAYER_HUMAN;
     right_players[0] = PLAYER_COMPUTER;
     for ( int i = 1; i < MAX_PLAYERS/2; i++ ) {
       left_players[i] = PLAYER_NONE;
       right_players[i] = PLAYER_NONE;
     }
+  }
+
+  inline void setFps(int val) {
+    fps = val;
+    mill_per_frame = 1000 / val;
   }
 };
 

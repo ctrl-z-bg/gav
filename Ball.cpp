@@ -191,7 +191,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _y = (SCREEN_HEIGHT() - _frames->height()-2);
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
     if ( !_scorerSide ) {
-      _scorerSide = (_x < (SCREEN_WIDTH() / 2))?1:-1;
+      // oldx, so we're safe from collisions against
+      // the net
+      _scorerSide = (oldx < (SCREEN_WIDTH() / 2))?1:-1;
       _scoredTime = 0;
     }
   }
@@ -219,7 +221,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
       resetCollisionCount();
   }
 
-  // network collision
+  // net collision
   if ( netPartialCollision(_x, _y) ) {
     if ( !netPartialCollision(oldx, NET_Y - 3*_frames->height()/4) ) {
       if ( oldy < _y ) { // hits from the top

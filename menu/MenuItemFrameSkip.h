@@ -20,27 +20,32 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _STATEPLAYING_H_
-#define _STATEPLAYING_H_
+#ifndef __MENUITEMFRAMESKIP_H__
+#define __MENUITEMFRAMESKIP_H__
 
-#include "State.h"
-#include "InputState.h"
-#include "Team.h"
-#include "Ball.h"
-#include "AI.h"
+#include <SDL.h>
+#include "MenuItem.h"
+#include "globals.h"
 
-class StatePlaying : public State {
-private:
-  Team *tl, *tr; // team left and team right
-  Ball *b;
-  Agent *agentR[MAX_PLAYERS/2], *agentL[MAX_PLAYERS/2];
-  unsigned int prevDrawn;
-
+class MenuItemFrameSkip: public MenuItem {
 public:
-  StatePlaying() : prevDrawn(0) {}
+  MenuItemFrameSkip() {
+    setLabel();
+  }
+  
+  void setLabel() {
+    char fs[10];
+    sprintf(fs, "%d", configuration.frame_skip);
 
-  virtual int execute(InputState *is, unsigned int ticks,
-		      unsigned int prevTicks, int firstTime);
+    label = std::string("Frameskip: ") + std::string(fs);
+  }
+
+  int execute(std::stack<Menu *> &s) {
+    configuration.frame_skip =
+      (configuration.frame_skip + 1)%10;
+    setLabel();
+    return(0);
+  }
 };
 
-#endif // _STATEPLAYING_H_
+#endif

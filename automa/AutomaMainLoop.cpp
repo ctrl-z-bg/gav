@@ -96,8 +96,8 @@ int AutomaMainLoop::start()
     _prev = _curr;
     _curr = transition(retval);
 
-    if ( (ticks - prevTicks) < 20 )
-      SDL_Delay(20 - (ticks - prevTicks));
+    if ( (ticks - prevTicks) < configuration.mill_per_frame )
+      SDL_Delay(configuration.mill_per_frame - (ticks - prevTicks));
     
     prevTicks = ticks;
   }
