@@ -51,7 +51,7 @@ void Agent::update() {
   net = fs = abs(_p->maxX() - _p->minX());
   wall = 0;
   mp = fs/2;
-  nplrs = 1; // To remove when multiplayer AI will work
+
   /* Normalize player x position, ball x position and ball x speed:
      Reasoning as it plays on the left, net=fs, wall=0 */
   px = (side>0)?(_p->maxX()-_p->x()-_p->width()/2):(_p->x()+_p->width()/2-_p->minX()); 
@@ -65,55 +65,44 @@ void Agent::update() {
       vector<Player *> plv = (_p->team())->players();
       /* Look for my id */
       vector<Player *>::const_iterator it; 
-      int myidx = _p->orderInField();
+      int myidx = _p->orderInField(), i;
 
       if (_p->orderInField() < 0) {
-	  for ( it = plv.begin(), myidx=0;
-		it != plv.end() && ((*it)->id() != (_p->id()));
-		it++,myidx++ );
-	  if ( it == plv.end() ) {
-	      cerr << "Congratulations! You found a bug in" <<
-		  __FILE__ << ":" << __LINE__;
-	      exit(-1);
-	  }
-	  _p->setOIF(myidx);
-      }
+	  for ( it = plv.begin(), i=0;
+		it != plv.end();
+		it++,i++ ) 
+	      (*it)->setOIF(i);	      
+	  
+	  myidx = _p->orderInField();
 
+      }
+      mypos = (int)(slotsize*(myidx+0.5));
+      Player *closerp;
       int minxsearching = net, minopx, opx, closer;
       for ( it = plv.begin();
 	    it != plv.end(); 
 	    it++ ) {
-	  int opx = (side>0)?((*it)->maxX()-(*it)->x()-(*it)->width()/2):
+	  opx = (side>0)?((*it)->maxX()-(*it)->x()-(*it)->width()/2):
 	      ((*it)->x()+(*it)->width()/2-(*it)->minX()); 	  
 	  if ( ( (*it)->id() != _p->id() ) &&
 	       ( abs(opx-mypos) < minxsearching ) ){
 	      closer=(*it)->id();
+	      closerp=(*it);
 	      minxsearching=abs(opx-mypos);
 	      minopx=opx;
 	  }
-	  printf("%+d(%d) -- %d %d %d\n",
-		 side, _p->id(),
-		 (*it)->id(),abs(opx-mypos), opx);
 			     
       }
       
-      int mv = 0;
       /* Someone is inside my slot over the 15% the slot size */
       if (minxsearching < (slotsize*0.35)) {
-	  if (opx > mypos) {
-	      mv = +1;
-	      _p->setOIF(++myidx);	      
-	  } else {
-	      mv = -1;
-	      _p->setOIF(--myidx);	      
-	  }
+	  myidx = closerp->orderInField();
+	  closerp->setOIF(_p->orderInField());
+	  _p->setOIF(myidx);
       }
       mypos = (int )(slotsize*(myidx+0.5));
       minslot = (int )(slotsize*myidx);
       maxslot = (int )(slotsize*(myidx+1));
-      printf("%+d(%d) -- %d %d (%d - %d - %d) => %d %d(%d-%d)\n", 
-	     side, _p->id(), myidx, px, minslot, mypos, maxslot, mv, 
-	     closer, minxsearching, minopx);
   } else {
       minslot = wall;
       mypos = mp-50; // behind the middle point
