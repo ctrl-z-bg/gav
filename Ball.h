@@ -119,6 +119,7 @@ class Ball {
   inline void speed(int v) { _speed = v; }
   inline int x() { return _x; }
   inline int y() { return _y; }
+  inline int radius() { return _radius; }
   inline float angle() { return _angle; }
   inline void angle(float v) { _angle = v; }
 

@@ -138,7 +138,7 @@ class Player {
   
   inline int y() {return _y;}
   inline void setY(int y) {_y = y;}
-  
+    inline Team *team() {return(_team);}
   inline int walkDrawSpeed() {return _walkDrawSpeed;}
   inline void setWalkDrawSpeed(int walkDrawSpeed) {
     _walkDrawSpeed = walkDrawSpeed;}
