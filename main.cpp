@@ -148,51 +148,6 @@ Sound * Prova;
 #endif
 #include <unistd.h>
 int main(int argc, char *argv[]) {
-#if 0
-  NetClient * client;
-  //NetServer * server;
-
-  if (fork()) {
-    nets = new NetServer();
-    //delete(server); while(1);
-    nets->StartServer();
-    sleep(1);
-    nets->WaitClients();
-#if 0
-    b.setFrame(33);
-    while(1) {
-      nets->SendSnapshot(&t1, &t2, &b);
-      {
-	char team, player;
-	cntrl_t cmd;
-	if (nets->ReceiveCommand(&team, &player, &cmd) != -1)
-	  printf ("     +++++ %p %d %d\n", team, (int)player, (int)cmd);
-      }
-      usleep(1000/60);
-      b.setFrame((b.frame() + 1) % 100);
-      //printf("   +++++ %d\n",(int)b.frame());
-    }
-#endif
-  } else {
-    int pl, pr;
-    init();
-    Team t1, t2;
-    Ball b(BALL_ORIG);
-    client = new NetClient();
-    //delete(client); while(1);
-    usleep(100);
-    client->ConnectToServer(&pl, &pr, NET_TEAM_RIGHT, "localhost");
-    while(1) {
-#if 1
-      if (client->ReceiveSnapshot(&t1, &t2, &b) != -1)
-	printf("client %p: %d\n", (int*)client->id(), b.x());
-#endif
-      client->SendCommand(CNTRL_JUMP);
-      usleep(1000/60);
-    }
-  }
-#endif // NETWORK TEST
-
   init();
   
 #ifdef AUDIO
