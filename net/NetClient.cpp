@@ -51,8 +51,8 @@ int NetClient::ConnectToServer(int * pl, int * pr, char team,
   _id = ((net_register_t*)(packetRegister->data))->id;
   _nplayers_l = ((net_register_t*)(packetRegister->data))->nplayers_l;
   _nplayers_r = ((net_register_t*)(packetRegister->data))->nplayers_r;
-  if (((net_register_t*)(packetRegister->data))->bgBig &&
-      !configuration.bgBig) {
+  if (((net_register_t*)(packetRegister->data))->bgBig !=
+      configuration.bgBig) {
     MenuItemBigBackground menuBG;
     std::stack<Menu *> st;
     menuBG.execute(st);
