@@ -57,7 +57,7 @@ int StateClient::setupConnection(InputState *is) {
 	cga->printRow(screen, 1, "                       ", background);
       } else {
 	char w[2];
-	w[0] = ch;
+	w[0] = (char)ch;
 	w[1] = 0;
 	saddress = saddress + w;
       }
@@ -74,7 +74,7 @@ int StateClient::setupConnection(InputState *is) {
 	cga->printRow(screen, 3, "                       ", background);
       } else {
 	char w[2];
-	w[0] = ch;
+	w[0] = (char)ch;
 	w[1] = 0;
 	ports = ports + w;
       }
@@ -93,7 +93,7 @@ int StateClient::setupConnection(InputState *is) {
 	cga->printRow(screen, 5, "                       ", background);
       } else {
 	char w[2];
-	w[0] = ch;
+	w[0] = (char)ch;
 	w[1] = 0;
 	team = team + w;
       }
