@@ -45,8 +45,8 @@ int NetServer::ComputePlayerID(char id) {
 
 int NetServer::WaitClients(int nclients) {
   IPaddress * ipa;
-  char nleft = 0;
-  char nright = 0;
+  //char nleft = 0;
+  //char nright = 0;
   char * id;
   int i;
   bool inserted = false;
@@ -70,7 +70,7 @@ int NetServer::WaitClients(int nclients) {
 	  }
 	if (inserted) {
 	  *id |= pl;
-	  nleft++;
+	  //nleft++;
 	} else
 	  continue;
       } else if (*id & NET_TEAM_RIGHT) {
@@ -82,7 +82,7 @@ int NetServer::WaitClients(int nclients) {
 	  }
 	if (inserted) {
 	  *id |= pl;
-	  nright++;
+	  //nright++;
 	} else
 	  continue;
       }

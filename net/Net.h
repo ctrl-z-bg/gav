@@ -48,7 +48,7 @@ typedef struct {
 } net_object_snapshot_t;
 
 typedef struct {
-  unsigned int timestamp;
+  //unsigned int timestamp;
   net_object_snapshot_t teaml[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t teamr[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t ball;
@@ -57,7 +57,7 @@ typedef struct {
 } net_game_snapshot_t;
 
 typedef struct {
-  unsigned int timestamp;
+  //unsigned int timestamp;
   char id;       // the client ID
   char command;
 } net_command_t;
