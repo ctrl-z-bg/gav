@@ -23,6 +23,8 @@
 #ifndef __NET_H__
 #define __NET_H__
 
+#ifndef NONET
+
 #include <SDL_net.h>
 #include <vector>
 #include "Configuration.h"
@@ -93,5 +95,7 @@ public:
   }
 
 };
+
+#endif // NONET
 
 #endif

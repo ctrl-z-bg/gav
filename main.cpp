@@ -183,7 +183,9 @@ int main(int argc, char *argv[]) {
   MenuItemExit miexit;
   Menu *menuExtra = new Menu();
   Menu *menuThemes = new Menu();
+#ifndef NONET
   Menu *menuNetwork = new Menu();
+#endif
   MenuItemBack *mib = new MenuItemBack("back");
   DIR *dir;
   if ((dir = opendir(ThemeDir.c_str())) == NULL) {
@@ -202,8 +204,8 @@ int main(int argc, char *argv[]) {
 #ifndef NONET
   menuNetwork->add(new MenuItemServer());
   menuNetwork->add(new MenuItemClient());
-#endif
   menuNetwork->add(mib);
+#endif
 
   menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
 #ifndef NONET

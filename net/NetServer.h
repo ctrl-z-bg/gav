@@ -23,6 +23,8 @@
 #ifndef __NETSERVER_H__
 #define __NETSERVER_H__
 
+#ifndef NONET
+
 #include "Net.h"
 #include <string.h>
 
@@ -54,5 +56,7 @@ public:
   inline int nclients() { return _nclients; }
 
 };
+
+#endif // NONET
 
 #endif

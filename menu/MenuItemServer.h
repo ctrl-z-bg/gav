@@ -25,13 +25,17 @@
 
 #include "MenuItem.h"
 #include "AutomaMainLoop.h"
+#ifndef NONET
 #include "NetServer.h"
+#endif
 
 class MenuItemServer: public MenuItem {
 public:
   MenuItemServer() {label = (std::string)"Start as server";}
   int execute(std::stack<Menu *> &s) {
+#ifndef NONET
     nets = new NetServer();
+#endif
     return STATE_PLAYING;
   }
 };

@@ -20,6 +20,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef NONET
+
 #include "NetServer.h"
 #include "Player.h"
 
@@ -151,3 +153,7 @@ int NetServer::ReceiveCommand(int * player, char * cmd) {
 int NetServer::isRemote(int pl) {
   return _players[pl];
 }
+
+
+#endif
+

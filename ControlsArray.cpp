@@ -24,6 +24,10 @@
 #include <SDL.h>
 #include "InputState.h"
 #include "ControlsArray.h"
+#include "vector"
+#include "Player.h"
+#include "Team.h"
+#include "PlayerAI.h"
 #ifndef NONET
 #include "NetServer.h"
 #endif
@@ -49,11 +53,11 @@ void ControlsArray::initializeControls() {
 void ControlsArray::setControlsState(InputState *is, Team * tl, Team * tr) {
   Uint8 *keystate = is->getKeyState();
   int i = 0;
-  int player;
-  char cmd;
   std::vector<Player *> players;
 
 #ifndef NONET
+  int player;
+  char cmd;
   if (nets)
     while ( nets->ReceiveCommand(&player, &cmd) != -1 ) {
       _inputs[player].left = cmd & CNTRL_LEFT;

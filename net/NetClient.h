@@ -23,6 +23,8 @@
 #ifndef __NETCLIENT_H__
 #define __NETCLIENT_H__
 
+#ifndef NONET
+
 #include "Net.h"
 
 class NetClient: public Net {
@@ -50,5 +52,7 @@ public:
   inline char id() { return _id; }
 
 };
+
+#endif // NONET
 
 #endif

@@ -123,8 +123,8 @@ int StateClient::setupConnection(InputState *is) {
   /* ok, I'm connected and I'm waiting for the game start */
   netc->WaitGameStart();
 
-  return(0);
 #endif //!NONET
+  return(0);
 }
 
 // executes one step of the game's main loop for a network client.
@@ -222,6 +222,6 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     return(STATE_MENU); // end of the game
   }
 
-  return(NO_TRANSITION);
 #endif // !NONET
+  return(NO_TRANSITION);
 }

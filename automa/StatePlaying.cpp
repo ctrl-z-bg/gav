@@ -142,10 +142,14 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( configuration.left_players[j] == PLAYER_HUMAN ) {
 	tl->addPlayerHuman(name.c_str(), PL_TYPE_MALE_LEFT);
       } else {
+#ifndef NONET
 	if (!nets || !(nets->isRemote(j*2)))
+#endif
 	  tl->addPlayerAI(name.c_str(), PL_TYPE_MALE_LEFT, b);
+#ifndef NONET
 	else
 	  tl->addPlayerRemote(name.c_str(), PL_TYPE_MALE_LEFT);
+#endif
       }
 
       i++;
@@ -159,10 +163,14 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       if ( configuration.right_players[j] == PLAYER_HUMAN ) {
 	tr->addPlayerHuman(name.c_str(), PL_TYPE_MALE_RIGHT);
       } else {
+#ifndef NONET
 	if (!nets || !(nets->isRemote(j*2+1)))
+#endif
 	  tr->addPlayerAI(name.c_str(), PL_TYPE_MALE_RIGHT, b);
+#ifndef NONET
 	else
 	  tr->addPlayerRemote(name.c_str(), PL_TYPE_MALE_RIGHT);
+#endif
       }
 
       i++;

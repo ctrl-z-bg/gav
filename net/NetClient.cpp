@@ -20,6 +20,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef NONET
+
 #include "NetClient.h"
 #include "MenuItemBigBackground.h"
 
@@ -113,3 +115,4 @@ int NetClient::SendCommand(char cmd) {
   return SDLNet_UDP_Send(mySock, -1, packetCmd)?0:-1;
 }
 
+#endif // NONET

@@ -46,15 +46,19 @@ extern MenuRoot *mroot;
 
 extern Configuration configuration;
 
+#ifndef NONET
 class NetClient;
 class NetServer;
+#endif
+
 class SoundMgr;
 
+#ifndef NONET
 extern NetServer * nets;
 extern NetClient * netc;
-extern SoundMgr * soundMgr;
+#endif
 
-//#define AUDIO
+extern SoundMgr * soundMgr;
 
 #ifdef AUDIO
 extern SDL_AudioSpec desired,obtained;
@@ -70,12 +74,6 @@ typedef struct playing_s {
   Uint32 position;
   bool loop;
 } playing_t, *playing_p;
-
-typedef struct {
-  Uint8 left;
-  Uint8 right;
-  Uint8 jump;
-} triple_t;
 
 #define MAX_PLAYING_SOUNDS 10
 
@@ -100,6 +98,12 @@ enum {
 
 
 #endif //AUDIO
+
+typedef struct {
+  Uint8 left;
+  Uint8 right;
+  Uint8 jump;
+} triple_t;
 
 #define SCREEN_WIDTH() (::background->w)
 #define SCREEN_HEIGHT() (::background->h)
