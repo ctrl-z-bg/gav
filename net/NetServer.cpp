@@ -27,7 +27,7 @@ using namespace std;
 
 int NetServer::StartServer(int port) {
   /* open the socket */
-  mySock = SDLNet_UDP_Open(port);
+  mySock = SDLNet_UDP_Open((Uint16)port);
   if(!mySock) {
     fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
     return -1;
