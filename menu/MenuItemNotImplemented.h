@@ -32,7 +32,7 @@ class MenuItemNotImplemented: public MenuItem {
 public:
   MenuItemNotImplemented(std::string l) {
     label = l;
-    msg = (string)"Menu Item Not Yet Implemented";
+    msg = (std::string)"Menu Item Not Yet Implemented";
   }
   int execute(std::stack<Menu *> &s) {
     SDL_Rect r;

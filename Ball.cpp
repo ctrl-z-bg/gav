@@ -27,6 +27,8 @@
 #define GRAVITY 250
 #define MAX_TOUCHES 3
 
+using namespace std;
+
 bool Ball::approaching(int spdx, int spdy) {
   int sgnx = (spdx>0)?1:(spdx<0)?-1:0;
   int sgny = (spdy>0)?1:(spdy<0)?-1:0;
@@ -118,7 +120,7 @@ void Ball::resetPos(int x, int y) {
   resetCollisionCount();
 }
 
-void Ball::draw(SDL_Surface *scr = screen) {
+void Ball::draw(SDL_Surface *scr) {
   SDL_Rect rect;
   rect.x = _x;
   rect.y = _y;

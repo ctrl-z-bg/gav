@@ -29,7 +29,7 @@
 
 class MenuItemPL2: public MenuItem {
  private:
-  string prefix;
+  std::string prefix;
 
 public:
   MenuItemPL2(std::string l) {
@@ -37,7 +37,7 @@ public:
     setLabel();
   }
   void setLabel() {
-    label = prefix + string(configuration.right_human?" Keyboard":" Computer");
+    label = prefix + std::string(configuration.right_human?" Keyboard":" Computer");
   }
   int execute(std::stack<Menu *> &s) {
     if ( configuration.right_human )
@@ -51,7 +51,7 @@ public:
 
 class MenuItemPL1: public MenuItem {
  private:
-  string prefix;
+  std::string prefix;
 
 public:
   MenuItemPL1(std::string l) {
@@ -59,7 +59,7 @@ public:
     setLabel();
   }
   void setLabel() {
-    label = prefix + string(configuration.left_human?" Keyboard":" Computer");
+    label = prefix + std::string(configuration.left_human?" Keyboard":" Computer");
   }
   int execute(std::stack<Menu *> &s) {
     if ( configuration.left_human )

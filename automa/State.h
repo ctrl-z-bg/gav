@@ -24,19 +24,20 @@
 #define _STATE_H_
 
 #include<string>
+#include<iostream>
 #include "InputState.h"
 
 class State {
 
   
 public:
-  string _name; // for debug
+  std::string _name; // for debug
   State() {};
   inline void setName(char *name) { _name = std::string(name); }
   inline std::string getName() { return(_name); }
   virtual int execute(InputState *is, unsigned int ticks,
 		      unsigned int prevticks, int firstTime) {
-    cout << "unextended state: " << _name << endl;
+    std::cout << "unextended state: " << _name << std::endl;
     return(0); // NO_TRANSITION
   }; 
   virtual ~State() {};

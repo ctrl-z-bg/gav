@@ -34,7 +34,7 @@ extern ScreenFont *cga;
 
 class Team {
  private:
-  vector<Player *> _players;
+  std::vector<Player *> _players;
   int _xmin;
   int _xmax;
   int _ymin;
@@ -71,7 +71,7 @@ class Team {
     return(_score);
   }
 
-  inline Player * addPlayer(string name, pl_type_t type, int speed = 250) {
+  inline Player * addPlayer(std::string name, pl_type_t type, int speed = 250) {
     Player *p = new Player(this, name, type, _nplayers * 2 + _playerNumInc,
 			   speed);
     _players.push_back(p);
@@ -83,7 +83,7 @@ class Team {
     return(p);
  }
 
-  inline vector<Player *> players() {
+  inline std::vector<Player *> players() {
     return(_players);
   }
 
@@ -101,7 +101,7 @@ class Team {
     SDL_Rect r;
     r.x = (_xmin < (SCREEN_WIDTH()/3))?100:(_xmax - 100);
     r.y = 0;
-    for ( vector<Player *>::const_iterator it = _players.begin();
+    for ( std::vector<Player *>::const_iterator it = _players.begin();
 	  it != _players.end(); it++ )
       (*it)->draw(scr);
     char s[100];
@@ -110,7 +110,7 @@ class Team {
   }
 
   void update(int ticks, ControlsArray *ca) {
-    for ( vector<Player *>::const_iterator it = _players.begin();
+    for ( std::vector<Player *>::const_iterator it = _players.begin();
 	  it != _players.end(); it++ ) {
       (*it)->update(ticks, ca);
     }

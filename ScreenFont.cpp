@@ -23,7 +23,7 @@
 #include "ScreenFont.h"
 
 void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
-			 bool wrapAround = true)
+			 bool wrapAround)
 {
   SDL_Rect r;
   

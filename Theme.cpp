@@ -22,7 +22,10 @@
 
 #include <unistd.h>
 #include <string>
+#include <iostream>
 #include "Theme.h"
+
+using namespace std;
 
 Theme *CurrentTheme;
 string ThemeDir;

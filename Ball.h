@@ -61,7 +61,7 @@ class Ball {
   int _side;
   int _scorerSide;
   int _scoredTime;
-  map<Team *, int> _collisionCount;
+  std::map<Team *, int> _collisionCount;
   Player * _inCollisionWith;
 
   void loadFrameSeq(ball_t t) {

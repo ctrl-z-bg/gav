@@ -58,7 +58,7 @@ typedef enum {
 
 class Player {
   FrameSeq * _frames;
-  string _name;
+  std::string _name;
   pl_type_t  _type;
   pl_state_t _state;
   int _speed;
@@ -73,7 +73,7 @@ class Player {
   char *_fileNames[NUM_TYPES];
 
  public:
-  Player(Team *team, string name, pl_type_t type, int idx, int speed) {
+  Player(Team *team, std::string name, pl_type_t type, int idx, int speed) {
 
     _fileNames[PL_TYPE_MALE_LEFT]    = 
 	(char *)malloc(sizeof(char)*(MAXPATHLENGTH+1));
@@ -116,7 +116,7 @@ class Player {
       free(_fileNames[PL_TYPE_FEMALE_RIGHT]);
   }
 
-  inline string name() {return _name;}
+  inline std::string name() {return _name;}
   
   inline int id() { return _plId; }
 
