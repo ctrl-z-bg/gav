@@ -25,7 +25,7 @@
 #include "AutomaMainLoop.h"
 #ifndef NONET
 #include "NetClient.h"
-#endif NONET
+#endif //NONET
 
 using namespace std;
 
