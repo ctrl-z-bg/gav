@@ -34,13 +34,15 @@
 #define F_NOT(a)      ( 1.0 - (a) )
 
 void Agent::update() {
-  int jmp = 0, i;
+  int jmp = 0;
+  //int i;
   int side = (_p->team())->side();
   int px, bx, fs, mp, bms, bsx, net, wall; /* Normalized values */
-  float p, c2n, c2w, mid; /* Fuzzy predicates */
+  float c2n, c2w, mid; /* Fuzzy predicates */
+  //float p;
   int move, pw;
-  int moves[10];
-  float prec[10];
+  //int moves[10];
+  //float prec[10];
   static int jumped = 0;
 
   net = fs = abs(_p->maxX() - _p->minX());
