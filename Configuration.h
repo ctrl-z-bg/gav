@@ -29,6 +29,8 @@
 #define FPS (50)
 #define WINNING_SCORE (15)
 
+#define DEFAULT_BALL_AMPLIFY 5
+
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
 
@@ -50,6 +52,7 @@ public:
   unsigned int fps;            // fps of the update (not graphical)
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
   bool bgBig;                  // if the background is big
+  unsigned int ballAmplify;
 
   Configuration() : left_nplayers(1), right_nplayers(1),
 		    sound(0), winning_score(WINNING_SCORE) {
@@ -64,6 +67,7 @@ public:
       right_players[i] = PLAYER_NONE;
     }
     bgBig = false;
+    ballAmplify = DEFAULT_BALL_AMPLIFY;
   }
 
   inline void setFps(int val) {

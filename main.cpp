@@ -46,6 +46,7 @@
 #include "MenuItemScore.h"
 #include "MenuItemMonitor.h"
 #include "MenuItemBigBackground.h"
+#include "MenuItemBallSpeed.h"
 #ifndef NONET
 #include "MenuItemClient.h"
 #include "MenuItemServer.h"
@@ -207,6 +208,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemFrameSkip());
   menuExtra->add(new MenuItemScore());
   menuExtra->add(new MenuItemMonitor());
+  menuExtra->add(new MenuItemBallSpeed());
   menuExtra->add(new MenuItemBigBackground());
   menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);

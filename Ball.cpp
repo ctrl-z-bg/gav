@@ -60,8 +60,6 @@ bool Ball::collide(Player *p) {
 }
 
 void Ball::update_internal(Player * pl) {
-#define AMPLIFY 5
-  
   int cplx = pl->x() + pl->width() / 2;
   int cply = pl->y() + pl->height() / 2;
   int cbx = _x + _frames->width() / 2;
@@ -84,7 +82,7 @@ void Ball::update_internal(Player * pl) {
   }
 
   y1 = _spdx * sinb + (- _spdy) * cosb;
-  x1 = AMPLIFY * (pl->speedX() * cosb - pl->speedY() * sinb);
+  x1 = configuration.ballAmplify * (pl->speedX() * cosb - pl->speedY() * sinb);
   
   int oldspdy = _spdy;
 
