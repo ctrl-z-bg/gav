@@ -272,7 +272,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     if ( !_scorerSide ) {
       // oldx, so we're safe from collisions against
       // the net
-      _scorerSide = (_oldx < (SCREEN_WIDTH() / 2))?1:-1;
+      _scorerSide = (_oldx < NET_X)?1:-1;
       _scoredTime = 0;
     }
   }
