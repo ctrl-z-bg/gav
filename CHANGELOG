@@ -4,6 +4,7 @@ Version 0.8.0 changes:
 - collision mechanisms improved
 - sound support added (sounds can be found in theme packages)
 - Players classes hierarchy re-designed
+- AI Player improved
 
 Version 0.7.3 added:
 - patch for stuck on the net problem
