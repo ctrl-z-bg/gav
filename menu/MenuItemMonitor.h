@@ -66,6 +66,7 @@ public:
     configuration.monitor_type =
       (configuration.monitor_type + 1)%4;
 
+    apply();
     setLabel();
     return(0);
   }
