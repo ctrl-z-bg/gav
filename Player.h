@@ -115,7 +115,7 @@ class Player {
       delete(_frames);
   }
 
-  inline int GROUND_LEVEL() { return(398-_frames->height());}  // (346)
+  inline int GROUND_LEVEL() { return(SCREEN_HEIGHT()-2-_frames->height());}  // (346)
 
   inline std::string name() {return _name;}
   

@@ -37,7 +37,7 @@
 
 //#define NET_X    (312)
 #define NET_X    (SCREEN_WIDTH() / 2 - 8)
-#define NET_Y    (206)
+#define NET_Y    (SCREEN_HEIGHT()/2 + ((3*SCREEN_HEIGHT())/200))
 
 typedef enum {
   BALL_ORIG
