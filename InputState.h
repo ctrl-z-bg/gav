@@ -39,6 +39,7 @@ public:
   virtual Uint8 *getF() { return _f; }
   virtual Uint8 *getKeyState() { return keystate; }
   virtual SDL_Event getEvent() { return event; }
+  virtual SDL_Event getEventWaiting();
 };
 
 #endif

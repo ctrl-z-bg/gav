@@ -24,6 +24,12 @@
 #include <SDL.h>
 #include "InputState.h"
 
+SDL_Event InputState::getEventWaiting() {
+  SDL_Event e;
+  SDL_WaitEvent(&e);
+  return(e);
+}
+
 void InputState::getInput() {
   SDL_PumpEvents();
   

@@ -46,9 +46,10 @@ void StatePlaying::setupConnection(InputState *is) {
   cga->printRow(screen, 0, "How many clients to wait? [1]");
   SDL_Flip(screen);
   while ( (ch = getKeyPressed(is)) != 0 ) {
-    if ( ch < 0 )
+    if ( ch < 0 ) {
       clinumb = deleteOneChar(clinumb); // should be backspace...
-    else {
+      cga->printRow(screen, 1, "                 ", background);
+    } else {
       char w[2];
       w[0] = ch;
       w[1] = 0;
@@ -135,6 +136,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     delete(tl);
     delete(tr);
     delete(b);
+    if ( nets ) {
+      delete(nets);
+      nets = NULL;
+    } 
     for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
@@ -188,6 +193,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     delete(tl);
     delete(tr);
     delete(b);
+    if ( nets ) {
+      delete(nets);
+      nets = NULL;
+    }
     for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);

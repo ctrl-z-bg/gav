@@ -45,12 +45,12 @@ class StateWithInput {
     SDL_Event event;
     while ( !typed ) {
       is->getInput();
-      if ( (event = is->getEvent()).type != SDL_KEYDOWN )
+      if ( (event = is->getEventWaiting()).type != SDL_KEYDOWN )
 	continue;
       keysym = event.key.keysym;
       do {
 	is->getInput();
-      } while ( is->getEvent().type != SDL_KEYUP );
+      } while ( is->getEventWaiting().type != SDL_KEYUP );
       char *kn = SDL_GetKeyName(keysym.sym);
       printf("\"%s\"\n", kn);
       if ( strlen(kn) == 1 )

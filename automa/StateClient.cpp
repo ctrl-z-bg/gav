@@ -47,9 +47,10 @@ int StateClient::setupConnection(InputState *is) {
     cga->printRow(screen, 0, "Please type server address");
     SDL_Flip(screen);
     while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 )
+      if ( ch < 0 ) {
 	saddress = deleteOneChar(saddress); // should be backspace...
-      else {
+	cga->printRow(screen, 1, "                       ", background);
+      } else {
 	char w[2];
 	w[0] = ch;
 	w[1] = 0;
@@ -63,9 +64,10 @@ int StateClient::setupConnection(InputState *is) {
     cga->printRow(screen, 2, msg);
     SDL_Flip(screen);
     while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) 
+      if ( ch < 0 ) {
 	ports = deleteOneChar(ports); // should be backspace...
-      else {
+	cga->printRow(screen, 2, "                       ", background);
+      } else {
 	char w[2];
 	w[0] = ch;
 	w[1] = 0;
@@ -86,6 +88,10 @@ int StateClient::setupConnection(InputState *is) {
   if ( netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
 			     port) == -1 ) {
     delete(netc);
+    cga->printRow(screen, 5, "host unreachable");
+    SDL_Flip(screen);
+    SDL_Delay(1000);
+    nets = NULL;
     return(STATE_MENU);
   }
 
@@ -145,6 +151,7 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     delete(tr);
     delete(b);
     delete(netc);
+    netc = NULL;
     return(STATE_MENU);
   }  
 
@@ -179,6 +186,7 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     delete(tr);
     delete(b);
     delete(netc);
+    netc = NULL;
     return(STATE_MENU); // end of the game
   }
 
