@@ -86,6 +86,9 @@ void StatePlaying::setupConnection(InputState *is) {
     nclients = 1;
   
   nets->StartServer(port);
+  cga->printRow(screen, 3, "Server started. Waiting for clients...",
+		background);
+  SDL_Flip(screen);  
   nets->WaitClients(nclients);
 }
 

@@ -67,7 +67,7 @@ int StateClient::setupConnection(InputState *is) {
     while ( (ch = getKeyPressed(is)) != 0 ) {
       if ( ch < 0 ) {
 	ports = deleteOneChar(ports); // should be backspace...
-	cga->printRow(screen, 2, "                       ", background);
+	cga->printRow(screen, 3, "                       ", background);
       } else {
 	char w[2];
 	w[0] = ch;
