@@ -47,30 +47,32 @@ int StateClient::setupConnection(InputState *is) {
     cga->printRow(screen, 0, "Please type server address");
     SDL_Flip(screen);
     while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) ; // should be backspace...
+      if ( ch < 0 )
+	saddress = deleteOneChar(saddress); // should be backspace...
       else {
 	char w[2];
 	w[0] = ch;
 	w[1] = 0;
 	saddress = saddress + w;
-	cga->printRow(screen, 1, saddress.c_str(), background);
-	SDL_Flip(screen);
       }
+      cga->printRow(screen, 1, saddress.c_str(), background);
+      SDL_Flip(screen);
     }
     char msg[100];
     sprintf(msg, "Please type port number [%d]", SERVER_PORT);
     cga->printRow(screen, 2, msg);
     SDL_Flip(screen);
     while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) ; // should be backspace...
+      if ( ch < 0 ) 
+	ports = deleteOneChar(ports); // should be backspace...
       else {
 	char w[2];
 	w[0] = ch;
 	w[1] = 0;
 	ports = ports + w;
-	cga->printRow(screen, 3, ports.c_str(), background);
-	SDL_Flip(screen);
       }
+      cga->printRow(screen, 3, ports.c_str(), background);
+      SDL_Flip(screen);
     }
     port = atoi(ports.c_str());
     if ( !port )
@@ -81,8 +83,11 @@ int StateClient::setupConnection(InputState *is) {
   netc = new NetClient();
   cga->printRow(screen, 4, "connecting...");
   SDL_Flip(screen);
-  netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
-			port);
+  if ( netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
+			     port) == -1 ) {
+    delete(netc);
+    return(STATE_MENU);
+  }
 
   return(0);
 }
@@ -94,7 +99,9 @@ int StateClient::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
   if ( firstTime ) {
-    setupConnection(is); 
+    int ret = 0;
+    if ( (ret = setupConnection(is)) )
+      return(ret);
 
    /* 
        First time we change to execute state: we should

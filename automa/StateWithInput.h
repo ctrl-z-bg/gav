@@ -25,12 +25,20 @@
 
 #include <SDL.h>
 #include "AutomaMainLoop.h"
-#include <string.h>
+#include <string>
 
 class StateWithInput {
  public:
   StateWithInput() {}
   
+  std::string deleteOneChar(std::string s) {
+    char s2[s.length()];
+
+    strncpy(s2, s.c_str(), s.length() - 1);
+    s2[s.length() - 1] = 0;
+    return(std::string(s2));
+  }
+
   char getKeyPressed(InputState *is) {
     bool typed = false;
     SDL_keysym keysym;

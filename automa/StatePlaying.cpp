@@ -46,7 +46,8 @@ void StatePlaying::setupConnection(InputState *is) {
   cga->printRow(screen, 0, "How many clients to wait? [1]");
   SDL_Flip(screen);
   while ( (ch = getKeyPressed(is)) != 0 ) {
-    if ( ch < 0 ) ; // should be backspace...
+    if ( ch < 0 )
+      clinumb = deleteOneChar(clinumb); // should be backspace...
     else {
       char w[2];
       w[0] = ch;
