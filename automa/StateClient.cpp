@@ -23,11 +23,15 @@
 #include <SDL.h>
 #include "StateClient.h"
 #include "AutomaMainLoop.h"
+#ifndef NONET
 #include "NetClient.h"
+#endif NONET
 
 using namespace std;
 
+
 int StateClient::setupConnection(InputState *is) {
+#ifndef NONET
   bool configured = false;
   string saddress = "";
   char ch;
@@ -120,6 +124,7 @@ int StateClient::setupConnection(InputState *is) {
   netc->WaitGameStart();
 
   return(0);
+#endif //!NONET
 }
 
 // executes one step of the game's main loop for a network client.
@@ -128,6 +133,7 @@ int StateClient::setupConnection(InputState *is) {
 int StateClient::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
+#ifndef NONET
   if ( firstTime ) {
     int ret = 0;
     if ( (ret = setupConnection(is)) )
@@ -212,4 +218,5 @@ int StateClient::execute(InputState *is, unsigned int ticks,
   }
 
   return(NO_TRANSITION);
+#endif // !NONET
 }

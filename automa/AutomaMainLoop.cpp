@@ -26,7 +26,9 @@
 #include "globals.h"
 #include "StateMenu.h"
 #include "StatePlaying.h"
+#ifndef NONET
 #include "StateClient.h"
+#endif
 
 AutomaMainLoop::AutomaMainLoop()
 {
@@ -38,8 +40,10 @@ AutomaMainLoop::AutomaMainLoop()
   _curr = STATE_MENU;
   StatePlaying *sp = new StatePlaying();
   addState(STATE_PLAYING, sp);
+#ifndef NONET
   StateClient *sc = new StateClient();
   addState(STATE_CLIENT, sc);
+#endif
   _prev = -1;
 }
 
@@ -56,9 +60,11 @@ int AutomaMainLoop::transition(int retval)
   case STATE_PLAYING:
     return STATE_MENU;
     break;
+#ifndef NONET
   case STATE_CLIENT:
     return STATE_MENU;
     break;
+#endif
   }
 #endif
   return retval; // _curr;

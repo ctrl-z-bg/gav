@@ -24,12 +24,16 @@
 #include "StatePlaying.h"
 #include "Automa.h"
 #include "AutomaMainLoop.h"
+#ifndef NONET
 #include "NetServer.h"
+#endif
 #include "StateWithInput.h"
 
 using namespace std;
 
+
 void StatePlaying::setupConnection(InputState *is) {
+#ifndef NONET
   std::string clinumb = "";
   int nclients = 0;
   char ch;
@@ -98,6 +102,7 @@ void StatePlaying::setupConnection(InputState *is) {
     cga->printRow(screen, 5, msg, background);
     SDL_Flip(screen);  
   } while ( remaining > 0 );
+#endif //!NONET
 }
 
 // executes one step of the game's main loop
@@ -106,10 +111,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
   if ( firstTime ) {
+#ifndef NONET
     if ( nets ) {
       setupConnection(is);
     }
-    
+#endif
     /* 
        First time we change to execute state: we should
        probably create players here instead of in the constructor,
@@ -135,10 +141,15 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       agentL[j] = new Agent(b, automL, controlsArray);
       if ( configuration.left_players[j] == PLAYER_HUMAN )
 	controlsArray->setHuman(j*2);
+#ifdef NONET 
+      else 
+	controlsArray->setArtificial(j*2);
+#else
       else if (!nets || nets->isRemote(j*2))
 	controlsArray->setArtificial(j*2);
       else
 	controlsArray->setRemote(j*2);
+#endif
       i++;
     }
 
@@ -151,10 +162,15 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
       agentR[j] = new Agent(b, automR, controlsArray);
       if ( configuration.right_players[j] == PLAYER_HUMAN )
 	controlsArray->setHuman(j*2 + 1);
+#ifdef NONET 
+      else 
+	controlsArray->setArtificial(j*2 + 1);
+#else 
       else if (!nets || nets->isRemote(j*2+1))
 	controlsArray->setArtificial(j*2 + 1);
       else
 	controlsArray->setRemote(j*2+1);
+#endif
       i++;
     }
 
@@ -170,10 +186,12 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     delete(tl);
     delete(tr);
     delete(b);
+#ifndef NONET
     if ( nets ) {
       delete(nets);
       nets = NULL;
     } 
+#endif
     for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
@@ -184,15 +202,24 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   /* update AI agents */
   for ( int i = 0, j = 0; i < configuration.left_nplayers; j++ ) {
     if ( configuration.left_players[j] == PLAYER_COMPUTER )
+#ifdef NONET
+	agentL[i]->update();
+#else 
       if ( !nets || !(nets->isRemote(2*i)) )
 	agentL[i]->update();
+#endif
+
     if ( configuration.left_players[j] != PLAYER_NONE )
       i++;
   }
   for ( int i = 0, j = 0; i < configuration.right_nplayers; j++ ) {
     if ( configuration.right_players[j] == PLAYER_COMPUTER )
+#ifdef NONET
+	agentR[j]->update();
+#else
       if ( !nets || !(nets->isRemote(2*i+1)) )
 	agentR[j]->update();
+#endif
     if ( configuration.right_players[j] != PLAYER_NONE )
       i++;
   }
@@ -213,8 +240,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tl->draw();
     tr->draw();
     b->draw();
+#ifndef NONET
     if (nets)
       nets->SendSnapshot(tl, tr, b);
+#endif
     SDL_Flip(screen);
     prevDrawn = ticks;
   }
@@ -227,10 +256,12 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     delete(tl);
     delete(tr);
     delete(b);
+#ifndef NONET
     if ( nets ) {
       delete(nets);
       nets = NULL;
     }
+#endif
     for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
       if ( agentL[i] ) delete(agentL[i]);
       if ( agentL[i] ) delete(agentR[i]);
