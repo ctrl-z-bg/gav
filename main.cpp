@@ -52,7 +52,8 @@
 
 #include "Sound.h"
 
-#include "Net.h"
+#include "NetClient.h"
+#include "NetServer.h"
 
 #define BPP 16
 
@@ -148,22 +149,25 @@ Sound * Prova;
 int main(int argc, char *argv[]) {
   init();
   
-#if 1
-  Net net;
+#if 0
+  NetClient * client;
+  NetServer * server;
   Team t1, t2;
   Ball b(BALL_ORIG);
 
   if (fork()) {
-    net.StartServer();
+    server = new NetServer();
+    //delete(server); while(1);
+    server->StartServer();
     sleep(1);
-    net.WaitClients();
+    server->WaitClients();
     b.setFrame(33);
     while(1) {
-      net.SendSnapshot(&t1, &t2, &b);
+      server->SendSnapshot(&t1, &t2, &b);
       {
 	char team, player;
 	cntrl_t cmd;
-	if (net.ReceiveCommand(&team, &player, &cmd) != -1)
+	if (server->ReceiveCommand(&team, &player, &cmd) != -1)
 	  printf ("     +++++ %p %d %d\n", team, (int)player, (int)cmd);
       }
       usleep(1000/60);
@@ -171,11 +175,13 @@ int main(int argc, char *argv[]) {
       //printf("   +++++ %d\n",(int)b.frame());
     }
   } else {
-    net.ConnectToServer(NET_TEAM_RIGHT, "mynos.metaware.it");
+    client = new NetClient();
+    //delete(client); while(1);
+    client->ConnectToServer(NET_TEAM_RIGHT, "mynos.metaware.it");
     while(1) {
-      if (net.ReceiveSnapshot(&t1, &t2, &b) != -1)
-	printf("client %p: %d\n", (int*)net.id(), b.frame());
-      net.SendCommand(CNTRL_JUMP);
+      if (client->ReceiveSnapshot(&t1, &t2, &b) != -1)
+	printf("client %p: %d\n", (int*)client->id(), b.frame());
+      client->SendCommand(CNTRL_JUMP);
       usleep(1000/60);
     }
   }

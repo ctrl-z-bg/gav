@@ -20,7 +20,7 @@ include CommonHeader
 
 ROOT=
 
-SUBDIRS = menu automa
+SUBDIRS = menu automa net
 CXXFLAGS += $(foreach DIR, $(SUBDIRS), -I$(DIR)) -I. -Dmain=SDL_main
 
 SUBDIRS_SRCS = $(foreach DIR, $(SUBDIRS), $(wildcard $(DIR)/*.cpp))

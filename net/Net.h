@@ -62,13 +62,10 @@ typedef struct {
 } net_command_t;
 
 class Net {
-  std::vector<IPaddress*> clientIP;
+protected:
   UDPsocket mySock;
-  IPaddress ipaddress;
   UDPpacket * packetCmd;
   UDPpacket * packetSnap;
-  int channel;   // the channel assigned to client
-  char _id;      // if I'm a client I've an id
 
 public:
   Net() {
@@ -79,28 +76,9 @@ public:
   }
 
   ~Net() {
-    unsigned int i;
     SDLNet_FreePacket(packetSnap);
     SDLNet_FreePacket(packetCmd);
-    /* TODO: deallocation of clientIP elements */
-    for (i = 0; i < clientIP.size(); i++)
-      free(clientIP[i]);
   }
-
-  /* server methods */
-  int StartServer(int port = 7145);
-  int KillServer();
-  int WaitClients(int nclients = 1);
-  int SendSnapshot(Team *tleft, Team *tright, Ball * ball);
-  int ReceiveCommand(char * team, char * player, cntrl_t * cmd);
-
-  /* client methods */
-  int ConnectToServer(char team, char * hostname, int port = 7145);
-  int KillClient();
-  int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
-  int SendCommand(cntrl_t cmd);
-
-  inline char id() { return _id; }
 
 };
 

@@ -20,7 +20,7 @@ include CommonHeader
 
 ROOT=
 
-SUBDIRS = menu automa
+SUBDIRS = menu automa net
 CXXFLAGS += $(foreach DIR, $(SUBDIRS), -I$(DIR)) -I.
 
 ALL_OBJ  = $(foreach DIR, $(SUBDIRS), $(DIR)/$(DIR:%=%_module.o))

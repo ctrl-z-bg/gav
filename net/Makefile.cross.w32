@@ -16,53 +16,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-include CommonHeader
+RELPATH    = net
+include ../CommonHeader
 
-ROOT=
+NAME 		= net
 
-SUBDIRS = menu automa net
-CXXFLAGS += $(foreach DIR, $(SUBDIRS), -I$(DIR)) -I.
-
-ALL_OBJ  = $(foreach DIR, $(SUBDIRS), $(DIR)/$(DIR:%=%_module.o))
+CXXFLAGS += -I$(GAV_ROOT)
 
 DEPEND = Makefile.depend
 
-.PHONY: depend clean all $(SUBDIRS)
+.PHONY: all
 
-all: $(SUBDIRS) gav
+all: $(OFILES)
 
-$(SUBDIRS):
-	$(MAKE) -C $@
-
-$(ALL_OBJ):
-	$(MAKE) -C $(@D:%_module.o=%)
-
-gav:	$(ALL_OBJ) $(OFILES)
-	$(CXX) -o gav $(OFILES) $(ALL_OBJ) $(LDFLAGS)
+($OFILES): $(SRCS)
+	$(CXX) -c $(CXXFLAGS) $<
 
 clean:
-	for i in $(SUBDIRS) ; do \
-	  make -C $$i clean;\
-	done
-	rm -f *~ *.o gav $(DEPEND)
-
-bindist: all
-	for i in $(SUBDIRS) ; do \
-	  make -C $$i clean;\
-	done
-	rm -f *~ *.o
-
-install: all
-	install gav $(ROOT)/usr/bin
-	install -d $(ROOT)/usr/share/games/gav/themes
-	cp -r themes/* $(ROOT)/usr/share/games/gav/themes
+	rm -f *.o *.bin *~ $(DEPEND)
 
 depend:
-	for i in $(SUBDIRS) ; do \
-	  make -C $$i depend;\
-	done
 	$(RM) $(DEPEND)
-	$(CXX) -M $(CXXFLAGS) $(SRCS) >> $(DEPEND)
+	$(CXX) $(CXXFLAGS) -M $(SRCS) >> $(DEPEND)
 
 ifeq ($(wildcard $(DEPEND)),$(DEPEND))
 include $(DEPEND)
