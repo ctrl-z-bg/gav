@@ -1,3 +1,5 @@
+# use rpmbuild with --target noarch  option
+
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav-themes
 Version: 0.7.0
