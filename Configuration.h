@@ -22,6 +22,9 @@
 
 /* Configuration options */
 
+#ifndef __CONFIGURATION_H__
+#define __CONFIGURATION_H__
+
 #define MAX_PLAYERS (12)
 #define FPS (50)
 #define POINTS (15)
@@ -67,3 +70,4 @@ public:
   }
 };
 
+#endif
