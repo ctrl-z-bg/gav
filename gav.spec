@@ -21,10 +21,15 @@ input devices and networking (not yet).
 make
 
 %install
-make install
+install -d $RPM_BUILD_ROOT/usr/bin
+install gav $RPM_BUILD_ROOT/usr/bin/
+install -d $RPM_BUILD_ROOT/usr/share/games/gav/themes
+cp -r themes/* $RPM_BUILD_ROOT/usr/share/games/gav/themes
+#rm -rf $RPM_BUILD_ROOT
 
 %clean
 make clean
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
