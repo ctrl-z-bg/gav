@@ -8,5 +8,7 @@ left player: z, c and left shift
 right player: <-, -> and cursor up.
 
 To activate a menu item, SPACE.
+To exit from the game and go back to the menu, ESC
+To switch to fullscreen (much faster), F10
 
 Checkout the INSTALL file for isntallation instructions.

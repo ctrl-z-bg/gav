@@ -37,10 +37,6 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/games/gav/
 /usr/share/games/gav/themes
 /usr/share/games/gav/themes/classic
-/usr/share/games/gav/themes/classic/CVS
-/usr/share/games/gav/themes/classic/CVS/Root
-/usr/share/games/gav/themes/classic/CVS/Repository
-/usr/share/games/gav/themes/classic/CVS/Entries
 /usr/share/games/gav/themes/classic/Font.png
 /usr/share/games/gav/themes/classic/FontInv.png
 /usr/share/games/gav/themes/classic/background.png
