@@ -44,7 +44,11 @@ bool Theme::_checkTheme() {
     bool r;
 #ifndef WIN32
     cerr << "Verifying Theme `" << _name << "' [" << ThemeDir << "/" << _name << "/]:\n";
-    if ( access(_CCS(_background), R_OK) )  errorOn(TH_BACKGROUND);
+    if ( access(_CCS(_background), R_OK) ) {
+      _background = TD + TH_BACKGROUND_JPG;
+      printf("provo il jpg %s\n", (_CCS(_background)));
+      if ( access(_CCS(_background), R_OK) ) errorOn("background.{jpg,png}");
+    }
     if ( access(_CCS(_font), R_OK) )        errorOn(TH_FONT);
     if ( access(_CCS(_fontinv), R_OK) )     errorOn(TH_FONTINV);
     if ( access(_CCS(_leftmale), R_OK) )    errorOn(TH_LEFTMALE);

@@ -45,7 +45,8 @@
 #define TH_RIGHTMALE    "plmr.png"
 #define TH_LEFTFEMALE   "plfl.png"
 #define TH_RIGHTFEMALE  "plfr.png"
-#define TH_BACKGROUND   "background.png"
+#define TH_BACKGROUND_JPG   "background.jpg"
+#define TH_BACKGROUND_PNG   "background.png"
 #define TH_BALL         "ball.png"
 #define TH_FONT         "Font.png"
 #define TH_FONTINV      "FontInv.png"
@@ -53,20 +54,20 @@
 extern std::string ThemeDir;
 
 class Theme {
- private:
-    std::string _name;
-    bool _hasnet; // To possibly add the image of the net (not used yet)
-    std::string _background;
-    std::string _net;
-    std::string _font;
-    std::string _fontinv;
-    std::string _leftmale;
-    std::string _rightmale;
-    std::string _leftfemale;
-    std::string _rightfemale;
-    std::string _ball;
-
-    bool _checkTheme(); // Theme Validation
+private:
+  std::string _name;
+  bool _hasnet; // To possibly add the image of the net (not used yet)
+  std::string _background;
+  std::string _net;
+  std::string _font;
+  std::string _fontinv;
+  std::string _leftmale;
+  std::string _rightmale;
+  std::string _leftfemale;
+  std::string _rightfemale;
+  std::string _ball;
+  std::string TD;
+  bool _checkTheme(); // Theme Validation
     
  public:
     Theme(std::string name) {
@@ -82,12 +83,11 @@ class Theme {
       } else
 	closedir(dir);
 
-      std::string TD = ThemeDir + "/" + name +  "/";
+      TD = ThemeDir + "/" + name +  "/";
 
 #else
       HANDLE hFindFile ;
       WIN32_FIND_DATA ffdData ;
-      std::string TD ;
       
       hFindFile = FindFirstFile (ThemeDir.c_str(), &ffdData) ;
       if (hFindFile == INVALID_HANDLE_VALUE)
@@ -106,7 +106,7 @@ class Theme {
       
       _net = TD + TH_NET;
       
-      _background = TD + TH_BACKGROUND;
+      _background = TD + TH_BACKGROUND_PNG;
       
       _font    = TD + TH_FONT;
       _fontinv = TD + TH_FONTINV;
