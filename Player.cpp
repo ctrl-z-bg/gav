@@ -44,6 +44,7 @@ void Player::update(int ticks, ControlsArray *ca) {
   static int overallPassed = 0;
 
   int dx = 0;
+  bool firstTime = (overallPassed == 0);
 
   overallPassed += ticks;
   if ( input.left ) 
@@ -89,7 +90,7 @@ void Player::update(int ticks, ControlsArray *ca) {
 	_currStateFrameDelay = configuration.playerFrameConf.playerJmpP/
 	  ( _currFrameE - _currFrameB);
     }
-  } else if ( !dx && (_state != PL_STATE_STILL) ) { // player still
+  } else if (firstTime || (!dx && (_state!=PL_STATE_STILL))) { // player still
     _state = PL_STATE_STILL;
     _currFrameB = configuration.playerFrameConf.playerStillB - 1;
     _currFrameE = configuration.playerFrameConf.playerStillE - 1;
