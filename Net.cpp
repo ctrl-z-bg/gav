@@ -21,6 +21,7 @@
 */
 
 #include "Net.h"
+#include "Player.h"
 
 int Net::StartServer(int port) {
   /* open the socket */
@@ -40,24 +41,55 @@ int Net::KillServer() {
 
 int Net::WaitClients(int nclients) {
   IPaddress * ipa;
-  int connected = 0;
+  char nleft = 0;
+  char nright = 0;
+  char * id;
 
-  while (connected != nclients) {
+  while ((nright + nleft) != nclients) {
     if (SDLNet_UDP_Recv(mySock, packetCmd) != 0) {
       ipa = (IPaddress*)malloc(sizeof(IPaddress));
       memcpy(ipa, &(packetCmd->address), sizeof(IPaddress));
       clientIP.push_back(ipa);
-      connected++;
+      id = &(((net_command_t*)(packetCmd->data))->id);
+      if (*id & TEAM_LEFT) {
+	*id |= nleft;
+	nleft++;
+      } else if (*id & TEAM_RIGHT) {
+	*id |= nright;
+	nright++;
+      }
+      /* send the ID back to client */
+      SDLNet_UDP_Send(mySock, -1, packetCmd);
     }
   }
 
   return 0;
 }
 
-int Net::SendSnapshot(net_game_snapshot_t * snap) {
+int Net::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   unsigned int i;
+  net_game_snapshot_t * snap = (net_game_snapshot_t *)(packetSnap->data);
+  std::vector<Player *> plv;
 
-  memcpy(packetSnap->data, snap, sizeof(net_game_snapshot_t));
+  /* fill the left team informations */
+  plv = tleft->players();
+  for (i = 0; i < plv.size(); i++) {
+    (snap->teaml)[i].x = plv[i]->x();
+    (snap->teaml)[i].y = plv[i]->y();
+    (snap->teaml)[i].frame = plv[i]->state();
+  }
+  /* fill the right team informations */
+  plv = tright->players();
+  for (i = 0; i < plv.size(); i++) {
+    (snap->teamr)[i].x = plv[i]->x();
+    (snap->teamr)[i].y = plv[i]->y();
+    (snap->teamr)[i].frame = plv[i]->state();
+  }
+  /* fill the ball informations */
+  (snap->ball).x = ball->x();
+  (snap->ball).y = ball->y();
+  (snap->ball).frame = ball->frame();
+
   /* send the snapshot to all clients */
   for (i = 0; i < clientIP.size(); i++) {
     packetSnap->address = *(clientIP[i]);
@@ -66,11 +98,19 @@ int Net::SendSnapshot(net_game_snapshot_t * snap) {
   return 0;
 }
 
-int Net::ReceiveCommand() {
-  return 0;
+int Net::ReceiveCommand(char * team, char * player, cntrl_t * cmd) {
+  if (SDLNet_UDP_Recv(mySock, packetCmd) != 0) {
+    net_command_t * c = (net_command_t*)(packetCmd->data);
+    *team = (c->id) & 0xC0;
+    *player = (c->id) & 0x3F;
+    *cmd = c->command;
+    return 0;
+  }
+
+  return -1;
 }
 
-int Net::ConnectToServer(char * hostname, int port) {
+int Net::ConnectToServer(char team, char * hostname, int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(0);
   /* resolve the server name */
@@ -86,7 +126,12 @@ int Net::ConnectToServer(char * hostname, int port) {
   }
 
   packetCmd->address = packetSnap->address = ipaddress;
-  
+  ((net_command_t*)(packetCmd->data))->id = team;
+
+  SDLNet_UDP_Send(mySock, -1, packetCmd);
+  while (!SDLNet_UDP_Recv(mySock, packetCmd));
+  _id = ((net_command_t*)(packetCmd->data))->id;
+
   return 0;
 }
 
@@ -96,16 +141,40 @@ int Net::KillClient() {
   return 0;
 }
 
-int Net::ReceiveSnapshot(net_game_snapshot_t * snap) {
+int Net::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
+  net_game_snapshot_t * snap;
+  std::vector<Player *> plv;
+  unsigned int i;
+
   if (SDLNet_UDP_Recv(mySock, packetSnap) != 0) {
-    memcpy(snap, packetSnap->data, sizeof(net_game_snapshot_t));
+    snap = (net_game_snapshot_t*)packetSnap->data;
+    /* fill the left team informations */
+    plv = tleft->players();
+    for (i = 0; i < plv.size(); i++) {
+      plv[i]->setX((int)(snap->teaml)[i].x);
+      plv[i]->setY((int)(snap->teaml)[i].y);
+      plv[i]->setState((pl_state_t)(snap->teaml)[i].frame);
+    }
+    /* fill the right team informations */
+    plv = tright->players();
+    for (i = 0; i < plv.size(); i++) {
+      plv[i]->setX((int)(snap->teamr)[i].x);
+      plv[i]->setY((int)(snap->teamr)[i].y);
+      plv[i]->setState((pl_state_t)(snap->teamr)[i].frame);
+    }
+    /* fill the ball informations */
+    ball->setX((int)(snap->ball).x);
+    ball->setY((int)(snap->ball).y);
+    ball->setFrame((int)(snap->ball).frame);
     return 0;
   }
   return -1;
 }
 
-int Net::SendCommand(net_command_t * cmd) {
-  memcpy(packetCmd->data, cmd, sizeof(net_command_t *));
+int Net::SendCommand(cntrl_t cmd) {
+  net_command_t * command = (net_command_t *)(packetCmd->data);
+  command->id = _id;
+  command->command = cmd;
   return SDLNet_UDP_Send(mySock, -1, packetCmd)?0:-1;
 }
 

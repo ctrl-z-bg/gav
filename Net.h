@@ -23,12 +23,24 @@
 #ifndef __NET_H__
 #define __NET_H__
 
-#include "Configuration.h"
 #include <SDL_net.h>
 #include <vector>
+#include "Configuration.h"
+#include "Ball.h"
+#include "Team.h"
+#include "ControlsArray.h"
 
 #define PLAYER_FOR_TEAM_IN_NET_GAME 2
 #define SERVER_PORT 7145
+
+/* The ID of a client is a char with the higher order 2 bits indicating
+   the team, the left 6 bits say the player number. When a client wants to
+   register itself, it sends a command with id equal to TEAM_LEFT or
+   TEAM_RIGHT. The server fills the others 6 bits and sends the id
+   back to the client.
+*/
+#define TEAM_LEFT  0x80    // 10xxxxxx
+#define TEAM_RIGHT 0x40    // 01xxxxxx
 
 typedef struct {
   short x;
@@ -38,15 +50,15 @@ typedef struct {
 
 typedef struct {
   unsigned int timestamp;
-  net_object_snapshot_t team1[PLAYER_FOR_TEAM_IN_NET_GAME];
-  net_object_snapshot_t team2[PLAYER_FOR_TEAM_IN_NET_GAME];
+  net_object_snapshot_t teaml[PLAYER_FOR_TEAM_IN_NET_GAME];
+  net_object_snapshot_t teamr[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t ball;
 } net_game_snapshot_t;
 
 typedef struct {
   unsigned int timestamp;
   char id;       // the client ID
-  char command;
+  cntrl_t command;
 } net_command_t;
 
 class Net {
@@ -56,6 +68,7 @@ class Net {
   UDPpacket * packetCmd;
   UDPpacket * packetSnap;
   int channel;   // the channel assigned to client
+  char _id;      // if I'm a client I've an id
 
 public:
   Net() {
@@ -78,14 +91,17 @@ public:
   int StartServer(int port = 7145);
   int KillServer();
   int WaitClients(int nclients = 1);
-  int SendSnapshot(net_game_snapshot_t * snap);
-  int ReceiveCommand();
+  int SendSnapshot(Team *tleft, Team *tright, Ball * ball);
+  int ReceiveCommand(char * team, char * player, cntrl_t * cmd);
 
   /* client methods */
-  int ConnectToServer(char * hostname, int port = 7145);
+  int ConnectToServer(char team, char * hostname, int port = 7145);
   int KillClient();
-  int ReceiveSnapshot(net_game_snapshot_t * snap);
-  int SendCommand(net_command_t * cmd);
+  int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
+  int SendCommand(cntrl_t cmd);
+
+  inline char id() { return _id; }
+
 };
 
 #endif

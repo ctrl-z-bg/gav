@@ -147,6 +147,41 @@ Sound * Prova;
 #include <unistd.h>
 int main(int argc, char *argv[]) {
   init();
+  
+#if 0
+  Net net;
+  Team t1, t2;
+  Ball b(BALL_ORIG);
+
+  if (fork()) {
+    net.StartServer();
+    sleep(1);
+    net.WaitClients();
+    b.setFrame(33);
+    while(1) {
+      net.SendSnapshot(&t1, &t2, &b);
+      {
+	char team, player;
+	cntrl_t cmd;
+	if (net.ReceiveCommand(&team, &player, &cmd) != -1)
+	  printf ("     +++++ %p %d %d\n", team, (int)player, (int)cmd);
+      }
+      usleep(1000/60);
+      b.setFrame((b.frame() + 1) % 100);
+      //printf("   +++++ %d\n",(int)b.frame());
+    }
+  } else {
+    net.ConnectToServer(TEAM_LEFT, "mynos.metaware.it");
+    while(1) {
+      if (net.ReceiveSnapshot(&t1, &t2, &b) != -1)
+	printf("client %p: %d\n", (int*)net.id(), b.frame());
+      net.SendCommand(CNTRL_JUMP);
+      usleep(1000/60);
+    }
+  }
+  exit(1);
+#endif // NETWORK TEST
+
 #ifdef AUDIO
   Prova = new Sound("rocket.wav");
 #endif
