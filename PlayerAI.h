@@ -29,20 +29,22 @@
 class Ball;
 
 class PlayerAI : public Player {
-  Ball * _b;
-
- public:
-  PlayerAI(Team *team, std::string name, 
-	   pl_type_t type, int idx, int speed,
-	   Ball *b) {
-    init(team, name, type, idx, speed);
-    _b = b;
-  }
-
-  virtual pl_ctrl_t getCtrl() { return PL_CTRL_AI; }
-
-  virtual triple_t planAction();
-
+    Ball * _b;
+protected:
+    int _highestpoint;
+public:
+    PlayerAI(Team *team, std::string name, 
+	     pl_type_t type, int idx, int speed,
+	     Ball *b) {
+	init(team, name, type, idx, speed);
+	_b = b;
+	_highestpoint = 0;
+    }
+    
+    virtual pl_ctrl_t getCtrl() { return PL_CTRL_AI; }
+    
+    virtual triple_t planAction();
+    
 };
 
 #endif

@@ -23,18 +23,22 @@
 #include "PlayerAI.h"
 #include "Ball.h"
 
-#define JUMP_LIMIT       ( 200 )
+#define JUMP_LIMIT       ( 220 )
+#define JUMPING_TIME     ( 150 )
+
+#define NEWPL_SIDE (-1)
 
 triple_t PlayerAI::planAction() {
   int jmp = 0;
   //int i;
   int side = (team())->side();
   int nplrs = (team())->nplayers();
-  int px, bx, fs, mp, bsx, net, wall; /* Normalized values */
+  int px, bx, fs, mp, bsx, net, wall, xt, xs; /* Normalized values */
   int mypos, minslot, maxslot;
   float slotsize;
   int move, pw;
   triple_t ret;
+  int ttime;
 
   net = fs = abs(maxX() - minX());
   wall = 0;
@@ -48,7 +52,68 @@ triple_t PlayerAI::planAction() {
   bx = (side>0)?(maxX()-(_b->radius()+_b->x())):
       (_b->radius()+_b->x()-minX()); 
   bsx = -side*_b->spdx();
+  xs = bx;
 
+  
+/*  if ( (_y > _highestpoint) ){
+      printf("_y: %d, hp: %d\n",_y, _highestpoint);
+      _highestpoint = _y;
+      }*/
+  if ( !_b->gravity() ) {
+	  xt = (side>0)?(maxX()-(_b->radius()/2+_b->x())):
+	      (_b->radius()/2+_b->x()-minX()); 
+  } else { 
+  //xt = bx; /* The old one 
+      int exp_y = _b->y();
+      int exp_x = _b->x();
+      int sx    = _b->spdx();
+      int sy    = _b->spdy();
+//	  printf("I(%d,%d) -> (%d,%d)\n",exp_x,exp_y,sx,sy);
+      
+      ttime=0;
+      while (exp_y < 240) {
+	  int passed=20;
+	  int px = exp_x;
+	  int py = exp_y; 
+	  
+	  ttime += passed;
+	  exp_x += (int)(sx * ((float) passed/1000.0));
+	  exp_y -= (int)(sy * ((float) passed/1000.0));
+	  sy = (int)(sy-((float) passed*_b->gravity()/1000.0));
+	  if ( exp_y < CEILING_Y ) {
+	      exp_y = CEILING_Y;
+	      sy = - (int ) (sy*ELASTIC_SMOOTH);
+	  }
+	  if ( exp_x < LEFT_WALL ) {
+	      exp_x = LEFT_WALL;
+	      sx = - (int ) (sx*ELASTIC_SMOOTH);
+	  }
+	  if ( exp_x > RIGHT_WALL(_b->radius()*2) ) {
+	      exp_x = RIGHT_WALL(_b->radius()*2);
+	      sx = - (int ) (sx*ELASTIC_SMOOTH);
+	  }
+	  int minx = (exp_x < px)?exp_x:px;
+	  
+	  if ( (minx > (NET_X-_b->radius()*2)) && 
+	       ( minx <  NET_X ) ) {
+	      /* The ball crossed the net region */
+	      if ( ( exp_y > NET_Y ) || ( py > NET_Y ) ) {
+		  /* Probably the ball will hit the net,
+		     consider a full collision */
+		  
+		  exp_x =  (minx == exp_x)?NET_X-_b->radius()*2:NET_X;
+		  sx = - (int ) (sx*ELASTIC_SMOOTH);		      
+		  if (!sx) sx = side*20;/*SMALL_SPD_X*/
+	      }
+	  }
+//	      printf("+(%d,%d) -> (%d,%d)\n", exp_x, exp_y, sx, sy);
+      }
+      xt = exp_x+_b->radius();
+      xt = (side>0)?(maxX()-xt):(xt-minX()); 
+//	  printf("Expected X: %d (bsx: %d, bsy: %d, bx: %d, by: %d (radius: %d, rw:%d, hp: %d)\n",xt, _b->spdx(), _b->spdy(), _b->x(), _b->y(), _b->radius(), RIGHT_WALL(2*_b->radius()),_highestpoint);
+//	  printf("HP: %d\n"u, _highestpoint);
+  }
+//Expected X: 80061 (bsx: -624, bsy: 679, bx: 455, by: 241 (radius: 25)
   slotsize = net/nplrs;
   
   if (nplrs > 1) {
@@ -110,6 +175,7 @@ triple_t PlayerAI::planAction() {
 	  minhd = rand()%(hd/2-10)+10; 
       hd = rand()%(hd-minhd)+minhd+1;
   }
+  /* When I consider closer, is the closer to the falling point */
   /* I care whether I'm the closer only when it's "service time" */
   int closest = 1;
   if ( !_b->gravity() ) {
@@ -122,7 +188,7 @@ triple_t PlayerAI::planAction() {
 	    it++ ) {
 	  opx = (side>0)?((*it)->maxX()-(*it)->x()-(*it)->width()/2):
 	      ((*it)->x()+(*it)->width()/2-(*it)->minX()); 	  
-	  if ( abs(px-bx) > abs(opx-bx) )
+	  if ( abs(px-xt) > abs(opx-xt) )
 	      closest = 0;
       }      
   } 
@@ -139,33 +205,38 @@ triple_t PlayerAI::planAction() {
 	  jmp = 1;
       }
   } else { // I serve only forward
-      jmp = ( (minhd < (bx-px) && ((bx - px) <= hd) ) );
+      jmp = ( (minhd < (bx - px) && ((bx - px) <= hd) ) );
   }
 //  printf("hd: %d - %d (%d - %d)\n",hd, abs(bx-px), _b->spdy(), _b->y()); 
+
   // if I'm the closest player I serve (when it's "service time").
-  // if the ball is (too) outside my (slot) size it does not go for it.
+  // if the ball is (too) outside my slot I do not go for it.
   double concern = (nplrs>1)?(slotsize*1.05):slotsize;
-  if ( (abs(bx-mypos) < concern) && closest) { 
+  if ( (abs(xt-mypos) < concern) && closest) { 
       if ( _b->gravity() ) { 
-	  move = bx-hd-px;
+	  move = xt-hd-px;
       } else { // I serve only forward
 	  move = bx-hd-px;
+      }
+      if (  ( ttime < JUMPING_TIME ) ){
+	  jmp = 1;
+	  move = (bx-px);
       }
   } else {
       move = mypos-px;
   }
-
+  
   move=-side*(move);
 
-
   ret.left = ret.right = ret.jump = 0;
-
-  if ( move < 0 )
-    ret.left = 1;
-  if ( move > 0 )
-    ret.right = 1;
+  if ( abs(move) > 2) {
+      if ( move < 0 )
+	  ret.left = 1;
+      if ( move > 0 )
+	  ret.right = 1;
+  }
   if ( jmp )
-    ret.jump = 1;
+      ret.jump = 1;
 
   return ret;
 }

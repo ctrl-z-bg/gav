@@ -30,6 +30,7 @@
 #define MIN(a,b)        ((a<b)?a:b)
 #define MAX(a,b)        ((a>b)?a:b)
 
+
 using namespace std;
 
 bool Ball::approaching(int spdx, int spdy) {
@@ -228,8 +229,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   _y -= dy; // usual problem with y
   
   //ball hits upper wall
-  if ( _y < 24 ) {
-    _y = 24;
+  if ( _y < CEILING_Y ) {
+    _y = CEILING_Y;
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
 #ifdef AUDIO
     soundMgr->playSound(SND_BOUNCE);
@@ -237,8 +238,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   }
     
   //ball hits left wall
-  if ( _x < 7  ) {
-    _x = 7;
+  if ( _x < LEFT_WALL  ) {
+    _x = LEFT_WALL;
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tright] )
       resetCollisionCount();
@@ -249,8 +250,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 
   
   //ball hits right wall
-  if ( _x > (SCREEN_WIDTH() - _frames->width() -16) ) {
-    _x = (SCREEN_WIDTH() - _frames->width()-16);
+  if ( _x > RIGHT_WALL(_frames->width()) ) {
+    _x = RIGHT_WALL(_frames->width());
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tleft] )
       resetCollisionCount();
