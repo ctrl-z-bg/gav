@@ -263,8 +263,16 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 	  // cerr << "CollisionCount " << string(teami?"R: ":"L: ") <<
 	  //_collisionCount[team] << endl;
 	  update_internal(*it);
-	  _x = oldx;
-	  _y = oldy;
+	  while (collide(*it)) {
+	    dx = (int) (_spdx * 0.1); // ((float) passed / 1000.0));
+	    dy = (int) (_spdy * 0.1); // ((float) passed / 1000.0));
+
+	    _x += (_spdx>0)?1:-1;
+	    _y -= (_spdy>0)?1:-1; // usual problem with y
+	  }
+	  _inCollisionWith = NULL;
+	    //_x = oldx;
+	    //_y = oldy;
 	}
       } else if ( _inCollisionWith == *it )
 	_inCollisionWith = NULL;
