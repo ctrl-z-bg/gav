@@ -62,23 +62,23 @@ void Player::update(int ticks, ControlsArray *ca) {
   else if ( _x < _team->xmin() )
     _x = _team->xmin();
 
-  if ( _y == GROUND_LEVEL && input.jump ) {
+  if ( _y == GROUND_LEVEL() && input.jump ) {
     _speedY = -SPEEDY;
   }
 
-  if ( _y > GROUND_LEVEL ) {
-    _y = GROUND_LEVEL;
+  if ( _y > GROUND_LEVEL() ) {
+    _y = GROUND_LEVEL();
     _speedY = 0;
   }
 
   _y += (int) (_speedY * 5 * ((float) ticks / 1000));
 
-  if ( _y < GROUND_LEVEL )
+  if ( _y < GROUND_LEVEL() )
     _speedY += (SPEEDY * 5 * ticks) / 1000;
 
   int _oldState = _state;
   /* detect state changes */
-  if ( _y < GROUND_LEVEL ) {
+  if ( _y < GROUND_LEVEL() ) {
     if ( _state != PL_STATE_JUMP ) { // jumping
       _state = PL_STATE_JUMP;
       _currFrameB = configuration.playerFrameConf.playerJmpB - 1;

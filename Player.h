@@ -35,8 +35,6 @@
 
 class Team;
 
-#define GROUND_LEVEL (346)
-
 #define SPEEDY  (160)
 
 #define NUM_TYPES (5)
@@ -103,10 +101,10 @@ class Player {
     _state  = PL_STATE_STILL;
     _frameIdx = configuration.playerFrameConf.playerStillB - 1;
     _speed  = speed;
-    _y      = GROUND_LEVEL;
     _speedX = 0;
     _speedY = 0;
     Player::loadFrames();
+    _y      = GROUND_LEVEL();
   }
 
   ~Player() {
@@ -116,6 +114,8 @@ class Player {
       free(_fileNames[PL_TYPE_FEMALE_RIGHT]);
       delete(_frames);
   }
+
+  inline int GROUND_LEVEL() { return(398-_frames->height());}  // (346)
 
   inline std::string name() {return _name;}
   

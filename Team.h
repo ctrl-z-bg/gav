@@ -78,7 +78,7 @@ class Team {
     for(unsigned int i = 0; i < _players.size(); i++)
       _players[i]->setX((i+1) * (_xmax + _xmin) / (_players.size()+1) - 
 			(p->width() / 2));
-    p->setY(GROUND_LEVEL);
+    p->setY(p->GROUND_LEVEL());
     _nplayers++;
     return(p);
  }
