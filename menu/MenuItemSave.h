@@ -36,7 +36,7 @@ public:
 
   int execute(std::stack<Menu *> &s) {
     std::string msg = "Configuration saved.";
-    if ( configuration.createConfigurationFile("/tmp/gav.conf") == -1 )
+    if ( configuration.createConfigurationFile("./gav.conf") == -1 )
       msg = "Could not save configuration";
     SDL_Rect r;
     r.x = (screen->w / 2) - msg.length()*(cga->charWidth())/2;

@@ -34,8 +34,7 @@
 AutomaMainLoop::AutomaMainLoop()
 {
   _is = new InputState();
-  controlsArray = new ControlsArray();
-  
+
   StateMenu *sm = new StateMenu();
   addState(STATE_MENU, sm);
   _curr = STATE_MENU;

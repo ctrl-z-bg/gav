@@ -167,9 +167,10 @@ init()
 
   setThemeDir(TH_DIR);
   videoinfo = SDL_GetVideoInfo();
-  if ( configuration.loadConfiguration("/tmp/gav.conf") == -1 ) {
+  controlsArray = new ControlsArray(); /* could be modified by loadConf */
+  if ( configuration.loadConfiguration("./gav.conf") == -1 ) {
     cerr << "Configuration file not found: creating.\n";
-    configuration.createConfigurationFile("/tmp/gav.conf");
+    configuration.createConfigurationFile("./gav.conf");
   }
   applyConfiguration();
 }
@@ -252,7 +253,7 @@ int main(int argc, char *argv[]) {
   m.add(&miexit);
   mroot = new MenuRoot();
   mroot->add(&m);
-
+  
   AutomaMainLoop *a = new AutomaMainLoop();
 
   a->start();

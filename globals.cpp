@@ -34,7 +34,7 @@ const SDL_VideoInfo *videoinfo;
 
 MenuRoot *mroot;
 
-ControlsArray *controlsArray;
+ControlsArray *controlsArray = NULL;
 
 #ifndef NONET
 NetServer * nets = NULL;

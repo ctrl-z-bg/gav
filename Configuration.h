@@ -29,7 +29,7 @@
 #ifndef __CONFIGURATION_H__
 #define __CONFIGURATION_H__
 
-#define MAX_PLAYERS (12)
+#define MAX_PLAYERS (4)
 #define DEFAULT_FPS (50)
 #define DEFAULT_WINNING_SCORE (15)
 

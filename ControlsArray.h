@@ -48,6 +48,14 @@ public:
     memset(_f, 0, 12);
     initializeControls();
   }
+  
+  controls_t getControls(int plId) {
+    return _keyMapping[plId];
+  }
+  
+  void setControls(int plId, controls_t ctrls) {
+    _keyMapping[plId] = ctrls;
+  }
 
   //  void addChannel(){}
   void setControl(int plId, cntrl_t cntrl, int keysym) {

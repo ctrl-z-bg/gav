@@ -25,6 +25,7 @@
 #include <string>
 #include <iostream>
 #include "Configuration.h"
+#include "ControlsArray.h"
 
 using namespace std;
 
@@ -56,7 +57,8 @@ int Configuration::loadConfiguration(const char *fname) {
     configuration.frame_skip = atoi(value.c_str());
   if ( aargh.getArg("fps", value) )
     configuration.setFps(atoi(value.c_str()));
-  for ( int i = 0; i < left_nplayers; i++ ) {
+
+  for ( int i = 0; i < left_nplayers; i++ )
     if ( aargh.getArg(("left_player" + toString(i)), value) )
       if ( value ==  "human")
 	configuration.left_players[i] = PLAYER_HUMAN;
@@ -64,9 +66,27 @@ int Configuration::loadConfiguration(const char *fname) {
 	configuration.left_players[i] = PLAYER_COMPUTER;
       else
 	cerr << "Unrecognized player type \"" << value << "\"\n";
-  }
   
-  for ( int i = 0; i < right_nplayers; i++ ) {
+  for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+    string arg1, arg2, arg3;
+
+    arg1 = "left_player" + toString(i) + "left";
+    arg2 = "left_player" + toString(i) + "right";
+    arg3 = "left_player" + toString(i) + "jump";
+    if ( aargh.getArg(arg1) && aargh.getArg(arg2) && aargh.getArg(arg3) ) {
+      string lval, rval, jval;
+      controls_t ctrls;
+      aargh.getArg(arg1, lval);
+      aargh.getArg(arg2, rval);
+      aargh.getArg(arg3, jval);
+      ctrls.left_key = atoi(lval.c_str());
+      ctrls.right_key = atoi(rval.c_str());
+      ctrls.jump_key = atoi(jval.c_str());
+      controlsArray->setControls(i*2, ctrls);
+    }
+  }
+
+  for ( int i = 0; i < right_nplayers; i++ )
     if ( aargh.getArg(("right_player" + toString(i)), value) )
       if ( value == "human" )
 	configuration.right_players[i] = PLAYER_HUMAN;
@@ -74,6 +94,24 @@ int Configuration::loadConfiguration(const char *fname) {
 	configuration.right_players[i] = PLAYER_COMPUTER;
       else
 	cerr << "Unrecognized player type \"" << value << "\"\n";
+  
+  for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+    string arg1, arg2, arg3;
+    
+    arg1 = "right_player" + toString(i) + "left";
+    arg2 = "right_player" + toString(i) + "right";
+    arg3 = "right_player" + toString(i) + "jump";
+    if ( aargh.getArg(arg1) && aargh.getArg(arg2) && aargh.getArg(arg3) ) {
+      string lval, rval, jval;
+      controls_t ctrls;
+      aargh.getArg(arg1, lval);
+      aargh.getArg(arg2, rval);
+      aargh.getArg(arg3, jval);
+      ctrls.left_key = atoi(lval.c_str());
+      ctrls.right_key = atoi(rval.c_str());
+      ctrls.jump_key = atoi(jval.c_str());
+      controlsArray->setControls(i*2 + 1, ctrls);
+    }
   }
   if ( aargh.getArg("big_background", value) )
     configuration.bgBig = (value=="yes");
@@ -161,5 +199,19 @@ int Configuration::createConfigurationFile(const char *fname) {
   aargh.setArg("sound", c.sound?"yes":"no");
   aargh.setArg("winning_score", c.winning_score);
 
+  for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+    controls_t ct = controlsArray->getControls(i*2);
+    aargh.setArg("left_player" + toString(i) + "left", ct.left_key);
+    aargh.setArg("left_player" + toString(i) + "right", ct.right_key);
+    aargh.setArg("left_player" + toString(i) + "jump", ct.jump_key);
+  } 
+   
+  for ( int i = 0; i < MAX_PLAYERS/2; i++ ) {
+    controls_t ct = controlsArray->getControls(i*2 + 1);
+    aargh.setArg("right_player" + toString(i) + "left", ct.left_key);
+    aargh.setArg("right_player" + toString(i) + "right", ct.right_key);
+    aargh.setArg("right_player" + toString(i) + "jump", ct.jump_key);
+  }
+  
   return(saveConfiguration(fname));
 }
