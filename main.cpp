@@ -52,6 +52,8 @@
 
 #include "Sound.h"
 
+#include "Net.h"
+
 #define BPP 16
 
 using namespace std;

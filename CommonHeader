@@ -24,7 +24,7 @@ MAKE	= make
 CXX = g++
 
 CXXFLAGS= `sdl-config --cflags` -g -Wall
-LDFLAGS= `sdl-config --libs` -lSDL_image -lm
+LDFLAGS= `sdl-config --libs` -lSDL_image -lSDL_net -lm
 
 SRCS	= 	$(wildcard *.cpp)
 OFILES	=	$(SRCS:%.cpp=%.o)  
