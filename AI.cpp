@@ -62,9 +62,9 @@ void Agent::update() {
   slotsize = net/nplrs;
   
   if (nplrs > 1) {
-      vector<Player *> plv = (_p->team())->players();
+      std::vector<Player *> plv = (_p->team())->players();
       /* Look for my id */
-      vector<Player *>::const_iterator it; 
+      std::vector<Player *>::const_iterator it; 
       int myidx = _p->orderInField(), i;
 
       if (_p->orderInField() < 0) {
