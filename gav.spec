@@ -24,7 +24,8 @@ make
 install -d $RPM_BUILD_ROOT/usr/bin
 install gav $RPM_BUILD_ROOT/usr/bin/
 install -d $RPM_BUILD_ROOT/usr/share/games/gav/themes
-cp -r themes/* $RPM_BUILD_ROOT/usr/share/games/gav/themes
+cp -r themes/classic/ $RPM_BUILD_ROOT/usr/share/games/gav/themes
+cp README $RPM_BUILD_ROOT/usr/share/games/gav/
 #rm -rf $RPM_BUILD_ROOT
 
 %clean
@@ -35,6 +36,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 /usr/bin/gav
 /usr/share/games/gav/
+/usr/share/games/gav/README
 /usr/share/games/gav/themes
 /usr/share/games/gav/themes/classic
 /usr/share/games/gav/themes/classic/Font.png
