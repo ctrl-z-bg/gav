@@ -22,11 +22,7 @@
 
 #include "AI.h"
 
-#define HITDELTA        (25)
 #define JUMP_LIMIT       ( 200 )
-#define EPSILON (5)
-#define MAX(a,b)        ((a>b)?a:b)
-#define MIN(a,b)        ((a<b)?a:b)
 
 void Agent::update() {
   int jmp = 0;
@@ -110,7 +106,7 @@ void Agent::update() {
   if ( !_b->gravity() ) { 
       if (hd/2 >= 12) 
 	  minhd = rand()%(hd/2-10)+10; 
-      hd = rand()%(HITDELTA-minhd)+minhd;
+      hd = rand()%(hd-minhd)+minhd+1;
   }
   /* I care whether I'm the closer only when it's "service time" */
   int closest = 1;
