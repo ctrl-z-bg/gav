@@ -18,6 +18,8 @@
 
 include CommonHeader
 
+ROOT=$RPM_BUILD_ROOT
+
 SUBDIRS = menu automa
 CXXFLAGS += $(foreach DIR, $(SUBDIRS), -I$(DIR)) -I.
 
@@ -49,9 +51,9 @@ bindist: all
 	rm -f *~ *.o
 
 install: all
-	install gav /usr/bin
-	install -d /usr/share/games/gav/themes
-	cp -r themes/* /usr/share/games/gav/themes
+	install gav $(RPM_BUILD_ROOT)/usr/bin
+	install -d $(RPM_BUILD_ROOT)/usr/share/games/gav/themes
+	cp -r themes/* $(RPM_BUILD_ROOT)/usr/share/games/gav/themes
 
 depend:
 	for i in $(SUBDIRS) ; do \
