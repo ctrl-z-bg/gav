@@ -31,18 +31,16 @@
 
 class Menu {
   std::vector<MenuItem *> items;
-  ScreenFont * normal_font;
-  ScreenFont * selected_font;
   int currentItem;
   unsigned int maxLabelLength;
 
 public:
-  Menu(ScreenFont * nf, ScreenFont * rf): 
-    normal_font(nf), selected_font(rf), currentItem(-1), maxLabelLength(0) {}
+  Menu(): 
+    currentItem(-1), maxLabelLength(0) {}
 
-  void add(MenuItem * mi);
-  int execute(InputState *is, std::stack<Menu *> &s);
-  ~Menu() {}
+  virtual void add(MenuItem * mi);
+  virtual int execute(InputState *is, std::stack<Menu *> &s);
+  virtual ~Menu() {}
 };
 
 #endif

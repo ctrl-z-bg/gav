@@ -1,6 +1,6 @@
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav
-Version: 0.5.1
+Version: 0.6.0
 Release: 1
 URL: gav.sourceforge.net
 Source0: %{name}-%{version}.tar.gz

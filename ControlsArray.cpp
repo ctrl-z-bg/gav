@@ -36,31 +36,34 @@ void ControlsArray::action(int plId, int movx, int movy) {
     _inputs[plId].jump = 1;
 }
 
-void ControlsArray::setControls(InputState *is) {
-  Uint8 *keystate = is->getKeyState();
+void ControlsArray::initializeControls() {
+  _keyMapping[0].left_key = SDLK_z;
+  _keyMapping[0].right_key = SDLK_c;
+  _keyMapping[0].jump_key = SDLK_LSHIFT;
   
-  if ( !_isArtificial[0] ) {
-    _inputs[0].left = keystate[SDLK_z];
-    _inputs[0].right = keystate[SDLK_c];
-    _inputs[0].jump = keystate[SDLK_LSHIFT];
-  }    
+  _keyMapping[1].left_key = SDLK_LEFT;
+  _keyMapping[1].right_key = SDLK_RIGHT;
+  _keyMapping[1].jump_key = SDLK_UP;
+  
+  _keyMapping[2].left_key = SDLK_h;
+  _keyMapping[2].right_key = SDLK_k;
+  _keyMapping[2].jump_key = SDLK_u;
 
-  if ( !_isArtificial[1] ) {
-    _inputs[1].left = keystate[SDLK_LEFT];
-    _inputs[1].right = keystate[SDLK_RIGHT];
-    _inputs[1].jump = keystate[SDLK_UP];
-  }    
+  _keyMapping[3].left_key = SDLK_s;
+  _keyMapping[3].right_key = SDLK_f;
+  _keyMapping[3].jump_key = SDLK_e;
+}
 
-  if ( !_isArtificial[2] ) {
-    _inputs[2].left = keystate[SDLK_h];
-    _inputs[2].right = keystate[SDLK_k];
-    _inputs[2].jump = keystate[SDLK_u];
-  }
+void ControlsArray::setControlsState(InputState *is) {
+  Uint8 *keystate = is->getKeyState();
+  int i = 0;
 
-  if ( !_isArtificial[3] ) { 
-    _inputs[3].left = keystate[SDLK_s];
-    _inputs[3].right = keystate[SDLK_f];
-    _inputs[3].jump = keystate[SDLK_e];
+  for (; i < 4; i++ ) {
+    if ( !_isArtificial[i] ) {
+      _inputs[i].left = keystate[_keyMapping[i].left_key];
+      _inputs[i].right = keystate[_keyMapping[i].right_key];
+      _inputs[i].jump = keystate[_keyMapping[i].jump_key];
+    }
   }
 }
 

@@ -34,7 +34,7 @@ void InputState::getInput() {
     if (event.type == SDL_QUIT)
       exit(0);
   }
-  
+
   for ( int i = 0; i < 12; i++ )
     _f[i] = keystate[SDLK_F1 + i];
 }

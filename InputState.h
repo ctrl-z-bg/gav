@@ -32,7 +32,6 @@ private:
   Uint8 _f[12];
   Uint8 *keystate;
   SDL_Event event;
-  
 
 public:
   InputState() {}

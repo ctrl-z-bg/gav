@@ -28,6 +28,11 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#include <SDL.h>
+#include <SDL_image.h>
+
+#include "globals.h"
+
 #define TH_DEFAULT "classic"
 #define TH_DIR "themes"
 
@@ -61,38 +66,61 @@ class Theme {
     
  public:
     Theme(std::string name) {
-	DIR *dir;
+      DIR *dir;
+      if ((dir = opendir(ThemeDir.c_str())) == NULL) {
+	ThemeDir = "/usr/share/games/gav/" + ThemeDir;
 	if ((dir = opendir(ThemeDir.c_str())) == NULL) {
-	  ThemeDir = "/usr/share/games/gav/" + ThemeDir;
-	  if ((dir = opendir(ThemeDir.c_str())) == NULL) {
-	    std::cerr << "Cannot find themes directory\n";
-	    exit(0);
-	  } else
-	    closedir(dir);
+	  std::cerr << "Cannot find themes directory\n";
+	  exit(0);
 	} else
 	  closedir(dir);
-
-	std::string TD = ThemeDir + "/" + name +  "/";
-
-	_name = name;
-
-	_net = TD + TH_NET;
-
-	_background = TD + TH_BACKGROUND;
-
-	_font    = TD + TH_FONT;
-	_fontinv = TD + TH_FONTINV;
-	
-	_leftmale    = TD + TH_LEFTMALE;
-	_rightmale   = TD + TH_RIGHTMALE;
-	_leftfemale  = TD + TH_LEFTFEMALE;
-	_rightfemale = TD + TH_RIGHTFEMALE;
-	
-	_ball = TD + TH_BALL;
-
-	_hasnet = Theme::_checkTheme();
-
+      } else
+	closedir(dir);
+      
+      std::string TD = ThemeDir + "/" + name +  "/";
+      
+      _name = name;
+      
+      _net = TD + TH_NET;
+      
+      _background = TD + TH_BACKGROUND;
+      
+      _font    = TD + TH_FONT;
+      _fontinv = TD + TH_FONTINV;
+      
+      _leftmale    = TD + TH_LEFTMALE;
+      _rightmale   = TD + TH_RIGHTMALE;
+      _leftfemale  = TD + TH_LEFTFEMALE;
+      _rightfemale = TD + TH_RIGHTFEMALE;
+      
+      _ball = TD + TH_BALL;
+      
+      _hasnet = Theme::_checkTheme();
+      
+      ::background = IMG_Load(background());
+      //if ( CurrentTheme->hasnet() ) IMG_Load(CurrentTheme->net());
+      
+      //screenFlags = SDL_DOUBLEBUF|SDL_HWSURFACE;
+      screenFlags |= SDL_DOUBLEBUF;
+      screen = SDL_SetVideoMode(SCREEN_WIDTH(),
+				//SCREEN_HEIGHT(), BPP, SDL_DOUBLEBUF);
+				SCREEN_HEIGHT(), videoinfo->vfmt->BitsPerPixel,
+				screenFlags);
+      
+      SDL_Surface *temp = ::background;
+      ::background = SDL_DisplayFormat(temp);
+      SDL_FreeSurface(temp);  
+      
+      cga = new ScreenFont(font(), FONT_FIRST_CHAR, FONT_NUMBER);
+      cgaInv = new ScreenFont(fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
     }
+  
+  ~Theme() {
+    SDL_FreeSurface(::background);
+    delete(cga);
+    delete(cgaInv);
+  }
+
 #define _CCS(str) ((str).c_str())
 
     inline const char * name()       { return( _CCS(_name)        );}

@@ -37,7 +37,17 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
        probably create players here instead of in the constructor,
        and think of a clever way to destroy them once we're done.
     */
-    
+
+    tl = new Team(-1);
+    tr = new Team(1);
+    b = new Ball(BALL_ORIG);
+
+    Player *automL = tl->addPlayer("Pippo", PL_TYPE_MALE_LEFT);
+    Player *automR = tr->addPlayer("Pluto", PL_TYPE_MALE_RIGHT);
+
+    agentL = new Agent(b, automL, controlsArray);
+    agentR = new Agent(b, automR, controlsArray);
+
     /* check to see if player 2 is automatic or not */
     if ( configuration.right_human )
       controlsArray->isHuman(1);
@@ -53,10 +63,9 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     tr->setScore(0);
     b->resetPos((int) (SCREEN_WIDTH() * 0.25),
 		(int) (SCREEN_HEIGHT() * 0.66));
-
   }
   
-  controlsArray->setControls(is);
+  controlsArray->setControlsState(is);
   
   if ( is->getKeyState()[SDLK_ESCAPE] )
     return(NO_TRANSITION + 1); // everything but NO_TRANSITION

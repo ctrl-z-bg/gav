@@ -36,15 +36,8 @@ private:
   Agent *agentR, *agentL;
 
 public:
-  StatePlaying() {
-    tl = new Team(-1);
-    Player *automL = tl->addPlayer("Pippo", PL_TYPE_MALE_LEFT);
-    tr = new Team(1);
-    Player *automR = tr->addPlayer("Pluto", PL_TYPE_MALE_RIGHT);
-    b = new Ball(BALL_ORIG);
-    agentL = new Agent(b, automL, controlsArray);
-    agentR = new Agent(b, automR, controlsArray);
-  }
+  StatePlaying() {}
+
   virtual int execute(InputState *is, unsigned int ticks,
 		      unsigned int prevTicks, int firstTime);
 };

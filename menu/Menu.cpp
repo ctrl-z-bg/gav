@@ -38,7 +38,7 @@ int Menu::execute(InputState *is, std::stack<Menu *> &s) {
   const char * label;
   ScreenFont * font;
   static bool spacePressed = false;
-  
+
   if ( is->getKeyState()[SDLK_UP] && (currentItem > 0) )
     currentItem--;
   if ( is->getKeyState()[SDLK_DOWN] && (currentItem < (int) (items.size() - 1)) )
@@ -48,20 +48,22 @@ int Menu::execute(InputState *is, std::stack<Menu *> &s) {
   rect.y = 30;
   for ( unsigned int it = 0; it < items.size(); it++ ) {
     label = items[it]->getLabel().c_str();
-    rect.x = (screen->w / 2) - strlen(label)*(normal_font->charWidth())/2;
+    rect.x = (screen->w / 2) - strlen(label)*(cga->charWidth())/2;
     if (it == (unsigned int) currentItem)
-      font = selected_font;
+      font = cgaInv;
     else
-      font = normal_font;
+      font = cga;
     font->printXY(screen, &rect, items[it]->getLabel().c_str());
     rect.y += font->charHeight();
   }
 
   /* call the execute method of the current item, if an event occurred */
-  if ( is->getKeyState()[SDLK_SPACE] ) {
+  if ( (is->getKeyState()[SDLK_SPACE]) ||
+       (is->getKeyState()[SDLK_RETURN]) ) {
     spacePressed = true;
   }
-  if ( spacePressed && !(is->getKeyState()[SDLK_SPACE]) ) {
+  if ( spacePressed && !(is->getKeyState()[SDLK_SPACE]) &&
+       !(is->getKeyState()[SDLK_RETURN]) ) {
     spacePressed = false;
     return items[currentItem]->execute(s);
   }

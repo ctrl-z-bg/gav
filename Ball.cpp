@@ -186,7 +186,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   _x += dx;
   _y -= dy; // usual problem with y
     
-  //ball hit floor
+  //ball hits floor
   if ( _y > (SCREEN_HEIGHT() - _frames->height()-2) ) {
     _y = (SCREEN_HEIGHT() - _frames->height()-2);
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
@@ -196,13 +196,13 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     }
   }
 
-  //ball hit upper wall
+  //ball hits upper wall
   if ( _y < 24 ) {
     _y = 24;
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
   }
     
-  //ball hit left wall
+  //ball hits left wall
   if ( _x < 7  ) {
     _x = 7;
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
@@ -211,7 +211,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   }
 
   
-  //ball hit right wall
+  //ball hits right wall
   if ( _x > (SCREEN_WIDTH() - _frames->width() -16) ) {
     _x = (SCREEN_WIDTH() - _frames->width()-16);
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
@@ -240,6 +240,7 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
       _x =  2* NET_X - 2*_frames->width() - _x;
   }
 
+  // collisions with the players
   for ( int teami = 0; !_scorerSide && (teami < 2); teami ++ ) {
     Team *team = (teami?tright:tleft);
     vector<Player *> plv = team->players();
@@ -267,7 +268,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 	_inCollisionWith = NULL;
     }
   }
-    
+  
+  // to activate 'gravity'
   if ( !_accelY && (abs(_spdx) + abs(_spdy)) )
     _accelY = GRAVITY;
 

@@ -20,19 +20,23 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-/* Global data */
+#ifndef __MENUITEMBACK_H__
+#define __MENUITEMBACK_H__
 
+#include <SDL.h>
+#include "MenuItem.h"
 #include "globals.h"
 
-SDL_Surface *screen;
-SDL_Surface *background;
+class MenuItemBack: public MenuItem {
+public:
+  MenuItemBack(std::string l) {
+    label = l;
+  }
 
-ScreenFont *cga, *cgaInv;
+  int execute(std::stack<Menu *> &s) {
+    s.pop();
+    return(0);
+  }
+};
 
-int screenFlags = 0;
-const SDL_VideoInfo *videoinfo;
-
-MenuRoot *mroot;
-
-ControlsArray *controlsArray;
-Configuration configuration;
+#endif

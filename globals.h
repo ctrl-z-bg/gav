@@ -45,7 +45,7 @@ extern MenuRoot *mroot;
 
 extern Configuration configuration;
 
-#define SCREEN_WIDTH() (background->w)
-#define SCREEN_HEIGHT() (background->h)
+#define SCREEN_WIDTH() (::background->w)
+#define SCREEN_HEIGHT() (::background->h)
 #define MAXPATHLENGTH (1024)
 #endif // _GLOBALS_H_

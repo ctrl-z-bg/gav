@@ -21,6 +21,8 @@
 
 #include <stdlib.h>
 #include <SDL.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include "globals.h"
 #include "ScreenFont.h"
 #include "AutomaMainLoop.h"
@@ -35,6 +37,9 @@
 #include "MenuItemExit.h"
 #include "MenuItemVar.h"
 #include "MenuItemNotImplemented.h"
+#include "MenuKeys.h"
+#include "MenuItemBack.h"
+#include "MenuItemTheme.h"
 
 #include "Theme.h"
 
@@ -50,42 +55,48 @@ init()
   atexit(SDL_Quit);
 
   setThemeDir(TH_DIR);
-  CurrentTheme = new Theme(TH_DEFAULT);
-  
-  background = IMG_Load(CurrentTheme->background());
-  //if ( CurrentTheme->hasnet() ) IMG_Load(CurrentTheme->net());
   videoinfo = SDL_GetVideoInfo();
-
-  //screenFlags = SDL_DOUBLEBUF|SDL_HWSURFACE;
-  screenFlags = SDL_DOUBLEBUF;
-  screen = SDL_SetVideoMode(SCREEN_WIDTH(),
-			    //SCREEN_HEIGHT(), BPP, SDL_DOUBLEBUF);
-			    SCREEN_HEIGHT(), videoinfo->vfmt->BitsPerPixel,
-			    screenFlags);
-
-
-  SDL_Surface *temp = background;
-  background = SDL_DisplayFormat(temp);
-  SDL_FreeSurface(temp);  
-
-  cga = new ScreenFont(CurrentTheme->font(), FONT_FIRST_CHAR, FONT_NUMBER);
-  cgaInv = new ScreenFont(CurrentTheme->fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
+  CurrentTheme = new Theme(TH_DEFAULT);
 }
 
 int main(int argc, char *argv[]) {
   init();
 
    /* initialize menus */
-  Menu m(cga, cgaInv);
+  Menu m;
   MenuItemPlay miplay;
   MenuItemExit miexit;
+  Menu *menuExtra = new Menu();
+  Menu *menuThemes = new Menu();
+  MenuItemBack *mib = new MenuItemBack("back");
+  DIR *dir;
+  if ((dir = opendir(ThemeDir.c_str())) == NULL) {
+    std::cerr << "Cannot find themes directory\n";
+    exit(0);
+  }
+  struct dirent *themeDir;
+  do {
+    themeDir = readdir(dir);
+    if ( themeDir && (themeDir->d_name[0] != '.') )
+      menuThemes->add(new MenuItemTheme(string(themeDir->d_name)));
+  } while (themeDir);
+  closedir(dir);
+  menuThemes->add(mib);
+
+  menuExtra->add(new MenuItemSubMenu(menuThemes, string("Theme")));
+  menuExtra->add(new MenuItemNotImplemented(string("Player 3")));
+  menuExtra->add(new MenuItemNotImplemented(string("Player 4")));
+  menuExtra->add(mib);
 
   m.add(&miplay);
   m.add(new MenuItemPL1(string("PL1")));
   m.add(new MenuItemPL2(string("PL2")));
-  m.add(new MenuItemNotImplemented((string)"Sound Off"));
-  m.add(new MenuItemNotImplemented((string)"Define Keys"));
-  m.add(new MenuItemNotImplemented((string)"Set Joystick"));
+  m.add(new MenuItemNotImplemented(string("Sound Off")));
+  m.add(new MenuItemSubMenu((new MenuKeys()),
+			    string("Define Keys")));
+  m.add(new MenuItemNotImplemented(string("Set Joystick")));
+  m.add(new MenuItemSubMenu(menuExtra,
+			    string("Extra")));
   m.add(&miexit);
   mroot = new MenuRoot();
   mroot->add(&m);

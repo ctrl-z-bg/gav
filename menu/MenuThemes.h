@@ -20,19 +20,31 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-/* Global data */
+#ifndef __MENUTHEMES_H__
+#define __MENUTHEMES_H__
 
+#include <SDL.h>
+#include "MenuItem.h"
 #include "globals.h"
 
-SDL_Surface *screen;
-SDL_Surface *background;
+class MenuThemes: public Menu {
+  bool firstTime;
 
-ScreenFont *cga, *cgaInv;
+public:
+  MenuThemes(ScreenFont *nf, ScreenFont *rf) {
+    normal_font = nf;
+    selected_font = rf;
+    firstTime = false;
+  }
 
-int screenFlags = 0;
-const SDL_VideoInfo *videoinfo;
+  virtual int execute(InputState *is, std::stack<Menu *> &s) {
+    if ( firstTime ) {
+      DIR *dir;
+      if ((dir = opendir(ThemeDir.c_str())) )
+    }
 
-MenuRoot *mroot;
+    Menu::execute(is, s);
+  }
+};
 
-ControlsArray *controlsArray;
-Configuration configuration;
+#endif
