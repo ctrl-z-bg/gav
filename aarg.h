@@ -166,6 +166,10 @@ public:
       }
   }
 
+  void reset() {
+    argmap.clear();
+  }
+
 private:
   std::map < std::string, std::string > argmap;
 };

@@ -166,6 +166,8 @@ int Configuration::createConfigurationFile() {
 
   Configuration c = configuration; /* for short :) */
 
+  aargh.reset();
+
   aargh.setArg("left_nplayers", c.left_nplayers);
   aargh.setArg("right_nplayers", c.right_nplayers);
   switch ( c.monitor_type ) {
@@ -202,6 +204,8 @@ int Configuration::createConfigurationFile() {
     aargh.setArg("ball_speed", "fast");
   else if ( c.ballAmplify == DEFAULT_BALL_AMPLIFY + 2*BALL_SPEED_INC )
     aargh.setArg("ball_speed", "very_fast");
+  else if ( c.ballAmplify == DEFAULT_BALL_AMPLIFY )
+    aargh.setArg("ball_speed", "normal");
   aargh.setArg("theme", c.currentTheme);
   aargh.setArg("sound", c.sound?"yes":"no");
   aargh.setArg("winning_score", c.winning_score);
