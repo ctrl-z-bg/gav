@@ -24,6 +24,9 @@
 #define _THEMES_H_
 #include <string>
 
+#include <sys/types.h>
+#include <dirent.h>
+
 #define TH_DEFAULT "classic"
 #define TH_DIR "themes"
 
@@ -37,27 +40,38 @@
 #define TH_FONT         "Font.png"
 #define TH_FONTINV      "FontInv.png"
 
-extern std::string ThemeDir;
+extern string ThemeDir;
 
 class Theme {
  private:
-    std::string _name;
+    string _name;
     bool _hasnet; // To possibly add the image of the net (not used yet)
-    std::string _background;
-    std::string _net;
-    std::string _font;
-    std::string _fontinv;
-    std::string _leftmale;
-    std::string _rightmale;
-    std::string _leftfemale;
-    std::string _rightfemale;
-    std::string _ball;
+    string _background;
+    string _net;
+    string _font;
+    string _fontinv;
+    string _leftmale;
+    string _rightmale;
+    string _leftfemale;
+    string _rightfemale;
+    string _ball;
 
     bool _checkTheme(); // Theme Validation
     
  public:
-    Theme(std::string name) {
-	std::string TD = ThemeDir + "/" + name +  "/";
+    Theme(string name) {
+	DIR *dir;
+	if ((dir = opendir(ThemeDir.c_str())) == NULL) {
+	  ThemeDir = "/usr/share/games/gav/" + ThemeDir;
+	  if ((dir = opendir(ThemeDir.c_str())) == NULL) {
+	    cerr << "Cannot find themes directory\n";
+	    exit(0);
+	  } else
+	    closedir(dir);
+	} else
+	  closedir(dir);
+
+	string TD = ThemeDir + "/" + name +  "/";
 
 	_name = name;
 
@@ -98,5 +112,5 @@ class Theme {
 extern Theme *CurrentTheme;
 
 
-inline void setThemeDir(std::string h) { ThemeDir = h; }
+inline void setThemeDir(string h) { ThemeDir = h; }
 #endif
