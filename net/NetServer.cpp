@@ -67,8 +67,8 @@ int NetServer::WaitClients(int nclients) {
 	      !_players[2*i])
 	    inserted = true;
 	if (inserted) {
-	  nleft++;
 	  *id |= nleft;
+	  nleft++;
 	} else
 	  continue;
       } else if (*id & NET_TEAM_RIGHT) {
