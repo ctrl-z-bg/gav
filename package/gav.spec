@@ -1,7 +1,7 @@
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav
-Version: 0.7.0
-Release: 1.rh8.0
+Version: 0.7.1
+Release: 1.rh7.x
 URL: gav.sourceforge.net
 Source0: %{name}-%{version}.tar.gz
 License: GPL
@@ -12,7 +12,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 An SDL-based rendition of an old favorite CGA game featuring
 two characters playing a volleyball-like game. This "revamped"
 version is supposed to support theming, multiplayer games,
-different input devices and networking (not yet).
+different input devices and networking.
 
 %prep
 %setup -q
