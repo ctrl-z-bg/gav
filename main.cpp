@@ -43,6 +43,7 @@
 #include "MenuItemFullScreen.h"
 #include "MenuItemFrameSkip.h"
 #include "MenuItemScore.h"
+#include "MenuItemMonitor.h"
 
 #include "Theme.h"
 
@@ -170,6 +171,7 @@ int main(int argc, char *argv[]) {
 				     string("Define Keys")));
   menuExtra->add(new MenuItemFrameSkip());
   menuExtra->add(new MenuItemScore());
+  menuExtra->add(new MenuItemMonitor());
   menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);
 

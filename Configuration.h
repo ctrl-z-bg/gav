@@ -27,6 +27,7 @@
 #define POINTS (15)
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
+enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
 
 class Configuration {
 public:
@@ -40,12 +41,15 @@ public:
   int sound;
   int winning_score;
 
+  int monitor_type;
+
   unsigned int frame_skip;     // one every frame_skip + 1 are actually drawn
   unsigned int fps;            // fps of the update (not graphical)
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
 
   Configuration() : left_nplayers(1), right_nplayers(1),
 		    sound(0), winning_score(POINTS) {
+    monitor_type = MONITOR_NORMAL;
     frame_skip = 0;
     fps = FPS;
     mill_per_frame = 1000 / fps;

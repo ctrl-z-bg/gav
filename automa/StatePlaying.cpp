@@ -31,7 +31,6 @@ using namespace std;
 int StatePlaying::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
-  // static int del_back = 0;
   if ( firstTime ) {
     /* 
        First time we change to execute state: we should
@@ -121,9 +120,7 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     r.x = r.y = 0;
     r.h = background->h;
     r.w = background->w;
-    //    if ( !del_back ) 
-      SDL_BlitSurface(background, &r, screen, &r);
-      // del_back = ( del_back + 1 ) % 3;
+    SDL_BlitSurface(background, &r, screen, &r);
 
     tl->draw();
     tr->draw();
