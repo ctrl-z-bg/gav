@@ -25,6 +25,8 @@ CXXFLAGS += $(foreach DIR, $(SUBDIRS), -I$(DIR)) -I.
 
 ALL_OBJ  = $(foreach DIR, $(SUBDIRS), $(DIR)/$(DIR:%=%_module.o))
 
+DEPEND = Makefile.depend
+
 .PHONY: depend clean all $(SUBDIRS)
 
 all: $(SUBDIRS) gav
@@ -42,7 +44,7 @@ clean:
 	for i in $(SUBDIRS) ; do \
 	  make -C $$i clean;\
 	done
-	rm -f *~ *.o gav
+	rm -f *~ *.o gav $(DEPEND)
 
 bindist: all
 	for i in $(SUBDIRS) ; do \
@@ -61,8 +63,6 @@ depend:
 	done
 	$(RM) $(DEPEND)
 	$(CXX) -M $(CXXFLAGS) $(SRCS) >> $(DEPEND)
-
-DEPEND = Makefile.depend
 
 ifeq ($(wildcard $(DEPEND)),$(DEPEND))
 include $(DEPEND)

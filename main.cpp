@@ -72,7 +72,7 @@ init()
   cgaInv = new ScreenFont(CurrentTheme->fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   init();
 
    /* initialize menus */
@@ -92,4 +92,6 @@ int main() {
 
   AutomaMainLoop *a = new AutomaMainLoop();
   a->start();
+
+  return 0;
 }

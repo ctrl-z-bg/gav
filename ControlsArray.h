@@ -40,8 +40,8 @@ class ControlsArray {
 
 public:
   ControlsArray() {
-    bzero(_inputs, MAX_PLAYERS * sizeof(triple_t));
-    bzero(_f, 12);
+    memset(_inputs, 0, MAX_PLAYERS * sizeof(triple_t));
+    memset(_f, 0, 12);
     for ( int i = 0; i < MAX_PLAYERS; _isArtificial[i++] = false );
   }
 

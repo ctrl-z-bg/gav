@@ -24,6 +24,8 @@ MODULE_NAME	= $(NAME)_module.o
 
 CXXFLAGS += -I$(GAV_ROOT) -I../menu
 
+DEPEND = Makefile.depend
+
 .PHONY: all
 
 all: $(MODULE_NAME)
@@ -35,13 +37,11 @@ $(MODULE_NAME): $(OFILES)
 	$(CXX) -c $(CXXFLAGS) $<
 
 clean:
-	rm -f *.o *.bin *~
+	rm -f *.o *.bin *~ $(DEPEND)
 
 depend:
 	$(RM) $(DEPEND)
 	$(CXX) $(CXXFLAGS) -M $(SRCS) >> $(DEPEND)
-
-DEPEND = Makefile.depend
 
 ifeq ($(wildcard $(DEPEND)),$(DEPEND))
 include $(DEPEND)
