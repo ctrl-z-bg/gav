@@ -35,6 +35,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "SoundMgr.h"
 #include "globals.h"
 
 #define TH_DEFAULT "classic"
@@ -148,6 +149,13 @@ private:
       
       cga = new ScreenFont(font(), FONT_FIRST_CHAR, FONT_NUMBER);
       cgaInv = new ScreenFont(fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
+
+#ifdef AUDIO
+      if ( soundMgr )
+	delete(soundMgr);
+      soundMgr = new SoundMgr((TD+"sounds").c_str(),
+			      (ThemeDir+"/sounds").c_str());
+#endif // AUDIO
     }
   
   ~Theme() {

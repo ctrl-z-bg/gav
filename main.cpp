@@ -36,6 +36,7 @@
 #include "MenuItemPlay.h"
 #include "MenuItemExit.h"
 #include "MenuItemPlayer.h"
+#include "MenuItemSound.h"
 #include "MenuItemNotImplemented.h"
 #include "MenuKeys.h"
 #include "MenuItemBack.h"
@@ -67,6 +68,8 @@ using namespace std;
 
 #ifdef AUDIO
 SDL_AudioSpec desired,obtained;
+
+SoundMgr * soundMgr = NULL;
 
 playing_t playing[MAX_PLAYING_SOUNDS];
 
@@ -164,8 +167,10 @@ int main(int argc, char *argv[]) {
   init();
   
 #ifdef AUDIO
+#if 0
   Prova = new Sound("rocket.wav");
   Prova->playSound();
+#endif
 #endif
 
    /* initialize menus */
@@ -216,7 +221,7 @@ int main(int argc, char *argv[]) {
   m.add(&miplay);
   m.add(new MenuItemPlayer(TEAM_LEFT, 0));
   m.add(new MenuItemPlayer(TEAM_RIGHT, 0));
-  m.add(new MenuItemNotImplemented(string("Sound Off")));
+  m.add(new MenuItemSound());
   m.add(new MenuItemSubMenu(new MenuKeys(0),
 			    string("Define Keys")));
   m.add(new MenuItemNotImplemented(string("Set Joystick")));

@@ -34,6 +34,7 @@
 #include "MenuItemPlay.h"
 #include "MenuItemExit.h"
 #include "MenuItemNotImplemented.h"
+#include "SoundMgr.h"
 
 class StateMenu : public State {
   private:
@@ -43,6 +44,7 @@ class StateMenu : public State {
   StateMenu() {
     _mr = mroot;
   };
+
   int execute(InputState *is, unsigned int ticks, unsigned int prevTicks,
 	      int firstTime) {
     static int lastExec = ticks;

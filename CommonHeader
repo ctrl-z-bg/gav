@@ -24,7 +24,7 @@ NET = true
 LD = ld
 CXX = g++
 
-CXXFLAGS= `sdl-config --cflags` -g -Wall 
+CXXFLAGS= `sdl-config --cflags` -g -Wall -DAUDIO
 
 ifndef NET
 CXXFLAGS+= -DNONET

@@ -104,8 +104,16 @@ void Ball::update_internal(Player * pl) {
 }
 
 void Ball::assignPoint(int side, Team *t) {
-  if ( _side == side )
+  if ( _side == side ) {
     t->score();
+#ifdef AUDIO
+    soundMgr->playSound(SND_SCORE);
+#endif // AUDIO
+  } else {
+#ifdef AUDIO
+    soundMgr->playSound(SND_SERVICECHANGE);
+#endif // AUDIO
+  }
   _side = side;
   _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4) - _radius;
   _y = (SCREEN_HEIGHT() * 2) / 3 - _radius;
@@ -223,6 +231,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   if ( _y < 24 ) {
     _y = 24;
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
+#ifdef AUDIO
+    soundMgr->playSound(SND_BOUNCE);
+#endif // AUDIO
   }
     
   //ball hits left wall
@@ -231,6 +242,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tright] )
       resetCollisionCount();
+#ifdef AUDIO
+    soundMgr->playSound(SND_BOUNCE);
+#endif // AUDIO
   }
 
   
@@ -240,6 +254,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tleft] )
       resetCollisionCount();
+#ifdef AUDIO
+    soundMgr->playSound(SND_BOUNCE);
+#endif // AUDIO
   }
 
   // net collision
@@ -255,12 +272,18 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _y -= _frames->height()/4; //(int) (_frames->height() -
     //(4*distance(NET_X, NET_Y) / _frames->height()));
     _spdy = (int) fabs(_spdy * ELASTIC_SMOOTH * ELASTIC_SMOOTH);
+#ifdef AUDIO
+    soundMgr->playSound(SND_PARTIALNET);
+#endif // AUDIO
   } else if ( netFullCollision(_x, _y) && !netFullCollision(_oldx, _oldy)) {
     _spdx = (int) ((- _spdx) * ELASTIC_SMOOTH);
     if ( _oldx > _x )
       _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
     else
       _x =  2* NET_X - 2*_frames->width() - _x;
+#ifdef AUDIO
+    soundMgr->playSound(SND_FULLNET);
+#endif // AUDIO
   }
 
   //ball hits floor
@@ -273,6 +296,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
       _scorerSide = (_oldx < NET_X)?1:-1;
       _scoredTime = 0;
     }
+#ifdef AUDIO
+    soundMgr->playSound(SND_BOUNCE);
+#endif // AUDIO
   }
 
   // collisions with the players
@@ -289,6 +315,9 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 	  if ( !_collisionCount[team] )
 	    resetCollisionCount();
 	  _collisionCount[team]++;
+#ifdef AUDIO
+	  soundMgr->playSound(SND_PLAYERHIT);
+#endif // AUDIO
 	  if ( _collisionCount[team] > MAX_TOUCHES ) {
 	    _scorerSide = (team == tleft)?1:-1;
 	    _scoredTime = 0;

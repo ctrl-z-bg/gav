@@ -48,9 +48,11 @@ extern Configuration configuration;
 
 class NetClient;
 class NetServer;
+class SoundMgr;
 
 extern NetServer * nets;
 extern NetClient * netc;
+extern SoundMgr * soundMgr;
 
 //#define AUDIO
 
@@ -74,6 +76,20 @@ typedef struct playing_s {
 extern playing_t playing [MAX_PLAYING_SOUNDS];
 
 #define VOLUME_PER_SOUND SDL_MIX_MAXVOLUME / 2
+
+/* this should be synchronized with char *sound_fnames[] in SoundMgr.cpp */
+enum {
+  SND_BOUNCE = 0,
+  SND_MENU_SELECT,
+  SND_MENU_ACTIVATE,
+  SND_SCORE,
+  SND_VICTORY,
+  SND_PARTIALNET,
+  SND_FULLNET,
+  SND_SERVICECHANGE,
+  SND_PLAYERHIT
+};
+
 
 #endif //AUDIO
 

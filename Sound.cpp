@@ -29,6 +29,8 @@ int Sound::loadAndConvertSound(char *filename, SDL_AudioSpec *spec,sound_p sound
   SDL_AudioCVT cvt;
   SDL_AudioSpec loaded;
   Uint8 *new_buf;
+  
+  printf("loading sound: %s\n", filename);
 
   if(SDL_LoadWAV(filename, &loaded,&sound->samples, &sound->length)==NULL) {
     printf("Cannot load the wav file\n");

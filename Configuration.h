@@ -90,7 +90,7 @@ public:
   unsigned int ballAmplify;
 
   Configuration() : left_nplayers(1), right_nplayers(1),
-		    sound(0), winning_score(WINNING_SCORE) {
+		    sound(1), winning_score(WINNING_SCORE) {
     monitor_type = MONITOR_NORMAL;
     frame_skip = 0;
     fps = FPS;

@@ -252,6 +252,9 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 	(tl->getScore() > (tr->getScore()+1))) ||
        ((tr->getScore() >= configuration.winning_score) &&
 	(tr->getScore() > (tl->getScore()+1))) ) {
+#ifdef AUDIO
+    soundMgr->playSound(SND_VICTORY);
+#endif // AUDIO
     /* Deallocate teams, ball and players */
     delete(tl);
     delete(tr);

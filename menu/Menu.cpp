@@ -22,6 +22,7 @@
 
 #include "Menu.h"
 #include <string.h>
+#include "SoundMgr.h"
 
 using namespace std;
 
@@ -39,11 +40,19 @@ int Menu::execute(InputState *is, std::stack<Menu *> &s) {
   ScreenFont * font;
   static bool spacePressed = false;
 
-  if ( is->getKeyState()[SDLK_UP] && (currentItem > 0) )
+  if ( is->getKeyState()[SDLK_UP] && (currentItem > 0) ) {
     currentItem--;
-  if ( is->getKeyState()[SDLK_DOWN] && (currentItem < (int) (items.size() - 1)) )
+#ifdef AUDIO
+    soundMgr->playSound(SND_MENU_SELECT);
+#endif // AUDIO
+  }
+  if ( is->getKeyState()[SDLK_DOWN] &&
+       (currentItem < (int) (items.size() - 1)) ) {
     currentItem++;
-
+#ifdef AUDIO
+    soundMgr->playSound(SND_MENU_SELECT);
+#endif // AUDIO
+  }
   /* draw menu items labels */
   rect.y = 30;
   for ( unsigned int it = 0; it < items.size(); it++ ) {
@@ -65,6 +74,9 @@ int Menu::execute(InputState *is, std::stack<Menu *> &s) {
   if ( spacePressed && !(is->getKeyState()[SDLK_SPACE]) &&
        !(is->getKeyState()[SDLK_RETURN]) ) {
     spacePressed = false;
+#ifdef AUDIO
+    soundMgr->playSound(SND_MENU_ACTIVATE);
+#endif // AUDIO
     return items[currentItem]->execute(s);
   }
   return 0;
