@@ -107,7 +107,6 @@ int StateClient::setupConnection(InputState *is) {
   SDL_Flip(screen);
   netc->ConnectToServer(&_lp, &_rp, NET_TEAM_RIGHT, saddress.c_str(),
 			port);
-  puts("fatto?");
 
   return(0);
 }
@@ -118,10 +117,10 @@ int StateClient::setupConnection(InputState *is) {
 int StateClient::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
-  setupConnection(is);
-
   if ( firstTime ) {
-    /* 
+    setupConnection(is); 
+
+   /* 
        First time we change to execute state: we should
        probably create players here instead of in the constructor,
        and think of a clever way to destroy them once we're done.
@@ -151,6 +150,8 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     tr->setScore(0);
     b->resetPos((int) (SCREEN_WIDTH() * 0.25),
 		(int) (SCREEN_HEIGHT() * 0.66));
+    
+    controlsArray->setHuman(0);
   }
   
   if ( is->getKeyState()[SDLK_ESCAPE] ) {
@@ -160,6 +161,11 @@ int StateClient::execute(InputState *is, unsigned int ticks,
     delete(netc);
     return(STATE_MENU);
   }  
+
+  triple_t input = controlsArray->getCommands(0);
+  netc->SendCommand((input.left?CNTRL_LEFT:0)|
+		    (input.right?CNTRL_RIGHT:0)|
+		    (input.jump?CNTRL_JUMP:0));
 
   if ( netc->ReceiveSnapshot(tl, tr, b) != -1 ) {
 
