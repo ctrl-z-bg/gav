@@ -45,7 +45,10 @@ bool Theme::_checkTheme() {
 #ifndef WIN32
     cerr << "Verifying Theme `" << _name << "' [" << ThemeDir << "/" << _name << "/]:\n";
     if ( access(_CCS(_background), R_OK) ) {
-      _background = TD + TH_BACKGROUND_JPG;
+      if (!_bigBackground)
+	_background = TD + TH_BACKGROUND_JPG;
+      else
+	_background = TD + TH_BACKGROUND_BIG_JPG;
       if ( access(_CCS(_background), R_OK) ) errorOn("background.{jpg,png}");
     }
     if ( access(_CCS(_font), R_OK) )        errorOn(TH_FONT);

@@ -46,6 +46,8 @@
 #include "MenuItemScore.h"
 #include "MenuItemMonitor.h"
 
+#include "MenuItemBigBackground.h"
+
 #include "Theme.h"
 
 #include "Sound.h"
@@ -176,6 +178,7 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemFrameSkip());
   menuExtra->add(new MenuItemScore());
   menuExtra->add(new MenuItemMonitor());
+  menuExtra->add(new MenuItemBigBackground());
   menuExtra->add(new MenuItemFullScreen());
   menuExtra->add(mib);
 

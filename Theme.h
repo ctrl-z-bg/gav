@@ -47,6 +47,8 @@
 #define TH_RIGHTFEMALE  "plfr.png"
 #define TH_BACKGROUND_JPG   "background.jpg"
 #define TH_BACKGROUND_PNG   "background.png"
+#define TH_BACKGROUND_BIG_JPG   "background_big.jpg"
+#define TH_BACKGROUND_BIG_PNG   "background_big.png"
 #define TH_BALL         "ball.png"
 #define TH_FONT         "Font.png"
 #define TH_FONTINV      "FontInv.png"
@@ -67,10 +69,11 @@ private:
   std::string _rightfemale;
   std::string _ball;
   std::string TD;
+  bool _bigBackground;
   bool _checkTheme(); // Theme Validation
     
  public:
-    Theme(std::string name) {
+    Theme(std::string name, bool big = false) {
 #ifndef WIN32
       DIR *dir;
       if ((dir = opendir(ThemeDir.c_str())) == NULL) {
@@ -103,10 +106,15 @@ private:
 #endif /* WIN32 */
       
       _name = name;
+
+      _bigBackground = big;
       
       _net = TD + TH_NET;
       
-      _background = TD + TH_BACKGROUND_PNG;
+      if (!_bigBackground)
+	_background = TD + TH_BACKGROUND_PNG;
+      else
+	_background = TD + TH_BACKGROUND_BIG_PNG;
       
       _font    = TD + TH_FONT;
       _fontinv = TD + TH_FONTINV;
@@ -147,7 +155,8 @@ private:
 #define _CCS(str) ((str).c_str())
 
     inline const char * name()       { return( _CCS(_name)        );}
-    inline bool   hasnet()     { return( _hasnet            );}
+    inline bool   hasnet()           { return( _hasnet            );}
+    inline bool   bigBackground()    { return( _bigBackground     );}
     inline const char * background() { return( _CCS(_background)  );}
     inline const char * net()        { return( _CCS(_net)         );}
     inline const char * font()       { return( _CCS(_font)        );}
