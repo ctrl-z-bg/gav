@@ -24,6 +24,7 @@
 
 #define MAX_PLAYERS (12)
 #define FPS (50)
+#define POINTS (15)
 
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 
@@ -44,7 +45,7 @@ public:
   unsigned int mill_per_frame; // caches the # of msecs per frame (1000/fps)
 
   Configuration() : left_nplayers(1), right_nplayers(1),
-		    sound(0), winning_score(15) {
+		    sound(0), winning_score(POINTS) {
     frame_skip = 0;
     fps = FPS;
     mill_per_frame = 1000 / fps;

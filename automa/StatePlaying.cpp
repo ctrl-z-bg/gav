@@ -26,13 +26,12 @@
 
 using namespace std;
 
-#define WINNING_SCORE 15
-
 // executes one step of the game's main loop
 // Returns NO_TRANSITION if the game continues, anything else otherwise
 int StatePlaying::execute(InputState *is, unsigned int ticks,
 			  unsigned int prevTicks, int firstTime)
 {
+  // static int del_back = 0;
   if ( firstTime ) {
     /* 
        First time we change to execute state: we should
@@ -122,8 +121,10 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     r.x = r.y = 0;
     r.h = background->h;
     r.w = background->w;
-    SDL_BlitSurface(background, &r, screen, &r);
-    
+    //    if ( !del_back ) 
+      SDL_BlitSurface(background, &r, screen, &r);
+      // del_back = ( del_back + 1 ) % 3;
+
     tl->draw();
     tr->draw();
     b->draw();
@@ -131,9 +132,9 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
     prevDrawn = ticks;
   }
   
-  if ( ((tl->getScore() >= WINNING_SCORE) &&
+  if ( ((tl->getScore() >= configuration.winning_score) &&
 	(tl->getScore() > (tr->getScore()+1))) ||
-       ((tr->getScore() >= WINNING_SCORE) &&
+       ((tr->getScore() >= configuration.winning_score) &&
 	(tr->getScore() > (tl->getScore()+1))) ) {
     /* Deallocate teams, ball and players */
     delete(tl);
