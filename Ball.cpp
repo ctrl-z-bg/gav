@@ -261,7 +261,16 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   }
 
   // net collision
-  if ( netPartialCollision(_x, _y) ) {
+  if ( netFullCollision(_x, _y) && !netFullCollision(_oldx, _oldy)) {
+    _spdx = (int) ((- _spdx) * ELASTIC_SMOOTH);
+    if ( _oldx > _x )
+      _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
+    else
+      _x =  2* NET_X - 2*_frames->width() - _x;
+#ifdef AUDIO
+    soundMgr->playSound(SND_FULLNET);
+#endif // AUDIO
+  } else if ( netPartialCollision(_x, _y) ) {
     if ( !netPartialCollision(_oldx, NET_Y - 3*_frames->height()/4) ) {
       if ( _oldy < _y ) { // hits from the top
 	if ( (_x + _frames->width()/8 < NET_X) &&
@@ -273,17 +282,17 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     _y -= _frames->height()/4; //(int) (_frames->height() -
     //(4*distance(NET_X, NET_Y) / _frames->height()));
     _spdy = (int) fabs(_spdy * ELASTIC_SMOOTH * ELASTIC_SMOOTH);
+
+    // ball stuck on the net "feature" ;-)
+    if (_x == _oldx) {
+      if (_spdx > 0)
+	_x += 5;
+      else
+	_x -= 5;
+    }
+
 #ifdef AUDIO
     soundMgr->playSound(SND_PARTIALNET);
-#endif // AUDIO
-  } else if ( netFullCollision(_x, _y) && !netFullCollision(_oldx, _oldy)) {
-    _spdx = (int) ((- _spdx) * ELASTIC_SMOOTH);
-    if ( _oldx > _x )
-      _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
-    else
-      _x =  2* NET_X - 2*_frames->width() - _x;
-#ifdef AUDIO
-    soundMgr->playSound(SND_FULLNET);
 #endif // AUDIO
   }
 
@@ -327,14 +336,18 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 	  //_collisionCount[team] << endl;
 	  update_internal(*it);
 	  while (collide(*it)) {
-	    _x += (_spdx>0)?1:-1;
+	    int newx = _x + ((_spdx>0)?1:-1);
 	    _y -= (_spdy>0)?1:-1; // usual problem with y
+	    if (!netFullCollision(newx, _y) &&
+		!netPartialCollision(newx, _y)) _x = newx;
 	  }
 	  //_inCollisionWith = NULL;
 	} else {
 	  while (collide(*it)) {
-	    _x += (_spdx>0)?1:-1;
+	    int newx = _x + ((_spdx>0)?1:-1);
 	    _y -= (_spdy>0)?1:-1; // usual problem with y
+	    if (!netFullCollision(newx, _y) &&
+		!netPartialCollision(newx, _y)) _x = newx;
 	  }
 	}
 
@@ -347,5 +360,26 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   if ( !_accelY && (abs(_spdx) + abs(_spdy)) )
     _accelY = GRAVITY;
 
+  /*
+  // over net test
+  if (!_spdx && !_spdy) {
+    _x = NET_X;
+    _y = NET_Y - 30;
+    _spdy = 5;
+  }
+  */
+
+  /*
+  // stuck test
+  {
+    static int ini = 1;
+    if (ini && !_spdx && !_spdy) {
+      ini = 0;
+      _x = NET_X - 20;
+      _y = NET_Y - 50;
+      _spdy = 5;
+    }
+  }
+  */
 }
 
