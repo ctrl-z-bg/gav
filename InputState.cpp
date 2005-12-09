@@ -45,4 +45,6 @@ void InputState::getInput() {
     _f[i] = keystate[SDLK_F1 + i];
 }
 
+InputState::~InputState() {
+}
 
