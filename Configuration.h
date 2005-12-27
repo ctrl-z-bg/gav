@@ -93,6 +93,19 @@ public:
   BallFrameConf_t ballFrameConf;
   std::string currentTheme;
   
+  /* Constants that depend on the screen size */
+  int SCREEN_WIDTH;
+  int SCREEN_HEIGHT;
+  int SPEEDY;
+  int FLOOR_ORD;
+  int SPEED_MULTIPLIER;
+  int NET_X;
+  int NET_Y;
+  int CEILING;
+  int LEFT_WALL;
+  int RIGHT_WALL;
+  
+
   /* To add: something meaningful to record the controls... */
 
   bool sound;
@@ -156,10 +169,23 @@ public:
     return os.str();
   }
 
+  void scaleFactors(int width, int height) {
+    SCREEN_WIDTH = width;
+    SCREEN_HEIGHT = height;
+    SPEEDY = (int) (SCREEN_HEIGHT / 2.5);
+    FLOOR_ORD = SCREEN_HEIGHT -(SCREEN_HEIGHT / 200);
+    NET_X = width / 2 - width / 80;
+    NET_Y = height / 2 + ( 3*height / 200 );
+    CEILING = (int) (height / 17);
+    LEFT_WALL = (int) (height / 57);
+    RIGHT_WALL = (int) (width - width / 40);
+  }
+
   int loadConfiguration();
   int saveConfiguration(std::string fname);
   int createConfigurationFile();
   std::string confFileName();
+  //void scaleFactors(int width, int height);
 };
 
 #endif

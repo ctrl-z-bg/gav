@@ -47,9 +47,9 @@ public:
     SDL_FreeSurface(screen);
     configuration.fullscreen = !configuration.fullscreen;
     apply();
-    screen = SDL_SetVideoMode(SCREEN_WIDTH(),
+    screen = SDL_SetVideoMode(configuration.SCREEN_WIDTH,
 			      //	SCREEN_HEIGHT(), BPP, screenFlags);
-			      SCREEN_HEIGHT(),
+			      configuration.SCREEN_HEIGHT,
 			      videoinfo->vfmt->BitsPerPixel, 
 			      screenFlags);
     

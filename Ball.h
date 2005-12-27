@@ -36,11 +36,11 @@
 #define MIN_NET_SPEED (10)
 
 //#define NET_X    (312)
-#define NET_X    (SCREEN_WIDTH() / 2 - 8)
-#define NET_Y    (SCREEN_HEIGHT()/2 + ((3*SCREEN_HEIGHT())/200))
-#define CEILING_Y  24
-#define LEFT_WALL  7 
-#define RIGHT_WALL(bw) (SCREEN_WIDTH() - bw - 16)
+//#define NET_X    (configuration.SCREEN_WIDTH / 2 - 8)
+//#define NET_Y    (configuration.SCREEN_HEIGHT /2 + ((3*configuration.SCREEN_HEIGHT)/200))
+//#define CEILING_Y  24
+//#define LEFT_WALL  7 
+//#define RIGHT_WALL(bw) (configuration.SCREEN_WIDTH - bw - 16)
 
 typedef enum {
   BALL_ORIG
@@ -108,9 +108,10 @@ class Ball {
     _inCollisionWith = NULL;
     _side = -1;
     if ( _x < 0 )
-      _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4) - _radius;
+      _x = (configuration.SCREEN_WIDTH / 2) +
+	((configuration.SCREEN_WIDTH * _side) / 4) - _radius;
     if ( _y < 0 )
-      _y = (SCREEN_HEIGHT() * 2) / 3 - _radius;
+      _y = (configuration.SCREEN_HEIGHT * 2) / 3 - _radius;
     _scorerSide = _scoredTime = 0;
   }
 

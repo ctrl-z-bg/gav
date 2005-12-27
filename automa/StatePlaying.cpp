@@ -178,8 +178,8 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
 
     tl->setScore(0);
     tr->setScore(0);
-    b->resetPos((int) (SCREEN_WIDTH() * 0.25),
-		(int) (SCREEN_HEIGHT() * 0.66));
+    b->resetPos((int) (configuration.SCREEN_WIDTH * 0.25),
+		(int) (configuration.SCREEN_HEIGHT * 0.66));
   }
   
   controlsArray->setControlsState(is, tl, tr);

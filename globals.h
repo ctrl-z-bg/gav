@@ -104,7 +104,5 @@ typedef struct {
   Uint8 jump;
 } triple_t;
 
-#define SCREEN_WIDTH() (::background->w)
-#define SCREEN_HEIGHT() (::background->h)
 #define MAXPATHLENGTH (1024)
 #endif // _GLOBALS_H_

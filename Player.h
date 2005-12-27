@@ -34,8 +34,6 @@
 class Team;
 class ControlsArray;
 
-#define SPEEDY  (160)
-
 #define NUM_TYPES (5)
 typedef enum {
   PL_TYPE_MALE_LEFT = 1,
@@ -125,7 +123,7 @@ public:
       delete(_frames);
   }
 
-  inline int GROUND_LEVEL() { return(SCREEN_HEIGHT()-2-_frames->height());}  // (346)
+  inline int GROUND_LEVEL() { return(configuration.FLOOR_ORD -_frames->height());}  // (346)
 
   inline std::string name() {return _name;}
   

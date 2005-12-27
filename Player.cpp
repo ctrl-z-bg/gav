@@ -25,6 +25,8 @@
 #include <math.h>
 #include "Team.h"
 
+#define SPEED_FACT_CONST (5)
+
 int Player::maxX() { return _team->xmax(); }
 int Player::minX() { return _team->xmin(); }
 int Player::minY() { return _team->ymin(); }
@@ -64,7 +66,7 @@ void Player::update(int ticks, ControlsArray *ca) {
     _x = _team->xmin();
 
   if ( _y == GROUND_LEVEL() && input.jump ) {
-    _speedY = -SPEEDY;
+    _speedY = (int) -(configuration.SPEEDY);
   }
 
   if ( _y > GROUND_LEVEL() ) {
@@ -72,11 +74,11 @@ void Player::update(int ticks, ControlsArray *ca) {
     _speedY = 0;
   }
 
-  _y += (int) (_speedY * 5 * ((float) ticks / 1000));
+  _y += (int) (_speedY * SPEED_FACT_CONST * ((float) ticks / 1000));
 
   if ( _y < GROUND_LEVEL() )
-    _speedY += (SPEEDY * 5 * ticks) / 1000;
-
+    _speedY += (int) (configuration.SPEEDY * SPEED_FACT_CONST * ticks) / 1000;
+  
   int _oldState = _state;
   /* detect state changes */
   if ( _y < GROUND_LEVEL() ) {

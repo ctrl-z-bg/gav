@@ -64,11 +64,11 @@ class Team {
     _score = 0;
     _nplayers = 0;
     _playerNumInc = (side<0)?0:1;
-    _xmin = (side<0)?8:(SCREEN_WIDTH() / 2) ;
+    _xmin = (side<0)?8:(configuration.SCREEN_WIDTH / 2) ;
 
     //304 the real half field width
     //    _xmax = _xmin + 304 ;
-    _xmax = _xmin + (SCREEN_WIDTH() / 2) - 16;
+    _xmax = _xmin + (configuration.SCREEN_WIDTH / 2) - 16;
     _ymin = 0;
     _ymax = 0;
   }
@@ -127,7 +127,7 @@ class Team {
 
   void draw(SDL_Surface *scr = screen) {
     SDL_Rect r;
-    r.x = (_xmin < (SCREEN_WIDTH()/3))?100:(_xmax - 100);
+    r.x = (_xmin < (configuration.SCREEN_WIDTH/3))?100:(_xmax - 100);
     r.y = 0;
     for ( std::vector<Player *>::const_iterator it = _players.begin();
 	  it != _players.end(); it++ )

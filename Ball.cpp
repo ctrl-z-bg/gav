@@ -79,7 +79,7 @@ void Ball::update_internal(Player * pl) {
   /* service patch */
   if (!_spdy && !_spdx) {
     _spdy = -200;
-    //_spdx = (_x > NET_X)?-100:100;
+    //_spdx = (_x > configuration.NET_X)?-100:100;
   }
 
   y1 = _spdx * sinb + (- _spdy) * cosb;
@@ -116,8 +116,9 @@ void Ball::assignPoint(int side, Team *t) {
 #endif // AUDIO
   }
   _side = side;
-  _x = (SCREEN_WIDTH() / 2) + ((SCREEN_WIDTH() * _side) / 4) - _radius;
-  _y = (SCREEN_HEIGHT() * 2) / 3 - _radius;
+  _x = (configuration.SCREEN_WIDTH / 2) +
+    ((configuration.SCREEN_WIDTH * _side) / 4) - _radius;
+  _y = (configuration.SCREEN_HEIGHT * 2) / 3 - _radius;
   _spdx = _spdy = _accelY = 0;
   _scorerSide = 0;
   resetCollisionCount();
@@ -163,16 +164,20 @@ Ball::netPartialCollision(int x, int y)
   ymin = MIN(y, _oldy);
   ymax = MAX(y, _oldy);
 
-  if ((xmin < NET_X) && (xmax > NET_X)) {
-    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin) + ymin;
-    if ( (collisionY < NET_Y ) && (collisionY > NET_Y - _frames->height()/2) )
+  if ((xmin < configuration.NET_X) && (xmax > configuration.NET_X)) {
+    int collisionY = (configuration.NET_X - xmin) *
+      (ymax - ymin)/(xmax - xmin) + ymin;
+    if ( (collisionY < configuration.NET_Y ) &&
+	 (collisionY > configuration.NET_Y - _frames->height()/2) )
       return true;
   }
 
-  return((x + _frames->width() > NET_X) && (x < NET_X) &&
-	 ( distance(NET_X, NET_Y) < (_frames->width()/2)) );
-	 /* (y + _frames->height()/2 < NET_Y) &&
-	    (y + _frames->height() > NET_Y)); */
+  return((x + _frames->width() > configuration.NET_X) &&
+	 (x < configuration.NET_X) &&
+	 ( distance(configuration.NET_X, configuration.NET_Y) <
+	   (_frames->width()/2)) );
+	 /* (y + _frames->height()/2 < configuration.NET_Y) &&
+	    (y + _frames->height() > configuration.NET_Y)); */
 }
 
 bool
@@ -185,14 +190,16 @@ Ball::netFullCollision(int x, int y)
   ymin = MIN(y, _oldy);
   ymax = MAX(y, _oldy);
 
-  if ((xmin < NET_X) && (xmax > NET_X)) {
-    int collisionY = (NET_X - xmin)*(ymax - ymin)/(xmax - xmin) + ymin;
-    if ( collisionY > NET_Y )
+  if ((xmin < configuration.NET_X) && (xmax > configuration.NET_X)) {
+    int collisionY = (configuration.NET_X - xmin) *
+      (ymax - ymin)/(xmax - xmin) + ymin;
+    if ( collisionY > configuration.NET_Y )
       return true;
   }
 
-  return((x + _frames->width() > NET_X) && (x < NET_X) &&
-	 (y + _frames->height()/2 >= NET_Y));
+  return((x + _frames->width() > configuration.NET_X) &&
+	 (x < configuration.NET_X) &&
+	 (y + _frames->height()/2 >= configuration.NET_Y));
 }
 
 // updates the ball position, knowing 'passed' milliseconds went
@@ -229,8 +236,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   _y -= dy; // usual problem with y
   
   //ball hits upper wall
-  if ( _y < CEILING_Y ) {
-    _y = CEILING_Y;
+  if ( _y < configuration.CEILING ) {
+    _y = configuration.CEILING;
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
 #ifdef AUDIO
     soundMgr->playSound(SND_BOUNCE);
@@ -238,8 +245,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   }
     
   //ball hits left wall
-  if ( _x < LEFT_WALL  ) {
-    _x = LEFT_WALL;
+  if ( _x < configuration.LEFT_WALL  ) {
+    _x = configuration.LEFT_WALL;
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tright] )
       resetCollisionCount();
@@ -250,8 +257,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
 
   
   //ball hits right wall
-  if ( _x > RIGHT_WALL(_frames->width()) ) {
-    _x = RIGHT_WALL(_frames->width());
+  if ( _x > (configuration.RIGHT_WALL -_frames->width()) ) {
+    _x = configuration.RIGHT_WALL - _frames->width();
     _spdx = - (int) (_spdx * ELASTIC_SMOOTH);
     if ( _collisionCount[tleft] )
       resetCollisionCount();
@@ -264,23 +271,25 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   if ( netFullCollision(_x, _y) && !netFullCollision(_oldx, _oldy)) {
     _spdx = (int) ((- _spdx) * ELASTIC_SMOOTH);
     if ( _oldx > _x )
-      _x = 2 * NET_X - _x; // moves ball out of the net by the right amount
+      _x = 2 * configuration.NET_X - _x; // moves ball out of the net
+                                         // by the right amount
     else
-      _x =  2* NET_X - 2*_frames->width() - _x;
+      _x =  2* configuration.NET_X - 2*_frames->width() - _x;
 #ifdef AUDIO
     soundMgr->playSound(SND_FULLNET);
 #endif // AUDIO
   } else if ( netPartialCollision(_x, _y) ) {
-    if ( !netPartialCollision(_oldx, NET_Y - 3*_frames->height()/4) ) {
+    if ( !netPartialCollision(_oldx,
+			      configuration.NET_Y - 3*_frames->height()/4) ) {
       if ( _oldy < _y ) { // hits from the top
-	if ( (_x + _frames->width()/8 < NET_X) &&
-	     (_x + 7*_frames->width()/8 > NET_X) )
+	if ( (_x + _frames->width()/8 < configuration.NET_X) &&
+	     (_x + 7*_frames->width()/8 > configuration.NET_X) )
 	  _spdx = - _spdx;
       }
       _spdx = (int) (_spdx * ELASTIC_SMOOTH * ELASTIC_SMOOTH * ELASTIC_SMOOTH);
     }
     _y -= _frames->height()/4; //(int) (_frames->height() -
-    //(4*distance(NET_X, NET_Y) / _frames->height()));
+    //(4*distance(configuration.NET_X, configuration.NET_Y) / _frames->height()));
     _spdy = (int) fabs(_spdy * ELASTIC_SMOOTH * ELASTIC_SMOOTH);
 
     // ball stuck on the net "feature" ;-)
@@ -297,13 +306,13 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   }
 
   //ball hits floor
-  if ( _y > (SCREEN_HEIGHT() - _frames->height()-2) ) {
-    _y = (SCREEN_HEIGHT() - _frames->height()-2);
+  if ( _y > (configuration.FLOOR_ORD - _frames->height() ) ) {
+    _y = (configuration.FLOOR_ORD - _frames->height() );
     _spdy = - (int) (_spdy * ELASTIC_SMOOTH);
     if ( !_scorerSide ) {
       // oldx, so we're safe from collisions against
       // the net
-      _scorerSide = (_oldx < NET_X)?1:-1;
+      _scorerSide = (_oldx < configuration.NET_X)?1:-1;
       _scoredTime = 0;
     }
 #ifdef AUDIO
@@ -363,8 +372,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
   /*
   // over net test
   if (!_spdx && !_spdy) {
-    _x = NET_X;
-    _y = NET_Y - 30;
+    _x = configuration.NET_X;
+    _y = configuration.NET_Y - 30;
     _spdy = 5;
   }
   */
@@ -375,8 +384,8 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     static int ini = 1;
     if (ini && !_spdx && !_spdy) {
       ini = 0;
-      _x = NET_X - 20;
-      _y = NET_Y - 50;
+      _x = configuration.NET_X - 20;
+      _y = configuration.NET_Y - 50;
       _spdy = 5;
     }
   }

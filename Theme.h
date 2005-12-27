@@ -137,13 +137,15 @@ private:
       _hasnet = Theme::_checkTheme();
       
       ::background = IMG_Load(background());
+      configuration.scaleFactors(::background->w, ::background->h);
       //if ( CurrentTheme->hasnet() ) IMG_Load(CurrentTheme->net());
       
       //screenFlags = SDL_DOUBLEBUF|SDL_HWSURFACE;
       screenFlags |= SDL_DOUBLEBUF;
-      screen = SDL_SetVideoMode(SCREEN_WIDTH(),
+      screen = SDL_SetVideoMode(configuration.SCREEN_WIDTH,
 				//SCREEN_HEIGHT(), BPP, SDL_DOUBLEBUF);
-				SCREEN_HEIGHT(), videoinfo->vfmt->BitsPerPixel,
+				configuration.SCREEN_HEIGHT,
+				videoinfo->vfmt->BitsPerPixel,
 				screenFlags);
       
       SDL_Surface *temp = ::background;
@@ -161,6 +163,7 @@ private:
       soundMgr = new SoundMgr((TD+"sounds").c_str(),
 			      (ThemeDir+"/../sounds").c_str());
 #endif // AUDIO
+
     }
   
   ~Theme() {

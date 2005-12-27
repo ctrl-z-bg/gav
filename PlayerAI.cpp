@@ -23,7 +23,7 @@
 #include "PlayerAI.h"
 #include "Ball.h"
 
-#define JUMP_LIMIT       ( 220 )
+#define JUMP_LIMIT       ( (int) (configuration.SCREEN_HEIGHT / 1.82) )
 #define JUMPING_TIME     ( 150 )
 
 #define NEWPL_SIDE (-1)
@@ -80,28 +80,29 @@ triple_t PlayerAI::planAction() {
 	  exp_x += (int)(sx * ((float) passed/1000.0));
 	  exp_y -= (int)(sy * ((float) passed/1000.0));
 	  sy = (int)(sy-((float) passed*_b->gravity()/1000.0));
-	  if ( exp_y < CEILING_Y ) {
-	      exp_y = CEILING_Y;
+	  if ( exp_y < configuration.CEILING ) {
+	      exp_y = configuration.CEILING;
 	      sy = - (int ) (sy*ELASTIC_SMOOTH);
 	  }
-	  if ( exp_x < LEFT_WALL ) {
-	      exp_x = LEFT_WALL;
+	  if ( exp_x < configuration.LEFT_WALL ) {
+	      exp_x = configuration.LEFT_WALL;
 	      sx = - (int ) (sx*ELASTIC_SMOOTH);
 	  }
-	  if ( exp_x > RIGHT_WALL(_b->radius()*2) ) {
-	      exp_x = RIGHT_WALL(_b->radius()*2);
+	  if ( exp_x > configuration.RIGHT_WALL - (_b->radius()*2) ) {
+	      exp_x = configuration.RIGHT_WALL - (_b->radius()*2);
 	      sx = - (int ) (sx*ELASTIC_SMOOTH);
 	  }
 	  int minx = (exp_x < px)?exp_x:px;
 	  
-	  if ( (minx > (NET_X-_b->radius()*2)) && 
-	       ( minx <  NET_X ) ) {
+	  if ( (minx > (configuration.NET_X-_b->radius()*2)) && 
+	       ( minx <  configuration.NET_X ) ) {
 	      /* The ball crossed the net region */
-	      if ( ( exp_y > NET_Y ) || ( py > NET_Y ) ) {
+	      if ( ( exp_y > configuration.NET_Y ) ||
+		   ( py > configuration.NET_Y ) ) {
 		  /* Probably the ball will hit the net,
 		     consider a full collision */
 		  
-		  exp_x =  (minx == exp_x)?NET_X-_b->radius()*2:NET_X;
+		  exp_x =  (minx == exp_x)?configuration.NET_X-_b->radius()*2:configuration.NET_X;
 		  sx = - (int ) (sx*ELASTIC_SMOOTH);		      
 		  if (!sx) sx = side*20;/*SMALL_SPD_X*/
 	      }
