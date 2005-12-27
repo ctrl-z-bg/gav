@@ -138,6 +138,7 @@ init()
     cerr << "Cannot initialize SDL, exiting." << endl;
     exit(1);
   }
+  SDL_ShowCursor(SDL_DISABLE);
   atexit(SDL_Quit);
 #ifndef NONET
   if(SDLNet_Init()==-1) {
