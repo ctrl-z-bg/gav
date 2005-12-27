@@ -44,9 +44,9 @@
 #define NET_TEAM_RIGHT 0x40    // 01xxxxxx
 
 typedef struct {
-  short x;
-  short y;
-  char  frame;
+  Uint16 x;
+  Uint16 y;
+  unsigned char  frame;
 } net_object_snapshot_t;
 
 typedef struct {
@@ -54,22 +54,24 @@ typedef struct {
   net_object_snapshot_t teaml[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t teamr[PLAYER_FOR_TEAM_IN_NET_GAME];
   net_object_snapshot_t ball;
-  char scorel;
-  char scorer;
+  unsigned char scorel;
+  unsigned char scorer;
 } net_game_snapshot_t;
 
 typedef struct {
   //unsigned int timestamp;
-  char id;       // the client ID
-  char command;
+  unsigned char id;       // the client ID
+  unsigned char command;
 } net_command_t;
 
 typedef struct {
-  char id;
-  char nplayers_l;
-  char nplayers_r;
-  char bgBig;    // 0 or 1
-  char winning_score;
+  unsigned char id;
+  unsigned char nplayers_l;
+  unsigned char nplayers_r;
+  unsigned char bgBig;    // 0 or 1
+  unsigned char winning_score;
+  Uint16 width; // resolution on the server side
+  Uint16 height;
 } net_register_t;
 
 class Net {

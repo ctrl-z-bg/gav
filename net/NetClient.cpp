@@ -65,12 +65,27 @@ int NetClient::ConnectToServer(int * pl, int * pr, char team,
   *pl = (int)_nplayers_l;
   *pr = (int)_nplayers_r;
 
+  serverWidth =
+    (int) SDLNet_Read16(&(((net_register_t*)(packetRegister->data))->width));
+  serverHeight =
+    (int) SDLNet_Read16(&(((net_register_t*)(packetRegister->data))->height));
+
   return 0;
 }
 
 int NetClient::WaitGameStart() {
   while (SDLNet_UDP_Recv(mySock, packetSnap) == 0) SDL_Delay(500);
   return 0;
+}
+
+inline int NetClient::receiveXAndScale(Uint16 *data) {
+  int v = (int)SDLNet_Read16(data);
+  return (int) ((v/(float) serverWidth)*configuration.SCREEN_WIDTH);
+}
+
+inline int NetClient::receiveYAndScale(Uint16 *data) {
+  int v = (int)SDLNet_Read16(data);
+  return (int) ((v/(float) serverHeight)*configuration.SCREEN_HEIGHT);
 }
 
 int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
@@ -83,20 +98,20 @@ int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
     /* fill the left team informations */
     plv = tleft->players();
     for (i = 0; i < plv.size(); i++) {
-      plv[i]->setX((int)(snap->teaml)[i].x);
-      plv[i]->setY((int)(snap->teaml)[i].y);
+      plv[i]->setX(receiveXAndScale(&(snap->teaml)[i].x));
+      plv[i]->setY(receiveYAndScale(&(snap->teaml)[i].y));
       plv[i]->setState((pl_state_t)(snap->teaml)[i].frame);
     }
     /* fill the right team informations */
     plv = tright->players();
     for (i = 0; i < plv.size(); i++) {
-      plv[i]->setX((int)(snap->teamr)[i].x);
-      plv[i]->setY((int)(snap->teamr)[i].y);
+      plv[i]->setX(receiveXAndScale(&(snap->teamr)[i].x));
+      plv[i]->setY(receiveYAndScale(&(snap->teamr)[i].y));
       plv[i]->setState((pl_state_t)(snap->teamr)[i].frame);
     }
     /* fill the ball informations */
-    ball->setX((int)(snap->ball).x);
-    ball->setY((int)(snap->ball).y);
+    ball->setX(receiveXAndScale(&(snap->ball).x));
+    ball->setY(receiveYAndScale(&(snap->ball).y));
     ball->setFrame((int)(snap->ball).frame);
 
     /* fill the score information */

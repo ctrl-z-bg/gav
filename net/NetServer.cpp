@@ -39,17 +39,17 @@ int NetServer::StartServer(int port) {
 }
 
 int NetServer::ComputePlayerID(char id) {
-  char tm ,pl;
+  unsigned char tm ,pl;
   tm = (id & NET_TEAM_LEFT)?0:1;
   pl = id & 0x3F;
-  return  (2 * pl + tm);
+  return  ((pl << 1) | tm);
 }
 
 int NetServer::WaitClients(int nclients) {
   IPaddress * ipa;
   //char nleft = 0;
   //char nright = 0;
-  char * id;
+  unsigned char * id;
   int i;
   bool inserted = false;
   char pl;
@@ -98,6 +98,11 @@ int NetServer::WaitClients(int nclients) {
 	configuration.bgBig;
       ((net_register_t*)(packetRegister->data))->winning_score =
 	configuration.winning_score;
+      SDLNet_Write16((Uint16)configuration.SCREEN_WIDTH,
+		     &(((net_register_t*)(packetRegister->data))->width));
+      SDLNet_Write16((Uint16)configuration.SCREEN_HEIGHT,
+		     &(((net_register_t*)(packetRegister->data))->height));
+		     
       SDLNet_UDP_Send(mySock, -1, packetRegister);
     } else SDL_Delay(500);
   }
@@ -115,20 +120,20 @@ int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   /* fill the left team informations */
   plv = tleft->players();
   for (i = 0; i < plv.size(); i++) {
-    (snap->teaml)[i].x = plv[i]->x();
-    (snap->teaml)[i].y = plv[i]->y();
+    SDLNet_Write16(plv[i]->x(), &((snap->teaml)[i].x));
+    SDLNet_Write16(plv[i]->y(), &((snap->teaml)[i].y));
     (snap->teaml)[i].frame = plv[i]->state();
   }
   /* fill the right team informations */
   plv = tright->players();
   for (i = 0; i < plv.size(); i++) {
-    (snap->teamr)[i].x = plv[i]->x();
-    (snap->teamr)[i].y = plv[i]->y();
+    SDLNet_Write16(plv[i]->x(), &((snap->teamr)[i].x));
+    SDLNet_Write16(plv[i]->y(), &((snap->teamr)[i].y));
     (snap->teamr)[i].frame = plv[i]->state();
   }
   /* fill the ball informations */
-  (snap->ball).x = ball->x();
-  (snap->ball).y = ball->y();
+  SDLNet_Write16(ball->x(), &((snap->ball).x));
+  SDLNet_Write16(ball->y(), &((snap->ball).y));
   (snap->ball).frame = ball->frame();
 
   /* send the snapshot to all clients */

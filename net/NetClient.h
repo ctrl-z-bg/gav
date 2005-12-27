@@ -33,6 +33,13 @@ class NetClient: public Net {
   char _id;      // if I'm a client I've an id
   char _nplayers_l;
   char _nplayers_r;
+  
+  int serverWidth;
+  int serverHeight;
+
+private:
+  int receiveXAndScale(Uint16 *data);
+  int receiveYAndScale(Uint16 *data);
 
 public:
   NetClient() {
