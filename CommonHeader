@@ -31,9 +31,9 @@ CXXFLAGS+= -DNONET
 endif
 
 ifdef NET
-LDFLAGS= `sdl-config --libs` -lSDL_image -lSDL_net -lm
+LDFLAGS= `sdl-config --libs` -lSDL_gfx -lSDL_image -lSDL_net -lm
 else
-LDFLAGS= `sdl-config --libs` -lSDL_image -lm
+LDFLAGS= `sdl-config --libs` -lSDL_gfx -lSDL_image -lm
 endif
 
 SRCS	= 	$(wildcard *.cpp)
