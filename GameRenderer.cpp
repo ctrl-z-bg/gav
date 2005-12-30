@@ -27,15 +27,21 @@ using namespace std;
 
 GameRenderer * gameRenderer = NULL;
 
-void GameRenderer::display(SDL_Surface *dest, SDL_Rect *rect,
-			   FrameSeq *what, int frame) {
+SDL_Rect GameRenderer::convertCoordinates(SDL_Rect *rect) {
   // Compute the actual coordinates in the display realm
   SDL_Rect r;
 
   r.x = (int) round(rect->x * _ratioX);
   r.y = (int) round(rect->y * _ratioY);
   r.w = (int) round(rect->w * _ratioX);
-  r.h = (int) round(rect->h * _ratioY);
+  r.h = (int) round(rect->h * _ratioY);  
+
+  return r;
+}
+
+void GameRenderer::display(SDL_Surface *dest, SDL_Rect *rect,
+			   FrameSeq *what, int frame) {
+  SDL_Rect r = convertCoordinates(rect);
 
   what->blit(frame, dest, &r);
 }

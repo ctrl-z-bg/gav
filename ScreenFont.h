@@ -48,7 +48,7 @@ public:
   }
 
   void printXY(SDL_Surface *dest, SDL_Rect *r, const char * str,
-	       bool wrapAround = true);
+	       bool wrapAround = true, FrameSeq *background = NULL);
   void printRow(SDL_Surface *dest, int row, const char *str,
 	        FrameSeq *bg = NULL);
   inline int charWidth() { return(_frames->width()); }

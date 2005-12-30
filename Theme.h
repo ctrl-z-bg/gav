@@ -117,6 +117,17 @@ private:
 
       _bigBackground = configuration.bgBig;
       
+      if ( _bigBackground ) {
+	printf("Big Background hack: FIX IT!\n");
+	configuration.env.w = 1024;
+	configuration.setResolution(1024, 400);
+	configuration.scaleFactors(1024, 400);
+      } else {
+	configuration.env.w = ENVIRONMENT_WIDTH;
+	configuration.setResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+	configuration.scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+      }
+
       _net = TD + TH_NET;
       
       if (!_bigBackground)
@@ -146,7 +157,6 @@ private:
       //screenFlags = SDL_DOUBLEBUF|SDL_HWSURFACE;
       screenFlags |= SDL_DOUBLEBUF;
       screen = SDL_SetVideoMode(configuration.resolution.x,
-				//SCREEN_HEIGHT(), BPP, SDL_DOUBLEBUF);
 				configuration.resolution.y,
 				videoinfo->vfmt->BitsPerPixel,
 				screenFlags);
@@ -155,7 +165,8 @@ private:
 
       gameRenderer = new GameRenderer(configuration.resolution.x,
 				      configuration.resolution.y,
-				      ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+				      configuration.env.w,
+				      configuration.env.h);
 
       cga = new ScreenFont(font(), FONT_FIRST_CHAR, FONT_NUMBER);
       cgaInv = new ScreenFont(fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);

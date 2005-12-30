@@ -94,22 +94,12 @@ typedef struct Resolution_s {
   float ratioY;
 } Resolution_t;
 
+typedef struct Environment_s {
+  unsigned short w;
+  unsigned short h;
+} Environment_t;
+
 class Configuration {
-protected:
-  void scaleFactors(int width, int height) {
-    SCREEN_WIDTH = width;
-    SCREEN_HEIGHT = height;
-    SPEEDY = ((float) SCREEN_HEIGHT / 2.5);
-    FLOOR_ORD = SCREEN_HEIGHT -(SCREEN_HEIGHT / 200);
-    NET_X = width / 2 - width / 80;
-    NET_Y = height / 2 + ( 3*height / 200 );
-    CEILING = (int) (height / 17);
-    LEFT_WALL = (int) (width / 80);
-    RIGHT_WALL = (int) (width - width / 40);
-    DEFAULT_SPEED = (int) (bgBig)?(width/4):(25*width/64);
-  }
-
-
 public:
   int left_nplayers;
   int right_nplayers;
@@ -118,6 +108,7 @@ public:
   PlayerFrameConf_t playerFrameConf;
   BallFrameConf_t ballFrameConf;
   Resolution_t resolution;
+  Environment_t env;
   std::string currentTheme;
   
   /* Constants that depend on the screen size */
@@ -166,14 +157,29 @@ public:
     setDefaultFrameConf();
     currentTheme = "classic";
     scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+    env.w = ENVIRONMENT_WIDTH;
+    env.h = ENVIRONMENT_HEIGHT;
     setResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+  }
+
+  void scaleFactors(int width, int height) {
+    SCREEN_WIDTH = width;
+    SCREEN_HEIGHT = height;
+    SPEEDY = ((float) SCREEN_HEIGHT / 2.5);
+    FLOOR_ORD = SCREEN_HEIGHT -(SCREEN_HEIGHT / 200);
+    NET_X = width / 2 - width / 80;
+    NET_Y = height / 2 + ( 3*height / 200 );
+    CEILING = (int) (height / 17);
+    LEFT_WALL = (int) (width / 80);
+    RIGHT_WALL = (int) (width - width / 40);
+    DEFAULT_SPEED = (int) (bgBig)?(width/4):(25*width/64);
   }
 
   inline void setResolution(int w, int h) {
     resolution.x = w;
     resolution.y = h;
-    resolution.ratioX = (float) resolution.x / (float) ENVIRONMENT_WIDTH;
-    resolution.ratioY = (float) resolution.y / (float) ENVIRONMENT_HEIGHT;
+    resolution.ratioX = (float) resolution.x / (float) env.w;
+    resolution.ratioY = (float) resolution.y / (float) env.h;
   }
 
   inline void setDefaultFrameConf() {

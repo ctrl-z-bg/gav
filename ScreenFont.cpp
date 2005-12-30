@@ -22,44 +22,46 @@
 
 #include <string.h>
 #include "globals.h"
+#include "GameRenderer.h"
 #include "ScreenFont.h"
 
+/* Converts to SCREEN coordinates! Should me moved into GameRenderer or something! */
 void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
-			 bool wrapAround)
+			 bool wrapAround, FrameSeq *bg)
 {
   SDL_Rect r;
   
-  int _charWid = _frames->width();
-  r.x = rect->x;
-  r.y = rect->y;
+  int _charWid = _frames->screenWidth();
+
+  r = gameRenderer->convertCoordinates(rect);
+  r.h = _frames->getActualFrameSeq()->height();
+  r.w = _frames->getActualFrameSeq()->width();
 
   const char *run = str;
   while ( *run ) {
 
     if ( wrapAround )
       //r.x = (r.x + dest->w) % dest->w;
-      r.x = (r.x + ENVIRONMENT_WIDTH) % ENVIRONMENT_WIDTH; // UGLY!!
+      r.x = (r.x + configuration.resolution.x) % configuration.resolution.x;
     
     if ( ((*run) >= _fst) && ((*run) < (_fst + _nchars)) ) {
-      _frames->blit((int) ((*run) - _fst), dest, &r);
+      if ( bg )
+	bg->getActualFrameSeq()->blitRect(0, dest, &r);
+      _frames->getActualFrameSeq()->blit((int) ((*run) - _fst), dest, &r);
     }
     run++;
     r.x += _charWid;
   }
 }
 
-
 void ScreenFont::printRow(SDL_Surface *dest, int row, const char *str,
 			  FrameSeq *bg)
 {
   SDL_Rect rect;
   /* draw menu items labels */
-  rect.y = configuration.CEILING + configuration.SCREEN_HEIGHT/100 +
+  rect.y = configuration.CEILING + configuration.env.h/100 +
     row * charHeight();
 
-  rect.x = (screen->w / 2) - strlen(str)*(charWidth())/2;
-  if ( bg )
-    bg->blit(0, dest, &rect);
-    //SDL_BlitSurface(bg, &rect, dest, &rect);
-  printXY(dest, &rect, str, false);
+  rect.x = (configuration.env.w / 2) - strlen(str)*(charWidth())/2;
+  printXY(dest, &rect, str, false, bg);
 }

@@ -67,6 +67,14 @@ public:
   virtual SDL_Surface *surface() { return _actualFrameSeq->surface(); }
 
   virtual void blit(int idx, SDL_Surface * dest, SDL_Rect * rect);
+  
+  /* These two functions are needed when it is required to reason in terms of actual
+     pixels (as in ScreenFonts to make sure the font is nicely laid out. In order
+     to be able to exchange between FrameSeq and LogicalFrameSeq, however, it has been
+     necessary to add these to FrameSeq as well. Should have worked that out better... */
+
+  virtual FrameSeq *getActualFrameSeq() { return _actualFrameSeq; }
+  virtual int screenWidth() { return _actualFrameSeq->width(); }
 };
 
 #endif // __LOGICALFRAMESEQ_H__

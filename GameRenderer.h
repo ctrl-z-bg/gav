@@ -45,6 +45,8 @@ class GameRenderer {
   // if the frame param is omitted, the whole surface is blitted to dest
   void display(SDL_Surface *dest, SDL_Rect *rect, FrameSeq *what,
 	       int frame = 0);
+
+  SDL_Rect convertCoordinates(SDL_Rect *rect);
 };
 
 #endif // _GAMERENDERER_H_

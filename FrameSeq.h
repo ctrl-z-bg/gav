@@ -71,10 +71,17 @@ public:
   inline int width() { return _width; }
   inline int height() { return _height; }
 
+  /* Blits an entire frame to screen */
   virtual void blit(int idx, SDL_Surface * dest, SDL_Rect * rect);
+
+  /* Blits part of a frame to screen */
+  void blitRect(int idx, SDL_Surface * dest, SDL_Rect * rect);
   bool collidesWith(FrameSeq *fs, int idx1, int idx2, SDL_Rect * rect1,
 		    SDL_Rect * rect2);
 
+  virtual FrameSeq *getActualFrameSeq() { return this; } // bit ugly
+  virtual int screenWidth() { return _width; }  // bit ugly
+  
 };
 
 #endif

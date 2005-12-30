@@ -27,6 +27,16 @@
 
 #define min(x, y)  ((x)<(y)?(x):(y))
 
+void FrameSeq::blitRect(int idx, SDL_Surface * dest, SDL_Rect * rect) {
+  SDL_Rect r;
+
+  r.x = (idx % _nframes) * _width;
+  r.y = 0;
+  r.w = rect->w;
+  r.h = rect->h;
+  SDL_BlitSurface(_surface, &r, dest, rect);
+}
+
 void FrameSeq::blit(int idx, SDL_Surface * dest, SDL_Rect * rect) {
   SDL_Rect r;
 
