@@ -44,12 +44,11 @@ int Player::speedX()  {
 
 void Player::update(int ticks, ControlsArray *ca) {
   triple_t input = ca->getCommands(_plId);
-  static int overallPassed = 0;
-
+  
   int dx = 0;
-  bool firstTime = (overallPassed == 0);
+  bool firstTime = (_overallPassed == 0);
 
-  overallPassed += ticks;
+  _overallPassed += ticks;
   if ( input.left ) 
     dx--;
 
@@ -58,7 +57,12 @@ void Player::update(int ticks, ControlsArray *ca) {
 
   _speedX = dx?(dx * _speed):0;
 
-  _x += dx * (_speed * ticks / 1000);
+  _displx += (float) dx * (_speed * ticks / 1000.0); 
+
+  if ( fabs(_displx) >= 1.0 ) {
+    _x += (int) _displx;
+    _displx -= (int) _displx;
+  }
 
   if ( _x > (_team->xmax() - _frames->width()) )
     _x = (_team->xmax() - _frames->width());
@@ -66,7 +70,7 @@ void Player::update(int ticks, ControlsArray *ca) {
     _x = _team->xmin();
 
   if ( _y == GROUND_LEVEL() && input.jump ) {
-    _speedY = (int) -(configuration.SPEEDY);
+    _speedY = -(configuration.SPEEDY);
   }
 
   if ( _y > GROUND_LEVEL() ) {
@@ -74,10 +78,16 @@ void Player::update(int ticks, ControlsArray *ca) {
     _speedY = 0;
   }
 
-  _y += (int) (_speedY * SPEED_FACT_CONST * ((float) ticks / 1000));
+  _disply = (float) (_speedY * SPEED_FACT_CONST * ((float) ticks / 1000.0));
+  
+  if ( fabs(_disply) >= 1.0 ) {
+    _y += (int) _disply;
+    _disply -= (int) _disply;
+  }
 
   if ( _y < GROUND_LEVEL() )
-    _speedY += (int) (configuration.SPEEDY * SPEED_FACT_CONST * ticks) / 1000;
+    _speedY +=
+      (float) (configuration.SPEEDY * SPEED_FACT_CONST * ticks) / 1000.0;
   
   int _oldState = _state;
   /* detect state changes */
@@ -116,14 +126,14 @@ void Player::update(int ticks, ControlsArray *ca) {
   }
 
   if ( _state != _oldState ) {
-    overallPassed = 0;
+    _overallPassed = 0;
     _frameIdx = _currFrameB;
   } else if ( _currStateFrameDelay &&
-	      (overallPassed > _currStateFrameDelay) ) {
+	      (_overallPassed > _currStateFrameDelay) ) {
     // update _frameIdx
     if ( ++_frameIdx > _currFrameE )
       _frameIdx = _currFrameB;
-    overallPassed = 0;
+    _overallPassed = 0;
   }
 }
 

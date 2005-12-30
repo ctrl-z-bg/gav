@@ -66,11 +66,13 @@ protected:
   int _speed;
   int _x, _y;
   int _speedX;        // actual x speed
-  int _speedY;
+  float _speedY;
   int _plId;
   int _oif;
   int _currStateFrameDelay, _currFrameB, _currFrameE;
   Team *_team;
+  int _overallPassed;
+  float _displx, _disply;
 
   char *_fileNames[NUM_TYPES];
 
@@ -110,7 +112,9 @@ public:
     _frameIdx = configuration.playerFrameConf.playerStillB - 1;
     _speed  = speed;
     _speedX = 0;
-    _speedY = 0;
+    _speedY = 0.0;
+    _overallPassed = 0;
+    _displx = _disply = 0.0;
     Player::loadFrames();
     _y      = GROUND_LEVEL();
   }
@@ -139,8 +143,8 @@ public:
   inline int speed() {return _speed;}
   inline void setSpeed(int s) {_speed = s;}
   
-  inline int speedY() {return _speedY;}
-  inline void setSpeedY(int s) {_speedY = s;}
+  inline float speedY() {return _speedY;}
+  inline void setSpeedY(float s) {_speedY = s;}
   
   int speedX();
   inline int x() {return _x;}
@@ -148,11 +152,11 @@ public:
   
   inline int y() {return _y;}
   inline void setY(int y) {_y = y;}
-    inline Team *team() {return(_team);}
+  inline Team *team() {return(_team);}
 
   void loadFrames() {
-    _frames = new FrameSeq(_fileNames[_type],
-			   configuration.playerFrameConf.nPlayerFrames);
+    _frames = new LogicalFrameSeq(_fileNames[_type],
+				  configuration.playerFrameConf.nPlayerFrames);
   }
 
   void update(int ticks, ControlsArray *ca);

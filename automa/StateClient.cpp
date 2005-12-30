@@ -43,9 +43,10 @@ int StateClient::setupConnection(InputState *is) {
     /* first, delete the screen... */
     SDL_Rect r;
     r.x = r.y = 0;
-    r.h = background->h;
-    r.w = background->w;
-    SDL_BlitSurface(background, &r, screen, &r);
+    r.h = background->height();
+    r.w = background->width();
+    background->blit(0, screen, &r);
+    //SDL_BlitSurface(background, &r, screen, &r);
     SDL_Flip(screen);
     
     /* now, ask for server address, port and team side */
@@ -195,9 +196,10 @@ int StateClient::execute(InputState *is, unsigned int ticks,
        (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
     SDL_Rect r;
     r.x = r.y = 0;
-    r.h = background->h;
-    r.w = background->w;
-    SDL_BlitSurface(background, &r, screen, &r);
+    r.h = background->height();
+    r.w = background->width();
+    //SDL_BlitSurface(background, &r, screen, &r);
+    background->blit(0, screen, &r);
     
     tl->draw();
     tr->draw();

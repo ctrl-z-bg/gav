@@ -25,7 +25,7 @@
 #include "globals.h"
 
 SDL_Surface *screen;
-SDL_Surface *background;
+FrameSeq *background;
 
 ScreenFont *cga, *cgaInv;
 

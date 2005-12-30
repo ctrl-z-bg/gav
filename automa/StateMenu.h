@@ -56,9 +56,10 @@ class StateMenu : public State {
     if ( (ticks - lastExec) > 50 ) {
       SDL_Rect r;
       r.x = r.y = 0;
-      r.h = background->h;
-      r.w = background->w;
-      SDL_BlitSurface(background, &r, screen, &r);
+      r.h = background->height();
+      r.w = background->width();
+      background->blit(0, screen, &r);
+      //SDL_BlitSurface(background, &r, screen, &r);
       int ret = _mr->execute(is);
       SDL_Flip(screen);
       lastExec = ticks;

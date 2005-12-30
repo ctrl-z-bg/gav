@@ -24,16 +24,17 @@
 #define _GLOBALS_H_
 
 #include <SDL.h>
-#include "ScreenFont.h"
 #include "Configuration.h"
 
 #define FPS (50)
 
 class MenuRoot;
 class ControlsArray;
+class FrameSeq;
+class ScreenFont;
 
 extern SDL_Surface *screen;
-extern SDL_Surface *background;
+extern FrameSeq *background;
 
 extern ScreenFont *cga, *cgaInv;
 
@@ -44,6 +45,10 @@ extern ControlsArray *controlsArray;
 extern MenuRoot *mroot;
 
 extern Configuration configuration;
+
+class GameRenderer;
+
+extern GameRenderer *gameRenderer;
 
 #ifndef NONET
 class NetClient;

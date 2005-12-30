@@ -56,9 +56,9 @@ public:
 
   void apply() {
     if ( !configuration.monitor_type )
-      SDL_SetAlpha(background, 0, 0);
+      SDL_SetAlpha(background->surface(), 0, 0);
     else
-      SDL_SetAlpha(background, SDL_SRCALPHA | SDL_RLEACCEL,
+      SDL_SetAlpha(background->surface(), SDL_SRCALPHA | SDL_RLEACCEL,
 		   128 - (configuration.monitor_type * 30));
   }
   

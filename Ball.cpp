@@ -33,7 +33,7 @@
 
 using namespace std;
 
-bool Ball::approaching(int spdx, int spdy) {
+bool Ball::approaching(int spdx, float spdy) {
   int sgnx = (spdx>0)?1:(spdx<0)?-1:0;
   int sgny = (spdy>0)?1:(spdy<0)?-1:0;
     
@@ -94,7 +94,7 @@ void Ball::update_internal(Player * pl) {
     _spdx = pl->speedX();
 
   if ( (pl->speedY() - _spdy) * dy > 0)
-    _spdy = pl->speedY();
+    _spdy = (int) pl->speedY();
 
 
 #define MIN_POS_SPD 100
@@ -116,9 +116,10 @@ void Ball::assignPoint(int side, Team *t) {
 #endif // AUDIO
   }
   _side = side;
-  _x = (configuration.SCREEN_WIDTH / 2) +
-    ((configuration.SCREEN_WIDTH * _side) / 4) - _radius;
-  _y = (configuration.SCREEN_HEIGHT * 2) / 3 - _radius;
+  _x = (configuration.NET_X) +
+    side * (configuration.SCREEN_WIDTH/4) - _radius;
+  //((configuration.SCREEN_WIDTH * _side) / 4);
+  _y = ((configuration.SCREEN_HEIGHT * 2) / 3) - _radius ;
   _spdx = _spdy = _accelY = 0;
   _scorerSide = 0;
   resetCollisionCount();

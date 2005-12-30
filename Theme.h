@@ -37,6 +37,7 @@
 
 #include "SoundMgr.h"
 #include "globals.h"
+#include "GameRenderer.h"
 #include "Menu.h"
 #include "MenuItem.h"
 #include "MenuItemMonitor.h"
@@ -136,22 +137,26 @@ private:
       
       _hasnet = Theme::_checkTheme();
       
-      ::background = IMG_Load(background());
-      
+      // ::background = IMG_Load(background());
+      // TODO: fetch the environment size (and therefore the ratios)
+      //       from the background image
+
       //if ( CurrentTheme->hasnet() ) IMG_Load(CurrentTheme->net());
       
       //screenFlags = SDL_DOUBLEBUF|SDL_HWSURFACE;
       screenFlags |= SDL_DOUBLEBUF;
-      screen = SDL_SetVideoMode(::background->w,
+      screen = SDL_SetVideoMode(configuration.resolution.x,
 				//SCREEN_HEIGHT(), BPP, SDL_DOUBLEBUF);
-				::background->h,
+				configuration.resolution.y,
 				videoinfo->vfmt->BitsPerPixel,
 				screenFlags);
       
-      SDL_Surface *temp = ::background;
-      ::background = SDL_DisplayFormat(temp);
-      SDL_FreeSurface(temp);  
-      
+      ::background = new LogicalFrameSeq(background(), 1, false); 
+
+      gameRenderer = new GameRenderer(configuration.resolution.x,
+				      configuration.resolution.y,
+				      ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+
       cga = new ScreenFont(font(), FONT_FIRST_CHAR, FONT_NUMBER);
       cgaInv = new ScreenFont(fontinv(), FONT_FIRST_CHAR, FONT_NUMBER);
       
@@ -163,14 +168,13 @@ private:
       soundMgr = new SoundMgr((TD+"sounds").c_str(),
 			      (ThemeDir+"/../sounds").c_str());
 #endif // AUDIO
-
-      configuration.scaleFactors(::background->w, ::background->h);
     }
   
   ~Theme() {
-    SDL_FreeSurface(::background);
+    delete(::background);
     delete(cga);
     delete(cgaInv);
+    delete(gameRenderer);
   }
 
 #define _CCS(str) ((str).c_str())

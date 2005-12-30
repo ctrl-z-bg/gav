@@ -21,6 +21,7 @@
 */
 
 #include <string.h>
+#include "globals.h"
 #include "ScreenFont.h"
 
 void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
@@ -36,7 +37,8 @@ void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
   while ( *run ) {
 
     if ( wrapAround )
-      r.x = (r.x + dest->w) % dest->w;
+      //r.x = (r.x + dest->w) % dest->w;
+      r.x = (r.x + ENVIRONMENT_WIDTH) % ENVIRONMENT_WIDTH; // UGLY!!
     
     if ( ((*run) >= _fst) && ((*run) < (_fst + _nchars)) ) {
       _frames->blit((int) ((*run) - _fst), dest, &r);
@@ -48,14 +50,16 @@ void ScreenFont::printXY(SDL_Surface *dest, SDL_Rect *rect, const char * str,
 
 
 void ScreenFont::printRow(SDL_Surface *dest, int row, const char *str,
-			  SDL_Surface *bg)
+			  FrameSeq *bg)
 {
   SDL_Rect rect;
   /* draw menu items labels */
-  rect.y = 30 + row * charHeight();
+  rect.y = configuration.CEILING + configuration.SCREEN_HEIGHT/100 +
+    row * charHeight();
 
   rect.x = (screen->w / 2) - strlen(str)*(charWidth())/2;
   if ( bg )
-    SDL_BlitSurface(bg, &rect, dest, &rect);
+    bg->blit(0, dest, &rect);
+    //SDL_BlitSurface(bg, &rect, dest, &rect);
   printXY(dest, &rect, str, false);
 }

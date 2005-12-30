@@ -20,39 +20,22 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _SCREENFONT_H_
-#define _SCREENFONT_H_
+#include <math.h>
+#include "GameRenderer.h"
 
-#include <SDL.h>
-#include "LogicalFrameSeq.h"
+using namespace std;
 
-#define FONT_FIRST_CHAR ' '
-#define FONT_NUMBER 104
+GameRenderer * gameRenderer = NULL;
 
-class FrameSeq;
+void GameRenderer::display(SDL_Surface *dest, SDL_Rect *rect,
+			   FrameSeq *what, int frame) {
+  // Compute the actual coordinates in the display realm
+  SDL_Rect r;
 
-class ScreenFont {
-private:
-  FrameSeq *_frames;
-  char _fst; // first character
-  unsigned char _nchars;
+  r.x = (int) round(rect->x * _ratioX);
+  r.y = (int) round(rect->y * _ratioY);
+  r.w = (int) round(rect->w * _ratioX);
+  r.h = (int) round(rect->h * _ratioY);
 
-public:
-  ScreenFont(const char *fname, char fst, unsigned char n) :
-    _fst(fst), _nchars(n) {
-    _frames = new LogicalFrameSeq(fname, (int) n);
-  }
-
-  ~ScreenFont() {
-    delete(_frames);
-  }
-
-  void printXY(SDL_Surface *dest, SDL_Rect *r, const char * str,
-	       bool wrapAround = true);
-  void printRow(SDL_Surface *dest, int row, const char *str,
-	        FrameSeq *bg = NULL);
-  inline int charWidth() { return(_frames->width()); }
-  inline int charHeight() { return(_frames->height()); }
-};
-
-#endif // _SCREENFONT_H_
+  what->blit(frame, dest, &r);
+}

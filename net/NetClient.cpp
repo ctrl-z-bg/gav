@@ -101,6 +101,7 @@ int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
       plv[i]->setX(receiveXAndScale(&(snap->teaml)[i].x));
       plv[i]->setY(receiveYAndScale(&(snap->teaml)[i].y));
       plv[i]->setState((pl_state_t)(snap->teaml)[i].frame);
+      printf("State: %d\n", (pl_state_t)(snap->teaml)[i].frame);
     }
     /* fill the right team informations */
     plv = tright->players();

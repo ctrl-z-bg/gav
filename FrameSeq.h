@@ -29,38 +29,49 @@
 
 extern SDL_Surface *screen;
 
-class FrameSeq {
+class FrameSeq {  
+protected:
   SDL_Surface * _surface;
   int _nframes;
   int _width;
   int _height;
 
-public:
-
-  FrameSeq (const char * filename, int nframes) {
-    SDL_Surface * temp;
-
+  void setSurfaceAndFrames(SDL_Surface *sfc, int nframes, bool useAlpha) {
+    _surface = SDL_DisplayFormat(sfc);
+    if ( useAlpha )
+      SDL_SetColorKey(_surface, SDL_SRCCOLORKEY,
+		      (Uint32) SDL_MapRGB(screen->format, 0, 0, 0));
+    SDL_FreeSurface(sfc);
     _nframes = nframes;
-    if ((temp = IMG_Load(filename)) == NULL) {
-      fprintf(stderr, "FrameSeq: cannot load %s\n", filename);
-      exit(-1);
-    }
-    SDL_SetColorKey(temp, SDL_SRCCOLORKEY,
-		    (Uint32) SDL_MapRGB(screen->format, 0, 0, 0));
-    _surface = SDL_DisplayFormat(temp);
-    SDL_FreeSurface(temp);
     _width = _surface->w / _nframes;
     _height = _surface->h;
   }
 
-  ~FrameSeq() {
+public:
+  FrameSeq (const char * filename, int nframes, bool useAlpha) {
+    SDL_Surface * temp;
+
+    if ((temp = IMG_Load(filename)) == NULL) {
+      fprintf(stderr, "FrameSeq: cannot load %s\n", filename);
+      exit(-1);
+    }
+    setSurfaceAndFrames(temp, nframes, useAlpha);
+  }
+
+  FrameSeq(SDL_Surface *sfc, int nframes, bool useAlpha) {
+    setSurfaceAndFrames(sfc, nframes, useAlpha);
+  }
+  
+  virtual ~FrameSeq() {
     SDL_FreeSurface(_surface);
   }
+  
+  virtual SDL_Surface *surface() { return _surface; }
 
   inline int width() { return _width; }
   inline int height() { return _height; }
 
-  void blit(int idx, SDL_Surface * dest, SDL_Rect * rect);
+  virtual void blit(int idx, SDL_Surface * dest, SDL_Rect * rect);
   bool collidesWith(FrameSeq *fs, int idx1, int idx2, SDL_Rect * rect1,
 		    SDL_Rect * rect2);
 

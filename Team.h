@@ -64,11 +64,13 @@ class Team {
     _score = 0;
     _nplayers = 0;
     _playerNumInc = (side<0)?0:1;
-    _xmin = (side<0)?8:(configuration.SCREEN_WIDTH / 2) ;
+    _xmin =
+      (side<0)?(configuration.LEFT_WALL+1):(configuration.SCREEN_WIDTH / 2) ;
 
     //304 the real half field width
     //    _xmax = _xmin + 304 ;
-    _xmax = _xmin + (configuration.SCREEN_WIDTH / 2) - 16;
+    // _xmax = _xmin + (configuration.SCREEN_WIDTH / 2) - 16;
+    _xmax = _xmin + ((304*configuration.SCREEN_WIDTH)/640);
     _ymin = 0;
     _ymax = 0;
   }
@@ -86,7 +88,8 @@ class Team {
   }
 
   inline Player * addPlayerHuman(std::string name, 
-				 pl_type_t type, int speed = 250) {
+				 pl_type_t type,
+				 int speed = configuration.DEFAULT_SPEED) {
     Player *p = new PlayerHuman(this, name, type, 
 				_nplayers * 2 + _playerNumInc, speed);
     addPlayer(p);
@@ -94,7 +97,8 @@ class Team {
  }
 
   inline Player * addPlayerRemote(std::string name, 
-				  pl_type_t type, int speed = 250) {
+				  pl_type_t type,
+				  int speed = configuration.DEFAULT_SPEED) {
     Player *p = new PlayerRemote(this, name, type, 
 				 _nplayers * 2 + _playerNumInc, speed);
     addPlayer(p);
@@ -102,7 +106,8 @@ class Team {
  }
 
   inline Player * addPlayerAI(std::string name, 
-			      pl_type_t type, Ball * b, int speed = 250) {
+			      pl_type_t type, Ball * b,
+			      int speed = configuration.DEFAULT_SPEED) {
     Player *p = new PlayerAI(this, name, type, 
 			     _nplayers * 2 + _playerNumInc, speed, b);
     addPlayer(p);

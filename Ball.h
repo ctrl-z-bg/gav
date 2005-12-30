@@ -67,15 +67,15 @@ class Ball {
   void loadFrameSeq(ball_t t) {
     switch (t) {
     case BALL_ORIG:
-      _frames = new FrameSeq(CurrentTheme->ball(),
-			     configuration.ballFrameConf.nBallFrames);
+      _frames = new LogicalFrameSeq(CurrentTheme->ball(),
+				    configuration.ballFrameConf.nBallFrames);
       break;
     }
   }
 
 
   void assignPoint(int side, Team *t);
-  bool approaching(int spdx, int spdy);
+  bool approaching(int spdx, float spdy);
 
   // evaluates a collision ("sprite"-wise)
   bool spriteCollide(Player *p);
@@ -109,9 +109,9 @@ class Ball {
     _side = -1;
     if ( _x < 0 )
       _x = (configuration.SCREEN_WIDTH / 2) +
-	((configuration.SCREEN_WIDTH * _side) / 4) - _radius;
+	((configuration.SCREEN_WIDTH * _side) / 4) ;
     if ( _y < 0 )
-      _y = (configuration.SCREEN_HEIGHT * 2) / 3 - _radius;
+      _y = (configuration.SCREEN_HEIGHT * 2) / 3;
     _scorerSide = _scoredTime = 0;
   }
 

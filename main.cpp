@@ -177,14 +177,35 @@ init()
     if ( configuration.createConfigurationFile() == -1 )
       perror("creation failed: ");
   }
-  applyConfiguration();
+
+  applyConfiguration();  
 }
 
 #ifdef AUDIO
 Sound * Prova;
 #endif
 #include <unistd.h>
+
+void
+parseArgs(int argc, char *argv[]) {
+  int i = 1;
+  int resx = -1;
+  int resy = -1;
+  for ( ; i < argc; i++ ) {
+    if ( !strcmp("-w", argv[i]) ) {
+      resx = atoi(argv[++i]);
+    } else if ( !strcmp("-h", argv[i]) ) {
+      resy = atoi(argv[++i]);
+    }
+  }
+  
+  if ( (resx > 0) && (resy >0) )
+    configuration.setResolution(resx, resy);
+}
+
 int main(int argc, char *argv[]) {
+  parseArgs(argc, argv);
+
   init();
   
 #ifdef AUDIO

@@ -14,45 +14,16 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _SCREENFONT_H_
-#define _SCREENFONT_H_
+#ifndef __RESIZESURFACE_H__
+#define __RESIZESURFACE_H__
 
 #include <SDL.h>
-#include "LogicalFrameSeq.h"
 
-#define FONT_FIRST_CHAR ' '
-#define FONT_NUMBER 104
+SDL_Surface * resizeSurface (SDL_Surface * buf, int width, int height);
 
-class FrameSeq;
-
-class ScreenFont {
-private:
-  FrameSeq *_frames;
-  char _fst; // first character
-  unsigned char _nchars;
-
-public:
-  ScreenFont(const char *fname, char fst, unsigned char n) :
-    _fst(fst), _nchars(n) {
-    _frames = new LogicalFrameSeq(fname, (int) n);
-  }
-
-  ~ScreenFont() {
-    delete(_frames);
-  }
-
-  void printXY(SDL_Surface *dest, SDL_Rect *r, const char * str,
-	       bool wrapAround = true);
-  void printRow(SDL_Surface *dest, int row, const char *str,
-	        FrameSeq *bg = NULL);
-  inline int charWidth() { return(_frames->width()); }
-  inline int charHeight() { return(_frames->height()); }
-};
-
-#endif // _SCREENFONT_H_
+#endif

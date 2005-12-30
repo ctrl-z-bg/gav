@@ -62,6 +62,10 @@
 #define DEFAULT_CONF_FILENAME     ".gav"
 #define ALTERNATIVE_CONF_FILENAME "gav.ini"
 
+#define ENVIRONMENT_WIDTH  (640)
+#define ENVIRONMENT_HEIGHT (400)
+
+
 enum { PLAYER_NONE, PLAYER_HUMAN, PLAYER_COMPUTER};
 enum { MONITOR_NORMAL, MONITOR_OLD, MONITOR_VERYOLD, MONITOR_VERYVERYOLD};
 
@@ -83,7 +87,29 @@ typedef struct BallFrameConf_s {
   unsigned short ballPeriod;
 } BallFrameConf_t;
 
+typedef struct Resolution_s {
+  unsigned short x;
+  unsigned short y;
+  float ratioX;
+  float ratioY;
+} Resolution_t;
+
 class Configuration {
+protected:
+  void scaleFactors(int width, int height) {
+    SCREEN_WIDTH = width;
+    SCREEN_HEIGHT = height;
+    SPEEDY = ((float) SCREEN_HEIGHT / 2.5);
+    FLOOR_ORD = SCREEN_HEIGHT -(SCREEN_HEIGHT / 200);
+    NET_X = width / 2 - width / 80;
+    NET_Y = height / 2 + ( 3*height / 200 );
+    CEILING = (int) (height / 17);
+    LEFT_WALL = (int) (width / 80);
+    RIGHT_WALL = (int) (width - width / 40);
+    DEFAULT_SPEED = (int) (bgBig)?(width/4):(25*width/64);
+  }
+
+
 public:
   int left_nplayers;
   int right_nplayers;
@@ -91,12 +117,13 @@ public:
   int right_players[MAX_PLAYERS/2];
   PlayerFrameConf_t playerFrameConf;
   BallFrameConf_t ballFrameConf;
+  Resolution_t resolution;
   std::string currentTheme;
   
   /* Constants that depend on the screen size */
   int SCREEN_WIDTH;
   int SCREEN_HEIGHT;
-  int SPEEDY;
+  float SPEEDY;
   int FLOOR_ORD;
   int SPEED_MULTIPLIER;
   int NET_X;
@@ -104,7 +131,7 @@ public:
   int CEILING;
   int LEFT_WALL;
   int RIGHT_WALL;
-  
+  int DEFAULT_SPEED;
 
   /* To add: something meaningful to record the controls... */
 
@@ -138,6 +165,15 @@ public:
     ballAmplify = DEFAULT_BALL_AMPLIFY;
     setDefaultFrameConf();
     currentTheme = "classic";
+    scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+    setResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+  }
+
+  inline void setResolution(int w, int h) {
+    resolution.x = w;
+    resolution.y = h;
+    resolution.ratioX = (float) resolution.x / (float) ENVIRONMENT_WIDTH;
+    resolution.ratioY = (float) resolution.y / (float) ENVIRONMENT_HEIGHT;
   }
 
   inline void setDefaultFrameConf() {
@@ -167,18 +203,6 @@ public:
     os << v;
     
     return os.str();
-  }
-
-  void scaleFactors(int width, int height) {
-    SCREEN_WIDTH = width;
-    SCREEN_HEIGHT = height;
-    SPEEDY = (int) (SCREEN_HEIGHT / 2.5);
-    FLOOR_ORD = SCREEN_HEIGHT -(SCREEN_HEIGHT / 200);
-    NET_X = width / 2 - width / 80;
-    NET_Y = height / 2 + ( 3*height / 200 );
-    CEILING = (int) (height / 17);
-    LEFT_WALL = (int) (height / 57);
-    RIGHT_WALL = (int) (width - width / 40);
   }
 
   int loadConfiguration();

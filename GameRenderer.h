@@ -20,39 +20,32 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef _SCREENFONT_H_
-#define _SCREENFONT_H_
+#ifndef _GAMERENDERER_H_
+#define _GAMERENDERER_H_
 
 #include <SDL.h>
-#include "LogicalFrameSeq.h"
+#include "FrameSeq.h"
+#include "globals.h"
 
-#define FONT_FIRST_CHAR ' '
-#define FONT_NUMBER 104
+class GameRenderer {
+  float _ratioX;
+  float _ratioY;
 
-class FrameSeq;
-
-class ScreenFont {
-private:
-  FrameSeq *_frames;
-  char _fst; // first character
-  unsigned char _nchars;
-
-public:
-  ScreenFont(const char *fname, char fst, unsigned char n) :
-    _fst(fst), _nchars(n) {
-    _frames = new LogicalFrameSeq(fname, (int) n);
+ public:
+  GameRenderer() {
+    _ratioX = 1.0;
+    _ratioY = 1.0;
   }
 
-  ~ScreenFont() {
-    delete(_frames);
+  GameRenderer(int aw, int ah, int lw, int lh) {
+    _ratioX = (float) aw / (float) lw;
+    _ratioY = (float) ah / (float) lh;
   }
-
-  void printXY(SDL_Surface *dest, SDL_Rect *r, const char * str,
-	       bool wrapAround = true);
-  void printRow(SDL_Surface *dest, int row, const char *str,
-	        FrameSeq *bg = NULL);
-  inline int charWidth() { return(_frames->width()); }
-  inline int charHeight() { return(_frames->height()); }
+    
+  // if the frame param is omitted, the whole surface is blitted to dest
+  void display(SDL_Surface *dest, SDL_Rect *rect, FrameSeq *what,
+	       int frame = 0);
 };
 
-#endif // _SCREENFONT_H_
+#endif // _GAMERENDERER_H_
+
