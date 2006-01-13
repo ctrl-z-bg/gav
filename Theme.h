@@ -119,9 +119,9 @@ private:
       
       if ( _bigBackground ) {
 	printf("Big Background hack: FIX IT!\n");
-	configuration.env.w = 1024;
-	configuration.setResolution(1024, 400);
-	configuration.scaleFactors(1024, 400);
+	configuration.env.w = 1000;
+	configuration.setResolution(1000, 400);
+	configuration.scaleFactors(1000, 400);
       } else {
 	configuration.env.w = ENVIRONMENT_WIDTH;
 	configuration.setResolutionToDesired();
