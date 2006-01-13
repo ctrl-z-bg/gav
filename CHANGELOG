@@ -2,6 +2,8 @@ Current CVS:
 - successfully compiled on Mac OS X, files for build added
 - preferences are stored to $HOME/.gav if $HOME exists, to
   ./gav.ini otherwise.
+- size of the window can be set by the -w and -h commandline parameters
+- joystick support
 
 Version 0.8.0 changes:
 - (we hope) *FINAL* patch for stuck on the net problem
