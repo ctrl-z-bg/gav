@@ -98,10 +98,6 @@ int NetServer::WaitClients(int nclients) {
 	configuration.bgBig;
       ((net_register_t*)(packetRegister->data))->winning_score =
 	configuration.winning_score;
-      SDLNet_Write16((Uint16)configuration.SCREEN_WIDTH,
-		     &(((net_register_t*)(packetRegister->data))->width));
-      SDLNet_Write16((Uint16)configuration.SCREEN_HEIGHT,
-		     &(((net_register_t*)(packetRegister->data))->height));
 		     
       SDLNet_UDP_Send(mySock, -1, packetRegister);
     } else SDL_Delay(500);

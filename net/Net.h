@@ -70,8 +70,6 @@ typedef struct {
   unsigned char nplayers_r;
   unsigned char bgBig;    // 0 or 1
   unsigned char winning_score;
-  Uint16 width; // resolution on the server side
-  Uint16 height;
 } net_register_t;
 
 class Net {
