@@ -200,7 +200,7 @@ parseArgs(int argc, char *argv[]) {
   }
   
   if ( (resx > 0) && (resy >0) )
-    configuration.setResolution(resx, resy);
+    configuration.setDesiredResolution(resx, resy);
 }
 
 int main(int argc, char *argv[]) {

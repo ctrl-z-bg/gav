@@ -108,6 +108,7 @@ public:
   PlayerFrameConf_t playerFrameConf;
   BallFrameConf_t ballFrameConf;
   Resolution_t resolution;
+  Resolution_t desiredResolution;
   Environment_t env;
   std::string currentTheme;
   
@@ -159,6 +160,7 @@ public:
     scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
     env.w = ENVIRONMENT_WIDTH;
     env.h = ENVIRONMENT_HEIGHT;
+    setDesiredResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
     setResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
   }
 
@@ -180,6 +182,17 @@ public:
     resolution.y = h;
     resolution.ratioX = (float) resolution.x / (float) env.w;
     resolution.ratioY = (float) resolution.y / (float) env.h;
+  }
+
+  inline void setResolutionToDesired() {
+    setResolution(desiredResolution.x, desiredResolution.y);
+  }
+
+  inline void setDesiredResolution(int w, int h) {
+    desiredResolution.x = w;
+    desiredResolution.y = h;
+    desiredResolution.ratioX = (float) desiredResolution.x / (float) env.w;
+    desiredResolution.ratioY = (float) desiredResolution.y / (float) env.h;
   }
 
   inline void setDefaultFrameConf() {

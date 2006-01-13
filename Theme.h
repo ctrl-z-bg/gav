@@ -124,7 +124,7 @@ private:
 	configuration.scaleFactors(1024, 400);
       } else {
 	configuration.env.w = ENVIRONMENT_WIDTH;
-	configuration.setResolution(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
+	configuration.setResolutionToDesired();
 	configuration.scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
       }
 
