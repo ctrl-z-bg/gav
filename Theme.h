@@ -119,11 +119,18 @@ private:
       
       if ( _bigBackground ) {
 	printf("Big Background hack: FIX IT!\n");
-	configuration.env.w = 1000;
-	configuration.setResolution(1000, 400);
-	configuration.scaleFactors(1000, 400);
+	configuration.env.w = BIG_ENVIRONMENT_WIDTH;
+	configuration.env.h = BIG_ENVIRONMENT_HEIGHT;
+	double rat = ((double) configuration.desiredResolution.y) /
+	  (double) BIG_ENVIRONMENT_HEIGHT;
+	int w = (int) (rat * BIG_ENVIRONMENT_WIDTH);
+	int h = configuration.desiredResolution.y;
+	configuration.setResolution(w, h);
+	configuration.scaleFactors(BIG_ENVIRONMENT_WIDTH,
+				   BIG_ENVIRONMENT_HEIGHT);
       } else {
 	configuration.env.w = ENVIRONMENT_WIDTH;
+	configuration.env.h = ENVIRONMENT_HEIGHT;
 	configuration.setResolutionToDesired();
 	configuration.scaleFactors(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT);
       }
