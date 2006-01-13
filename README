@@ -16,7 +16,7 @@ Network Game:
 One of the programs must function as server. The server determines
 the parameters of the game (except for the theme, which might be
 different from client to client). Whatever player the server configures
-as "Keyboard" is local to the server, "Computer/Net" players are controlled
+as "Keyboard/Joy" is local to the server, "Computer/Net" players are controlled
 either by the computer or by a remote client. Starting the server, you
 specify how many clients will attach: each of them will replace a computer
 player. This way, you can play in several different ways: a local player

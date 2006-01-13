@@ -59,7 +59,7 @@ public:
       postfix = std::string("Computer / Net");
       break;
     case PLAYER_HUMAN:
-      postfix = std::string("Keyboard");
+      postfix = std::string("Keyboard / Joy");
       break;
     }
 

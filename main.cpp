@@ -52,6 +52,7 @@
 #include "MenuItemBigBackground.h"
 #include "MenuItemBallSpeed.h"
 #include "MenuItemSave.h"
+#include "MenuItemJoystick.h"
 #ifndef NONET
 #include "MenuItemClient.h"
 #include "MenuItemServer.h"
@@ -113,6 +114,12 @@ void AudioCallBack(void *user_data,Uint8 *audio,int length)
     }
 }
 
+void initJoysticks()
+{
+  for ( int i = 0; i < SDL_NumJoysticks(); i++ ) {
+    
+  }
+}
 
 void ClearPlayingSounds(void)
 {
@@ -134,7 +141,7 @@ void applyConfiguration() {
 void
 init()
 {
-  if ( SDL_Init(SDL_INIT_VIDEO) ) {
+  if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK) ) {
     cerr << "Cannot initialize SDL, exiting." << endl;
     exit(1);
   }
@@ -221,6 +228,7 @@ int main(int argc, char *argv[]) {
   MenuItemExit miexit;
   Menu *menuExtra = new Menu();
   Menu *menuThemes = new Menu();
+  Menu *menuJoystick = new Menu();
 #ifndef NONET
   Menu *menuNetwork = new Menu();
 #endif
@@ -263,6 +271,11 @@ int main(int argc, char *argv[]) {
   menuExtra->add(new MenuItemSave());
   menuExtra->add(mib);
 
+  for (int plId = 0; plId < MAX_PLAYERS; plId++ ) {
+    menuJoystick->add(new MenuItemJoystick(plId, -1));
+  }
+  menuJoystick->add(mib);
+
   m.add(&miplay);
   m.add(new MenuItemPlayer(TEAM_LEFT, 0));
   m.add(new MenuItemPlayer(TEAM_RIGHT, 0));
@@ -273,7 +286,8 @@ int main(int argc, char *argv[]) {
 #endif // AUDIO
   m.add(new MenuItemSubMenu(new MenuKeys(0),
 			    string("Define Keys")));
-  m.add(new MenuItemNotImplemented(string("Set Joystick")));
+  m.add(new MenuItemSubMenu(menuJoystick,
+			    string("Set Joystick")));
   m.add(new MenuItemSubMenu(menuExtra,
 			    string("Extra")));
   m.add(&miexit);

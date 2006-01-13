@@ -35,17 +35,30 @@ typedef struct {
   int jump_key;
 } controls_t;
 
+#define MAX_JOYS (4)
+
 typedef enum { CNTRL_LEFT = 1, CNTRL_RIGHT = 2, CNTRL_JUMP = 4} cntrl_t;
 
 class ControlsArray {
   triple_t _inputs[MAX_PLAYERS];
   controls_t _keyMapping[MAX_PLAYERS];
+  /* vector from playerId to SDL_Joystick * */
+  SDL_Joystick *_joyMapping[MAX_PLAYERS];
   Uint8 _f[12];
+  int _nJoys;
+  SDL_Joystick *_joys[MAX_JOYS];
 
 public:
   ControlsArray() {
     memset(_inputs, 0, MAX_PLAYERS * sizeof(triple_t));
     memset(_f, 0, 12);
+    for ( int i = 0; i < MAX_PLAYERS; i++ )
+      _joyMapping[i] = NULL;
+    _nJoys = SDL_NumJoysticks();
+    if ( _nJoys > MAX_JOYS)
+      _nJoys = MAX_JOYS;
+    for ( int i = 0; i < _nJoys; i++ )
+      _joys[i] = SDL_JoystickOpen(i);
     initializeControls();
   }
   
@@ -55,6 +68,15 @@ public:
   
   void setControls(int plId, controls_t ctrls) {
     _keyMapping[plId] = ctrls;
+  }
+
+  int getNJoysticks() { return _nJoys; }
+
+  void assignJoystick(int plId, int joyId) {
+    if ( joyId == -1 )
+      _joyMapping[plId] = NULL;
+    else
+      _joyMapping[plId] = _joys[joyId%_nJoys];
   }
 
   //  void addChannel(){}

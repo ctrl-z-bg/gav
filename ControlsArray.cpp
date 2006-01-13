@@ -32,6 +32,8 @@
 #include "NetServer.h"
 #endif
 
+#define JOY_THRESHOLD (10000)
+
 void ControlsArray::initializeControls() {
   _keyMapping[0].left_key = SDLK_z;
   _keyMapping[0].right_key = SDLK_c;
@@ -48,12 +50,16 @@ void ControlsArray::initializeControls() {
   _keyMapping[3].left_key = SDLK_s;
   _keyMapping[3].right_key = SDLK_f;
   _keyMapping[3].jump_key = SDLK_e;
+  
+  // _joyMapping[0] = SDL_JoystickOpen(0);
 }
 
 void ControlsArray::setControlsState(InputState *is, Team * tl, Team * tr) {
   Uint8 *keystate = is->getKeyState();
   int i = 0;
   std::vector<Player *> players;
+
+  SDL_JoystickUpdate();
 
 #ifndef NONET
   int player;
@@ -72,9 +78,18 @@ void ControlsArray::setControlsState(InputState *is, Team * tl, Team * tr) {
     for ( std::vector<Player *>::const_iterator it = players.begin();
 	  it != players.end(); it++ ) {
       if ( (*it)->getCtrl() == PL_CTRL_HUMAN ) {
-	_inputs[(*it)->id()].left = keystate[_keyMapping[(*it)->id()].left_key];
-	_inputs[(*it)->id()].right = keystate[_keyMapping[(*it)->id()].right_key];
-	_inputs[(*it)->id()].jump = keystate[_keyMapping[(*it)->id()].jump_key];
+	int plId = (*it)->id();
+	/* first check the keyboard */
+	_inputs[plId].left  = keystate[_keyMapping[plId].left_key];
+	_inputs[plId].right = keystate[_keyMapping[plId].right_key];
+	_inputs[plId].jump  = keystate[_keyMapping[plId].jump_key];
+	/* then check the joystick */
+	SDL_Joystick *js = _joyMapping[plId];
+	if ( js ) {
+	  _inputs[plId].left |= (SDL_JoystickGetAxis(js, 0) < -JOY_THRESHOLD);
+	  _inputs[plId].right |= (SDL_JoystickGetAxis(js, 0) > JOY_THRESHOLD);
+	  _inputs[plId].jump |= SDL_JoystickGetButton(js, 0);
+	}
       } else if ( (*it)->getCtrl() == PL_CTRL_AI ) {
 	_inputs[(*it)->id()] = ((PlayerAI *) (*it))->planAction();
       }
