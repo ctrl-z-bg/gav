@@ -42,7 +42,7 @@ public:
 		      unsigned int prevTicks, int firstTime);
 
 private:
-  void StatePlaying::setupConnection(InputState *is);
+  void setupConnection(InputState *is);
 };
 
 #endif // _STATEPLAYING_H_
