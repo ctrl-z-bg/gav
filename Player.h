@@ -138,7 +138,7 @@ public:
   inline pl_type_t type() {return _type;}
 
   inline pl_state_t state() {return _state;}
-  bool setState(pl_state_t s);
+  bool setState(pl_state_t s, bool force = false);
 
   inline int speed() {return _speed;}
   inline void setSpeed(int s) {_speed = s;}

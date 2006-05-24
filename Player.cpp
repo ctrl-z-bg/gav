@@ -41,7 +41,7 @@ int Player::speedX()  {
   return(0);
 }
 
-bool Player::setState(pl_state_t st) {
+bool Player::setState(pl_state_t st, bool forse) {
 
   if (_state == st) return false;
   
@@ -156,7 +156,7 @@ void Player::update(int ticks, ControlsArray *ca) {
   if ( _y < GROUND_LEVEL() ) {
     setState(PL_STATE_JUMP); // jumping
   } else if (firstTime || (!dx)) { // player still
-    setState(PL_STATE_STILL);
+    setState(PL_STATE_STILL, firstTime);
   } else if ( dx ) { // player running
     setState(PL_STATE_WALK);
   }
