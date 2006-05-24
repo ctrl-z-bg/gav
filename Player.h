@@ -138,7 +138,7 @@ public:
   inline pl_type_t type() {return _type;}
 
   inline pl_state_t state() {return _state;}
-  inline void setState(pl_state_t s) {_state = s;}
+  bool setState(pl_state_t s);
 
   inline int speed() {return _speed;}
   inline void setSpeed(int s) {_speed = s;}
@@ -158,6 +158,9 @@ public:
     _frames = new LogicalFrameSeq(_fileNames[_type],
 				  configuration.playerFrameConf.nPlayerFrames);
   }
+
+  inline void updateFrame(int ticks, bool changed);
+  inline void updateClient(int ticks, pl_state_t state);
 
   void update(int ticks, ControlsArray *ca);
   void draw(SDL_Surface * screen);

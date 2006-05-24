@@ -41,6 +41,69 @@ int Player::speedX()  {
   return(0);
 }
 
+bool Player::setState(pl_state_t st) {
+
+  if (_state == st) return false;
+  
+  _state = st;
+  
+  switch (st) {
+  case  PL_STATE_JUMP:
+    _currFrameB = configuration.playerFrameConf.playerJmpB - 1;
+    _currFrameE = configuration.playerFrameConf.playerJmpE - 1;
+    if ( (_currFrameB == _currFrameE) ||
+	 (configuration.playerFrameConf.playerJmpP == 0) )
+      _currStateFrameDelay = 0;
+    else
+      _currStateFrameDelay = configuration.playerFrameConf.playerJmpP/
+	( _currFrameE - _currFrameB);
+    break;
+  case PL_STATE_STILL:
+    _currFrameB = configuration.playerFrameConf.playerStillB - 1;
+    _currFrameE = configuration.playerFrameConf.playerStillE - 1;
+    if ( (_currFrameB == _currFrameE) ||
+	 (configuration.playerFrameConf.playerStillP == 0) )
+      _currStateFrameDelay = 0;
+    else
+      _currStateFrameDelay = configuration.playerFrameConf.playerStillP/
+	( _currFrameE - _currFrameB);
+    break;
+  case PL_STATE_WALK:
+    _currFrameB = configuration.playerFrameConf.playerRunB - 1;
+    _currFrameE = configuration.playerFrameConf.playerRunE - 1;
+    if ( (_currFrameB == _currFrameE) ||
+	 (configuration.playerFrameConf.playerRunP == 0) )
+      _currStateFrameDelay = 0;
+    else
+      _currStateFrameDelay = configuration.playerFrameConf.playerRunP/
+	( _currFrameE - _currFrameB);
+    break;
+  }
+
+  return true;
+}
+
+inline void Player::updateFrame(int ticks, bool changed) {
+  _overallPassed += ticks;
+
+  if ( changed ) {
+    _overallPassed = 0;
+    _frameIdx = _currFrameB;
+  } else if ( _currStateFrameDelay &&
+	      (_overallPassed > _currStateFrameDelay) ) {
+    // update _frameIdx
+    if ( ++_frameIdx > _currFrameE )
+      _frameIdx = _currFrameB;
+    _overallPassed = 0;
+  }
+
+}
+
+/* Invoked by the network client in order to draw the proper
+   animation frame */
+inline void Player::updateClient(int ticks, pl_state_t st) {
+  updateFrame(ticks, setState(st));
+}
 
 void Player::update(int ticks, ControlsArray *ca) {
   triple_t input = ca->getCommands(_plId);
@@ -48,7 +111,6 @@ void Player::update(int ticks, ControlsArray *ca) {
   int dx = 0;
   bool firstTime = (_overallPassed == 0);
 
-  _overallPassed += ticks;
   if ( input.left ) 
     dx--;
 
@@ -92,49 +154,14 @@ void Player::update(int ticks, ControlsArray *ca) {
   int _oldState = _state;
   /* detect state changes */
   if ( _y < GROUND_LEVEL() ) {
-    if ( _state != PL_STATE_JUMP ) { // jumping
-      _state = PL_STATE_JUMP;
-      _currFrameB = configuration.playerFrameConf.playerJmpB - 1;
-      _currFrameE = configuration.playerFrameConf.playerJmpE - 1;
-      if ( (_currFrameB == _currFrameE) ||
-	   (configuration.playerFrameConf.playerJmpP == 0) )
-	_currStateFrameDelay = 0;
-      else
-	_currStateFrameDelay = configuration.playerFrameConf.playerJmpP/
-	  ( _currFrameE - _currFrameB);
-    }
-  } else if (firstTime || (!dx && (_state!=PL_STATE_STILL))) { // player still
-    _state = PL_STATE_STILL;
-    _currFrameB = configuration.playerFrameConf.playerStillB - 1;
-    _currFrameE = configuration.playerFrameConf.playerStillE - 1;
-    if ( (_currFrameB == _currFrameE) ||
-	 (configuration.playerFrameConf.playerStillP == 0) )
-      _currStateFrameDelay = 0;
-    else
-      _currStateFrameDelay = configuration.playerFrameConf.playerStillP/
-	( _currFrameE - _currFrameB);
-  } else if ( dx && (_state != PL_STATE_WALK) ) { // player running
-    _state = PL_STATE_WALK;
-    _currFrameB = configuration.playerFrameConf.playerRunB - 1;
-    _currFrameE = configuration.playerFrameConf.playerRunE - 1;
-    if ( (_currFrameB == _currFrameE) ||
-	 (configuration.playerFrameConf.playerRunP == 0) )
-      _currStateFrameDelay = 0;
-    else
-      _currStateFrameDelay = configuration.playerFrameConf.playerRunP/
-	( _currFrameE - _currFrameB);
+    setState(PL_STATE_JUMP); // jumping
+  } else if (firstTime || (!dx)) { // player still
+    setState(PL_STATE_STILL);
+  } else if ( dx ) { // player running
+    setState(PL_STATE_WALK);
   }
 
-  if ( _state != _oldState ) {
-    _overallPassed = 0;
-    _frameIdx = _currFrameB;
-  } else if ( _currStateFrameDelay &&
-	      (_overallPassed > _currStateFrameDelay) ) {
-    // update _frameIdx
-    if ( ++_frameIdx > _currFrameE )
-      _frameIdx = _currFrameB;
-    _overallPassed = 0;
-  }
+  updateFrame(ticks, (_oldState != _state));
 }
 
 void Player::draw(SDL_Surface * screen) {
