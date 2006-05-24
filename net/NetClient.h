@@ -47,7 +47,7 @@ public:
   }
 
   /* client methods */
-  int ConnectToServer(int * pl, int * pr, char team, 
+  int ConnectToServer(InputState * is, int * pl, int * pr, char team, 
 		      const char * hostname, int port = SERVER_PORT);
   int WaitGameStart();
   int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball, int passed);

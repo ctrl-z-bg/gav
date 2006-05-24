@@ -27,7 +27,7 @@
 
 using namespace std;
 
-int NetClient::ConnectToServer(int * pl, int * pr, char team, 
+int NetClient::ConnectToServer(InputState * is, int * pl, int * pr, char team, 
 			       const char * hostname, int port) {
   /* open the socket */
   mySock = SDLNet_UDP_Open(0);
@@ -49,7 +49,11 @@ int NetClient::ConnectToServer(int * pl, int * pr, char team,
   ((net_register_t*)(packetRegister->data))->id = team;
 
   SDLNet_UDP_Send(mySock, -1, packetRegister);
-  while (!SDLNet_UDP_Recv(mySock, packetRegister));
+  while (!SDLNet_UDP_Recv(mySock, packetRegister)) {
+    if (getKeyPressed(is, false) == SDLK_ESCAPE) {
+      return -1;
+    }
+  }
   _id = ((net_register_t*)(packetRegister->data))->id;
   _nplayers_l = ((net_register_t*)(packetRegister->data))->nplayers_l;
   _nplayers_r = ((net_register_t*)(packetRegister->data))->nplayers_r;

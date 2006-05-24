@@ -109,13 +109,13 @@ int StateClient::setupConnection(InputState *is) {
   netc = new NetClient();
   cga->printRow(screen, 6, "connecting...");
   SDL_Flip(screen);
-  if ( netc->ConnectToServer(&_lp, &_rp, ti, saddress.c_str(),
+  if ( netc->ConnectToServer(is, &_lp, &_rp, ti, saddress.c_str(),
 			     port) == -1 ) {
     delete(netc);
     cga->printRow(screen, 7, "host unreachable");
     SDL_Flip(screen);
     SDL_Delay(1000);
-    nets = NULL;
+    netc = NULL;
     return(STATE_MENU);
   }
   cga->printRow(screen, 7, "connected. Waiting for other clients...");
