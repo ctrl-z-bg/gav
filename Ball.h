@@ -128,10 +128,10 @@ class Ball {
   inline int spdx() { return _spdx; }
   inline int spdy() { return _spdy; }
   inline int frame() { return _frameIdx; }
-  inline void setFrame(int fr) { _frameIdx = fr; }
   inline void setX(int x) { _x = x; }
   inline void setY(int y) { _y = y; }
   inline int gravity()   { return _accelY; }
+  void updateFrame(int passed);
   void update(int passed, Team *tleft, Team *tright);
   float distance(int, int);
 

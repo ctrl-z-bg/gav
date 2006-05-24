@@ -78,7 +78,8 @@ inline int NetClient::receiveData(Uint16 *data) {
   return v;
 }
 
-int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
+int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball, 
+			       int passed) {
   net_game_snapshot_t * snap;
   std::vector<Player *> plv;
   unsigned int i;
@@ -90,19 +91,19 @@ int NetClient::ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball) {
     for (i = 0; i < plv.size(); i++) {
       plv[i]->setX(receiveData(&(snap->teaml)[i].x));
       plv[i]->setY(receiveData(&(snap->teaml)[i].y));
-      plv[i]->setState((pl_state_t)(snap->teaml)[i].frame);
+      plv[i]->updateClient(passed, (pl_state_t)receiveData(&(snap->teaml)[i].frame));
     }
     /* fill the right team informations */
     plv = tright->players();
     for (i = 0; i < plv.size(); i++) {
       plv[i]->setX(receiveData(&(snap->teamr)[i].x));
       plv[i]->setY(receiveData(&(snap->teamr)[i].y));
-      plv[i]->setState((pl_state_t)(snap->teamr)[i].frame);
+      plv[i]->updateClient(passed, (pl_state_t)receiveData(&(snap->teamr)[i].frame));
     }
     /* fill the ball informations */
     ball->setX(receiveData(&(snap->ball).x));
     ball->setY(receiveData(&(snap->ball).y));
-    ball->setFrame((int)(snap->ball).frame);
+    ball->updateFrame(passed);
 
     /* fill the score information */
     tleft->setScore(snap->scorel);

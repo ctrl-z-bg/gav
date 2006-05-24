@@ -46,7 +46,7 @@
 typedef struct {
   Uint16 x;
   Uint16 y;
-  unsigned char  frame;
+  Uint16 frame;
 } net_object_snapshot_t;
 
 typedef struct {

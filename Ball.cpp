@@ -203,14 +203,8 @@ Ball::netFullCollision(int x, int y)
 	 (y + _frames->height()/2 >= configuration.NET_Y));
 }
 
-// updates the ball position, knowing 'passed' milliseconds went
-// away
-void Ball::update(int passed, Team *tleft, Team *tright) {
-  int dx, dy;
+void Ball::updateFrame(int passed) {
   static int overallPassed = 0;
-    
-  _oldx = _x;
-  _oldy = _y;
     
   overallPassed += passed;
   if (overallPassed > (configuration.ballFrameConf.ballPeriod/
@@ -218,6 +212,17 @@ void Ball::update(int passed, Team *tleft, Team *tright) {
     overallPassed = 0;
     _frameIdx = (_frameIdx + 1) % configuration.ballFrameConf.nBallFrames;
   }
+}
+
+// updates the ball position, knowing 'passed' milliseconds went
+// away
+void Ball::update(int passed, Team *tleft, Team *tright) {
+  int dx, dy;
+
+  updateFrame(passed);
+
+  _oldx = _x;
+  _oldy = _y;
     
   if ( _scorerSide ) {
     _scoredTime += passed;

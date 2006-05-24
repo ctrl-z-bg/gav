@@ -191,7 +191,7 @@ int StateClient::execute(InputState *is, unsigned int ticks,
 		    (input.right?CNTRL_RIGHT:0)|
 		    (input.jump?CNTRL_JUMP:0));
 
-  while ( netc->ReceiveSnapshot(tl, tr, b) != -1 );
+  while ( netc->ReceiveSnapshot(tl, tr, b, ticks - prevTicks) != -1 );
   if ( (ticks - prevDrawn) >
        (unsigned int) (FPS - (FPS / (configuration.frame_skip + 1)) ) ) {
     SDL_Rect r;

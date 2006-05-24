@@ -50,7 +50,7 @@ public:
   int ConnectToServer(int * pl, int * pr, char team, 
 		      const char * hostname, int port = SERVER_PORT);
   int WaitGameStart();
-  int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball);
+  int ReceiveSnapshot(Team *tleft, Team *tright, Ball * ball, int passed);
   int SendCommand(char cmd);
   inline char id() { return _id; }
 

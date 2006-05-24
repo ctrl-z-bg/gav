@@ -106,6 +106,8 @@ int NetServer::WaitClients(int nclients) {
   return (nclients-1);
 }
 
+//Uint16 NetServer::NormalizeCurrentFrame(
+
 int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   unsigned int i;
   net_game_snapshot_t * snap = (net_game_snapshot_t *)(packetSnap->data);
@@ -118,19 +120,20 @@ int NetServer::SendSnapshot(Team *tleft, Team *tright, Ball * ball) {
   for (i = 0; i < plv.size(); i++) {
     SDLNet_Write16(plv[i]->x(), &((snap->teaml)[i].x));
     SDLNet_Write16(plv[i]->y(), &((snap->teaml)[i].y));
-    (snap->teaml)[i].frame = plv[i]->state();
+    SDLNet_Write16(plv[i]->state(), &((snap->teaml)[i].frame));
   }
   /* fill the right team informations */
   plv = tright->players();
   for (i = 0; i < plv.size(); i++) {
     SDLNet_Write16(plv[i]->x(), &((snap->teamr)[i].x));
     SDLNet_Write16(plv[i]->y(), &((snap->teamr)[i].y));
-    (snap->teamr)[i].frame = plv[i]->state();
+    SDLNet_Write16(plv[i]->state(), &((snap->teamr)[i].frame));
   }
   /* fill the ball informations */
   SDLNet_Write16(ball->x(), &((snap->ball).x));
   SDLNet_Write16(ball->y(), &((snap->ball).y));
-  (snap->ball).frame = ball->frame();
+  // ball has just one state
+  //SDLNet_Write16(ball->frame(), &((snap->ball).frame));
 
   /* send the snapshot to all clients */
   for (i = 0; i < clientIP.size(); i++) {

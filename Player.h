@@ -159,8 +159,8 @@ public:
 				  configuration.playerFrameConf.nPlayerFrames);
   }
 
-  inline void updateFrame(int ticks, bool changed);
-  inline void updateClient(int ticks, pl_state_t state);
+  void updateFrame(int ticks, bool changed);
+  void updateClient(int ticks, pl_state_t state);
 
   void update(int ticks, ControlsArray *ca);
   void draw(SDL_Surface * screen);

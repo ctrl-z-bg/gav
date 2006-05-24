@@ -83,7 +83,7 @@ bool Player::setState(pl_state_t st) {
   return true;
 }
 
-inline void Player::updateFrame(int ticks, bool changed) {
+void Player::updateFrame(int ticks, bool changed) {
   _overallPassed += ticks;
 
   if ( changed ) {
@@ -101,7 +101,7 @@ inline void Player::updateFrame(int ticks, bool changed) {
 
 /* Invoked by the network client in order to draw the proper
    animation frame */
-inline void Player::updateClient(int ticks, pl_state_t st) {
+void Player::updateClient(int ticks, pl_state_t st) {
   updateFrame(ticks, setState(st));
 }
 
