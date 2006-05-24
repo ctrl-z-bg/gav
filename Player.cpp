@@ -41,9 +41,9 @@ int Player::speedX()  {
   return(0);
 }
 
-bool Player::setState(pl_state_t st, bool forse) {
+bool Player::setState(pl_state_t st, bool force) {
 
-  if (_state == st) return false;
+  if ((_state == st) && !force) return false;
   
   _state = st;
   
