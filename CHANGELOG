@@ -4,6 +4,10 @@ Current CVS:
   ./gav.ini otherwise.
 - size of the window can be set by the -w and -h commandline parameters
 - joystick support
+- a couple of leaks removed from the code
+- now network game with different themes works correctly
+- network connection phase no longer blocking
+- the network protocol has changed! no longer compatible with old versions
 
 Version 0.8.0 changes:
 - (we hope) *FINAL* patch for stuck on the net problem
