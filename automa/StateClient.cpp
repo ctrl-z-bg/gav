@@ -52,8 +52,8 @@ int StateClient::setupConnection(InputState *is) {
     /* now, ask for server address, port and team side */
     cga->printRow(screen, 0, "Please type server address");
     SDL_Flip(screen);
-    while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) {
+    while ( (ch = getKeyPressed(is)) != SDLK_RETURN ) {
+      if ( ch == SDLK_BACKSPACE ) {
 	saddress = deleteOneChar(saddress); // should be backspace...
 	cga->printRow(screen, 1, "                       ", background);
       } else {
@@ -69,8 +69,8 @@ int StateClient::setupConnection(InputState *is) {
     sprintf(msg, "Please type port number [%d]", SERVER_PORT);
     cga->printRow(screen, 2, msg);
     SDL_Flip(screen);
-    while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) {
+    while ( (ch = getKeyPressed(is)) != SDLK_RETURN ) {
+      if ( ch == SDLK_BACKSPACE ) {
 	ports = deleteOneChar(ports); // should be backspace...
 	cga->printRow(screen, 3, "                       ", background);
       } else {
@@ -88,8 +88,8 @@ int StateClient::setupConnection(InputState *is) {
     string team = "";
     cga->printRow(screen, 4, "Left or right team? (l/r)");
     SDL_Flip(screen);
-    while ( (ch = getKeyPressed(is)) != 0 ) {
-      if ( ch < 0 ) {
+    while ( (ch = getKeyPressed(is)) != SDLK_RETURN ) {
+      if ( ch == SDLK_BACKSPACE ) {
 	team = deleteOneChar(team); // should be backspace...
 	cga->printRow(screen, 5, "                       ", background);
       } else {
@@ -158,12 +158,14 @@ int StateClient::execute(InputState *is, unsigned int ticks,
 
     for ( int j = 0; j < _lp; j++ ) {
       string name = "Pippo-" + j;
-      tl->addPlayerHuman(name.c_str(), PL_TYPE_MALE_LEFT);
+      Player * pl = tl->addPlayerHuman(name.c_str(), PL_TYPE_MALE_LEFT);
+      pl->setState(PL_STATE_STILL, true);
     }
 
     for ( int j = 0; j < _rp; j++ ) {
       string name = "Pluto-" + j;
-      tr->addPlayerHuman(name.c_str(), PL_TYPE_MALE_RIGHT);
+      Player * pl = tr->addPlayerHuman(name.c_str(), PL_TYPE_MALE_RIGHT);
+      pl->setState(PL_STATE_STILL, true);
     }
 
     tl->setScore(0);

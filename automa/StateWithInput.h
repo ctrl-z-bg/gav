@@ -42,31 +42,34 @@ class StateWithInput {
     return(std::string(s2));
   }
 
-  signed char getKeyPressed(InputState *is) {
-    bool typed = false;
+  short getKeyPressed(InputState *is, bool blocking = true) {
     SDL_keysym keysym;
     SDL_Event event;
-    while ( !typed ) {
-      is->getInput();
-      if ( (event = is->getEventWaiting()).type != SDL_KEYDOWN )
+    while ( 1 ) {
+      if (!blocking && (!SDL_PollEvent(NULL)))
+	return -1;
+      if ( (event = is->getEventWaiting()).type != SDL_KEYDOWN ) {
 	continue;
+      }
       keysym = event.key.keysym;
-      do {
-	is->getInput();
-      } while ( is->getEventWaiting().type != SDL_KEYUP );
+      while ( is->getEventWaiting().type != SDL_KEYUP );
       char *kn = SDL_GetKeyName(keysym.sym);
       // printf("\"%s\"\n", kn);
       if ( strlen(kn) == 1 )
 	return((signed char)(*kn));
       else if ( !strcmp(kn, "return") )
-	return(0);
+	return(SDLK_RETURN);
       else if ( !strcmp(kn, "backspace") )
-	return(-1);
+	return(SDLK_BACKSPACE);
+      else if ( !strcmp(kn, "escape") )
+	return(SDLK_ESCAPE);
       else
 	continue;
+
     }
-    return(0);
+    return -1;
   }
+
 };
 
 #endif

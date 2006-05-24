@@ -45,7 +45,7 @@ int NetServer::ComputePlayerID(char id) {
   return  ((pl << 1) | tm);
 }
 
-int NetServer::WaitClients(int nclients) {
+int NetServer::WaitClients(InputState * is, int nclients) {
   IPaddress * ipa;
   //char nleft = 0;
   //char nright = 0;
@@ -100,7 +100,12 @@ int NetServer::WaitClients(int nclients) {
 	configuration.winning_score;
 		     
       SDLNet_UDP_Send(mySock, -1, packetRegister);
-    } else SDL_Delay(500);
+    } else {
+      if (getKeyPressed(is, false) == SDLK_ESCAPE) {
+	return -1;
+      }
+      SDL_Delay(500);
+    }
   }
 
   return (nclients-1);

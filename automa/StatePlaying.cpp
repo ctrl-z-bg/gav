@@ -32,13 +32,13 @@
 using namespace std;
 
 
-void StatePlaying::setupConnection(InputState *is) {
+int StatePlaying::setupConnection(InputState *is) {
 #ifndef NONET
   std::string clinumb = "";
   int nclients = 0;
   signed char ch;
   
-  nets = new NetServer();
+  //nets = new NetServer();
   /* first, delete the screen... */
   SDL_Rect r;
   r.x = r.y = 0;
@@ -54,8 +54,8 @@ void StatePlaying::setupConnection(InputState *is) {
   sprintf(msg, "What port to listen on? [%d]", SERVER_PORT);
   cga->printRow(screen, 0, msg);
   SDL_Flip(screen);
-  while ( (ch = getKeyPressed(is)) != 0 ) {
-    if ( ch < 0 ) {
+  while ( (ch = getKeyPressed(is)) != SDLK_RETURN ) {
+    if ( ch == SDLK_BACKSPACE ) {
       ports = deleteOneChar(ports); // should be backspace...
       cga->printRow(screen, 1, "                 ", background);
     } else {
@@ -73,8 +73,8 @@ void StatePlaying::setupConnection(InputState *is) {
 
   cga->printRow(screen, 2, "How many clients to wait? [1]");
   SDL_Flip(screen);
-  while ( (ch = getKeyPressed(is)) != 0 ) {
-    if ( ch < 0 ) {
+  while ( (ch = getKeyPressed(is)) != SDLK_RETURN ) {
+    if ( ch == SDLK_BACKSPACE ) {
       clinumb = deleteOneChar(clinumb); // should be backspace...
       cga->printRow(screen, 3, "                 ", background);
     } else {
@@ -97,13 +97,16 @@ void StatePlaying::setupConnection(InputState *is) {
   SDL_Flip(screen);  
   int remaining = nclients;
   do {
-    remaining = nets->WaitClients(remaining);
+    remaining = nets->WaitClients(is, remaining);
     char msg[100];
     sprintf(msg, "  %d connection(s) to go  ", remaining);
     cga->printRow(screen, 5, msg, background);
     SDL_Flip(screen);  
   } while ( remaining > 0 );
-#endif //!NONET
+  return remaining;
+#else //!NONET
+  return 0;
+#endif
 }
 
 // executes one step of the game's main loop
@@ -114,7 +117,11 @@ int StatePlaying::execute(InputState *is, unsigned int ticks,
   if ( firstTime ) {
 #ifndef NONET
     if ( nets ) {
-      setupConnection(is);
+      if (setupConnection(is) < 0) {
+	delete(nets);
+	nets = NULL;
+	return(STATE_MENU);
+      }
     }
 #endif
 

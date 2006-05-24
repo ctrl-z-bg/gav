@@ -48,7 +48,7 @@ public:
 
   /* server methods */
   int StartServer(int port = SERVER_PORT);
-  int WaitClients(int nclients = 1);
+  int WaitClients(InputState * is, int nclients = 1);
   int SendSnapshot(Team *tleft, Team *tright, Ball * ball);
   int ReceiveCommand(int * player, char * cmd);
   int ComputePlayerID(char id);

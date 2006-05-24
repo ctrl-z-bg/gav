@@ -30,6 +30,7 @@
 #include "Configuration.h"
 #include "Ball.h"
 #include "Team.h"
+#include "automa/StateWithInput.h"
 
 #define PLAYER_FOR_TEAM_IN_NET_GAME 2
 #define SERVER_PORT 7145
@@ -72,7 +73,7 @@ typedef struct {
   unsigned char winning_score;
 } net_register_t;
 
-class Net {
+class Net : public StateWithInput{
 protected:
   UDPsocket mySock;
   UDPpacket * packetCmd;
