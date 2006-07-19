@@ -20,9 +20,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef WIN32
-#include <unistd.h>
-#else
+#ifdef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif /* WIN32 */

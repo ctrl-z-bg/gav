@@ -1,6 +1,6 @@
 Summary: GPL rendition of old Arcade Volleyball game
 Name: gav
-Version: 0.8.0
+Version: 0.9.0
 Release: 1
 URL: gav.sourceforge.net
 Source0: %{name}-%{version}.tar.gz
@@ -70,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/games/gav/themes/classic/plmr.png
 
 %changelog
-* Fri Apr 2 2004 Alessandro Tommasi <ale@ctrl-z-bg.org>
+* Thu May 25 2006 Alessandro Tommasi <ale@ctrl-z-bg.org>
 - Major Changes
 
 

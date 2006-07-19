@@ -25,7 +25,7 @@
 #include <string>
 #include <iostream>
 
-#include <sys/types.h>
+//#include <sys/types.h>
 #ifndef WIN32
 #include <dirent.h>
 #else

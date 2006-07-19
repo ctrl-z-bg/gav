@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <SDL.h>
-#include <sys/types.h>
+//#include <sys/types.h>
 #include <dirent.h>
 #include "globals.h"
 #include "ScreenFont.h"
@@ -191,7 +191,6 @@ init()
 #ifdef AUDIO
 Sound * Prova;
 #endif
-#include <unistd.h>
 
 void
 parseArgs(int argc, char *argv[]) {
