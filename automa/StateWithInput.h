@@ -32,14 +32,17 @@ class StateWithInput {
   StateWithInput() {}
   
   std::string deleteOneChar(std::string s) {
+    char *s2;
+    std::string ret;
     if ( s.length() < 1 )
       return(s);
 
-    char s2[s.length()];
+    s2 = (char*)alloca(s.length()*sizeof(char));
 
     strncpy(s2, s.c_str(), s.length() - 1);
     s2[s.length() - 1] = 0;
-    return(std::string(s2));
+    ret = std::string(s2);
+    return(ret);
   }
 
   short getKeyPressed(InputState *is, bool blocking = true) {
