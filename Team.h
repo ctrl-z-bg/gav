@@ -150,7 +150,9 @@ class Team {
   }
 
   ~Team() {
-    Player *pl[_players.size()];
+    Player **pl;
+
+    pl = (Player**)alloca(_players.size() * sizeof(Player*));
 
     int i = 0;
     for ( std::vector<Player *>::const_iterator it = _players.begin();
