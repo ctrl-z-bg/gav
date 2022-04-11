@@ -7,6 +7,8 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <unistd.h>
+#include <string.h>
 
 class Aargh
 {
