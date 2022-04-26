@@ -65,7 +65,8 @@ int Menu::execute(InputState *is, std::stack<Menu *> &s)
   // draw menu items labels
   rect.y = configuration.CEILING + configuration.env.h/100;
   for ( unsigned int it = 0; it < items.size(); it++ ) {
-    label = items[it]->getLabel().c_str();
+    std::string slabel = items[it]->getLabel();
+    label = slabel.c_str();
     rect.x = (configuration.env.w / 2) -
       strlen(label)*(cga->charWidth())/2; // UGLY
     if (it == (unsigned int) currentItem)

@@ -1,3 +1,7 @@
+Version 0.9.1 changes:
+- fixed imports
+- fixed menu item label centering	
+
 Version 0.9.0 changes:
 - successfully compiled on Mac OS X, files for build added
 - preferences are stored to $HOME/.gav if $HOME exists, to

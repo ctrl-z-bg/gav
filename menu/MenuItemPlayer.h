@@ -42,15 +42,15 @@ public:
     index = idx;
     char numb[10];
     sprintf(numb, "%d", idx*2 + tm + 1);
-    prefix = std::string("Player ") + numb + ": ";
-    setLabel();
+    prefix = std::string("Player ") + std::string(numb) + std::string(": ");
+    resetLabel();
   }
 
-  void setLabel() {
+  void resetLabel() {
     int *src =
       (team == TEAM_LEFT)?configuration.left_players:configuration.right_players;
     
-    std::string postfix;
+    std::string postfix = std::string("");
     switch ( src[index] ) {
     case PLAYER_NONE:
       postfix = std::string("None");
@@ -64,7 +64,6 @@ public:
     }
 
     label = prefix + postfix;
-    
   }
 
   int execute(std::stack<Menu *> &s) {
@@ -94,7 +93,7 @@ public:
       break;
     }
 
-    setLabel();
+    resetLabel();
     return(0);
   }
 };
