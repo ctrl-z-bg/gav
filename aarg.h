@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 
 class Aargh
 {
