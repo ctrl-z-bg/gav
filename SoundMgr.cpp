@@ -51,12 +51,12 @@ SoundMgr::SoundMgr(const char *dir, const char *defdir)
   if ( dir && stat(dir, &sbuf) )
     actualdir = defdir;
 
-  char fname[100];
+  char fname[MAXPATHLENGTH];
 
   int sndidx = 0;
   for ( sndidx = SND_BOUNCE; sound_fnames[sndidx] && (sndidx <= SND_BACKGROUND_MENU);
 	sndidx++ ) {
-    sprintf(fname, "%s/%s", actualdir, sound_fnames[sndidx]);
+    snprintf(fname, MAXPATHLENGTH, "%s/%s", actualdir, sound_fnames[sndidx]);
     FILE *fp = fopen(fname, "r");
     if ( !fp ) continue;
     printf("sound: %s\n", fname);
